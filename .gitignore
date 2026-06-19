@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Xcode / SwiftPM build artifacts
+.build/
+build/
+dist/
+DerivedData/
+*.xcuserstate
+*.xcuserdatad
+
+# XcodeGen generates Fellow2.xcodeproj from project.yml.
+# Run `xcodegen generate` after cloning (see docs/06-setup-and-run.md).
+Fellow2.xcodeproj/
+
+# Local Claude settings (personal, machine-specific)
+.claude/settings.local.json
+
+# Node / Vite (React prototype in "Fellow2 - Design")
+node_modules/
+**/dist/
+*.log
+.pnpm-store/

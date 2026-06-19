@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Sandbox OFF for easy local dev with a free Apple ID. -->
+	<key>com.apple.security.app-sandbox</key>
+	<false/>
+	<!-- REQUIRED with Hardened Runtime (ENABLE_HARDENED_RUNTIME=YES in project.yml).
+	     Without it, EventKit's requestFullAccessToEvents() silently returns granted=false
+	     under the hardened runtime — no prompt, app never appears in System Settings →
+	     Privacy → Calendars. The Info.plist usage string ALONE is not enough once the
+	     hardened runtime is on. Verified empirically (see docs/07). -->
+	<key>com.apple.security.personal-information.calendars</key>
+	<true/>
+</dict>
+</plist>

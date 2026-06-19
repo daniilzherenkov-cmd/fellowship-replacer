@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:fellowship-replacer}",
+            "name": "Debug Fellow2",
+            "target": "Fellow2",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Fellow2"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:fellowship-replacer}",
+            "name": "Release Fellow2",
+            "target": "Fellow2",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Fellow2"
+        }
+    ]
+}

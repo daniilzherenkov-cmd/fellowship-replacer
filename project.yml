@@ -1,0 +1,49 @@
+# XcodeGen spec → run `xcodegen generate` to produce Fellow2.xcodeproj.
+# Requires Xcode installed to build/run; install XcodeGen with `brew install xcodegen`.
+name: Fellow2
+options:
+  bundleIdPrefix: com.deliveryhero
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""          # set to your free Apple ID team in Xcode → Signing
+    CODE_SIGN_STYLE: Automatic
+
+packages:
+  GoogleSignIn:
+    url: https://github.com/google/GoogleSignIn-iOS
+    from: "7.1.0"
+  GoogleAPIClientForREST:
+    url: https://github.com/google/google-api-objectivec-client-for-rest
+    from: "3.0.0"
+
+targets:
+  Fellow2:
+    type: application
+    platform: macOS
+    sources:
+      - path: Fellow2
+        excludes:
+          - "Info.plist"
+          - "Fellow2.entitlements"
+    dependencies:
+      - package: GoogleSignIn
+        product: GoogleSignIn
+      - package: GoogleAPIClientForREST
+        product: GoogleAPIClientForREST_Calendar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.deliveryhero.fellow2
+        PRODUCT_NAME: "Fellow 2"
+        INFOPLIST_FILE: Fellow2/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Fellow2/Fellow2.entitlements
+        GENERATE_INFOPLIST_FILE: NO
+        ENABLE_HARDENED_RUNTIME: YES
+        COMBINE_HIDPI_IMAGES: YES
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks"

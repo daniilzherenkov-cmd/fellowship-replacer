@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[RFC] Fellow 2 — Access, Licenses &amp; Backend Enablement</title>
+<style>
+  :root{
+    --ink:#202124; --muted:#5f6368; --line:#dadce0; --accent:#1a73e8;
+    --th-bg:#f1f3f4; --code-bg:#f8f9fa; --ok:#188038; --warn:#b06000;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:#f6f7f9; color:var(--ink);
+    font-family:Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size:11pt; line-height:1.55;
+  }
+  .page{
+    max-width:816px; margin:32px auto; background:#fff; padding:84px 96px;
+    box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08); border-radius:2px;
+  }
+  h1{font-size:23pt; font-weight:700; line-height:1.25; margin:0 0 6px; letter-spacing:-.2px;}
+  h2{font-size:16pt; font-weight:700; margin:34px 0 8px; padding-bottom:4px; border-bottom:1px solid var(--line);}
+  h3{font-size:12.5pt; font-weight:700; margin:22px 0 6px; color:#3c4043;}
+  p{margin:8px 0;}
+  a{color:var(--accent); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  ul{margin:8px 0 8px 0; padding-left:22px;}
+  li{margin:4px 0;}
+  code{background:var(--code-bg); border:1px solid var(--line); border-radius:3px; padding:1px 5px; font-family:"SF Mono",Menlo,Consolas,monospace; font-size:9.5pt;}
+  .meta{color:var(--muted); font-size:10.5pt; margin:2px 0; line-height:1.5;}
+  .meta b{color:#3c4043;}
+  .status{display:inline-block; background:#fef7e0; color:var(--warn); border:1px solid #fde293; border-radius:12px; padding:2px 12px; font-size:9.5pt; font-weight:700; letter-spacing:.3px;}
+  .divider{border:none; border-top:1px solid var(--line); margin:26px 0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0; font-size:10pt;}
+  th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top;}
+  th{background:var(--th-bg); font-weight:700; color:#3c4043;}
+  td.num{width:34px; text-align:center; color:var(--muted);}
+  .yes{color:var(--ok); font-weight:700;}
+  .no{color:var(--muted);}
+  .callout{background:#e8f0fe; border:1px solid #d2e3fc; border-left:4px solid var(--accent); border-radius:4px; padding:12px 16px; margin:16px 0; font-size:10.5pt;}
+  .callout.warn{background:#fef7e0; border-color:#fde293; border-left-color:var(--warn);}
+  .callout b{color:#202124;}
+  .toc{font-size:10.5pt; color:var(--muted);}
+  .lead{color:#3c4043;}
+  ol.decisions{margin:8px 0 8px 22px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>[RFC] Fellow 2 — Access, Licenses &amp; Backend Enablement for the Full Build</h1>
+
+  <p class="meta"><b>Owner team:</b> Shop Science (Fellow 2)</p>
+  <p class="meta"><b>Author:</b> Daniel (“Danya”) Zherenkov</p>
+  <p class="meta"><b>Sponsor:</b> Milena (QC lead)</p>
+  <p class="meta"><b>Related:</b> docs/07 — Integrations &amp; Sync · docs/04 — MVP Spec + Roadmap</p>
+  <p class="meta"><b>Status:</b> <span class="status">DRAFT — FOR REVIEW</span></p>
+
+  <hr class="divider">
+
+  <h3>Reviewers</h3>
+  <table>
+    <thead>
+      <tr><th>Team</th><th>Reviewer</th><th>Required/optional</th><th>Status</th><th>Comment</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>IT / Google Workspace Admin</td><td><i>TBD</i></td><td>Required</td><td>—</td><td>Owns Internal OAuth app approval</td></tr>
+      <tr><td>Apple Developer Program (DH)</td><td><i>TBD</i></td><td>Required</td><td>—</td><td>Owns membership + signing/notarization</td></tr>
+      <tr><td>Platform / Data Engineering</td><td><i>TBD</i></td><td>Required</td><td>—</td><td>Owns backend + data-residency decision</td></tr>
+      <tr><td>InfoSec / Privacy</td><td><i>TBD</i></td><td>Required</td><td>—</td><td>Reviews off-device storage of 1:1 notes</td></tr>
+      <tr><td>Endpoint / MDM (Jamf)</td><td><i>TBD</i></td><td>Optional</td><td>—</td><td>Needed only at rollout (Wave 3)</td></tr>
+      <tr><td>QC Leadership</td><td>Milena</td><td>Optional (informed)</td><td>—</td><td>Sponsor</td></tr>
+    </tbody>
+  </table>
+
+  <hr class="divider">
+
+  <h2>1. Preamble</h2>
+
+  <h3>1.1 Context</h3>
+  <p>Fellow 2 is a native macOS replacement for <b>Fellow</b> (fellow.ai), the meeting-management tool DH currently pays <b>~$30k/mo</b> for. The local-only, single-user MVP (manual notes, calendar-synced meetings, per-person 1:1 history, in-meeting checklists, one unified to-do list — no AI/transcription) has been <b>built and approved by the sponsor (Milena)</b>.</p>
+  <p>We now want to move from the local MVP to a <b>full Fellow replica</b>: real Google Calendar connectivity, distribution to colleagues, and the collaborative “both people see the 1:1 note” experience. Each of these depends on external access, licenses, or org decisions that the project does <b>not</b> currently hold.</p>
+
+  <h3>1.2 Problem statement</h3>
+  <p>The MVP runs entirely on-device (SwiftData + EventKit) and needs no external grants. The full build does:</p>
+  <ul>
+    <li><b>Calendar:</b> a clean in-app “Connect Google Calendar” flow requires a DH-owned Google Cloud project with an <b>Internal</b> OAuth app — which needs Workspace-admin sign-off.</li>
+    <li><b>Distribution:</b> running on colleagues’ Macs without Gatekeeper warnings requires a <b>paid Apple Developer Program</b> seat for signing + notarization (a free Apple ID covers local dev only).</li>
+    <li><b>Collaboration (v3):</b> real-time, multi-user notes require a <b>shared backend</b> — which forces a <b>data-residency decision</b> that is DH’s to make, plus an InfoSec review (1:1 notes are sensitive, HR-adjacent content).</li>
+  </ul>
+  <p>These are the blocking dependencies. This RFC enumerates them so the owning teams can grant/decide them in one pass.</p>
+
+  <h3>1.3 Goal</h3>
+  <p>Secure the specific access, licenses, and decisions listed in §3 so the full Fellow 2 build can proceed. The <b>long-pole</b> is the Internal Google OAuth app (§3.1) — it unblocks both calendar sync and, later, collaboration auth — so we want that approval started first.</p>
+
+  <h3>1.4 Out of scope</h3>
+  <ul>
+    <li><b>Paid Google Calendar API cost</b> — the API is free at our usage; no budget requested.</li>
+    <li><b>AI / transcription infrastructure</b> — explicitly cut from scope; not requested.</li>
+    <li><b>Public Google app verification</b> — avoided entirely by the Internal OAuth setting.</li>
+    <li>Building the BFF / CRDT co-editing layer — a later phase, not an access request.</li>
+  </ul>
+
+  <h2>2. Why these specific choices (background for reviewers)</h2>
+  <ul>
+    <li><b>Internal OAuth (not public):</b> set the OAuth consent screen to <i>Internal</i> so only DH Google accounts can use it → <b>no Google app-verification and no “unverified app” warning</b>. Trade-off: it must live inside the DH Google Cloud org and be admin-approved.</li>
+    <li><b>Notarization (not App Store):</b> internal tool → direct notarized distribution (Developer ID), not the Mac App Store. Notarization requires the Hardened Runtime, which the app already ships with.</li>
+    <li><b>Backend fork:</b> the data-residency answer (EU-self-hosted vs Google-hosted vs DH-platform) determines the whole collaboration stack. We surface it as an explicit decision rather than pre-deciding it.</li>
+  </ul>
+
+  <h2>3. What we need (access, licenses &amp; decisions)</h2>
+
+  <h3>3.1 Google Cloud / Calendar — <span style="color:var(--warn)">long-pole, start first</span></h3>
+  <table>
+    <thead><tr><th class="num">#</th><th>Item</th><th>Why</th><th>Approver</th><th>Blocking</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Google Cloud project <b>inside the DH org</b></td><td>Lets the OAuth app be set to “Internal”</td><td>GCP org owner</td><td class="yes">Yes</td></tr>
+      <tr><td class="num">2</td><td><b>Google Calendar API</b> enabled on it</td><td>Read (and later create) meetings</td><td>GCP project admin</td><td class="yes">Yes</td></tr>
+      <tr><td class="num">3</td><td>OAuth consent screen = <b>Internal</b>; scopes <code>calendar.readonly</code> (v1) + <code>calendar.events</code> (write: Meet links, RSVP)</td><td>Calendar sync + Fellow-parity event creation</td><td>Workspace admin</td><td class="yes">Yes</td></tr>
+      <tr><td class="num">4</td><td><b>OAuth Client ID</b> (type: iOS) for bundle <code>com.deliveryhero.fellow2</code></td><td>Yields Client ID + reversed-client-id URL scheme for <code>Info.plist</code></td><td>GCP project admin</td><td class="yes">Yes</td></tr>
+      <tr><td class="num">5</td><td><b>Workspace-admin sign-off</b> to publish the Internal OAuth app</td><td>The real gating approval; also covers collaboration auth later</td><td>Google Workspace admin</td><td class="yes">Yes</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 Apple Developer</h3>
+  <table>
+    <thead><tr><th class="num">#</th><th>Item</th><th>Why</th><th>Approver</th><th>Blocking</th></tr></thead>
+    <tbody>
+      <tr><td class="num">6</td><td>Seat on DH’s <b>Apple Developer Program</b> (Org account, paid $99/yr)</td><td>Required for notarized distribution beyond the dev’s own Mac</td><td>Apple Dev account holder</td><td class="yes">Yes (distribution)</td></tr>
+      <tr><td class="num">7</td><td>My Apple ID added to the team (Developer role) → real <code>DEVELOPMENT_TEAM</code> ID</td><td>Code signing</td><td>Apple Dev admin</td><td class="yes">Yes (distribution)</td></tr>
+      <tr><td class="num">8</td><td><b>Developer ID Application</b> certificate</td><td>What notarization signs against</td><td>Apple Dev admin</td><td class="yes">Yes (distribution)</td></tr>
+      <tr><td class="num">9</td><td>Reserve/confirm bundle id <code>com.deliveryhero.fellow2</code> (Apple + Google)</td><td>Keep OAuth client + signing aligned</td><td>Apple/GCP admins</td><td class="yes">Yes</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.3 Collaboration backend (v3) — gated on a decision</h3>
+  <div class="callout warn">
+    <b>Decision required (DH’s call):</b> <i>Where must DH meeting data live, and on what backend?</i><br>
+    Options: <b>Supabase self-hosted in EU</b> (recommended if residency rules apply — Postgres, EU-hostable, Google OAuth, real-time built in) · <b>Firebase/Firestore</b> (fastest, Google-hosted only) · <b>DH-hosted / standard platform</b> (most governance-aligned, most work — may already exist).
+  </div>
+  <table>
+    <thead><tr><th class="num">#</th><th>Item</th><th>Why</th><th>Approver</th><th>Blocking</th></tr></thead>
+    <tbody>
+      <tr><td class="num">10</td><td><b>Backend decision</b> (per the fork above)</td><td>Determines the entire collaboration stack</td><td>Platform / Data Eng</td><td class="yes">Yes (v3)</td></tr>
+      <tr><td class="num">11</td><td>Provisioning per the choice: Firebase project <b>or</b> EU infra to self-host Supabase <b>or</b> onboarding to the DH standard backend</td><td>Where shared notes live</td><td>Platform / DevOps</td><td class="yes">Yes (v3)</td></tr>
+      <tr><td class="num">12</td><td>Confirm app login can <b>reuse the Google OAuth</b> from §3.1 (or SSO/Okta details if mandated)</td><td>Identity = real DH people for note access control</td><td>IT / IAM</td><td class="yes">Yes (v3)</td></tr>
+      <tr><td class="num">13</td><td><b>InfoSec / privacy review</b> + data-classification for off-device 1:1 notes</td><td>Sensitive content leaving the device</td><td>InfoSec</td><td class="yes">Yes (v3)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.4 Distribution at scale (Wave 3)</h3>
+  <table>
+    <thead><tr><th class="num">#</th><th>Item</th><th>Why</th><th>Approver</th><th>Blocking</th></tr></thead>
+    <tbody>
+      <tr><td class="num">14</td><td><b>MDM / Jamf</b> push + pre-approved calendar/TCC permissions</td><td>Smooth rollout to colleagues vs. manual installs</td><td>Endpoint team</td><td class="no">Rollout only</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.5 Deployment &amp; build infrastructure</h3>
+  <p class="meta">Distinct from §3.4: that is “push to the fleet”; this is the build → sign → host → auto-update pipeline.</p>
+  <table>
+    <thead><tr><th class="num">#</th><th>Item</th><th>Why</th><th>Approver</th><th>Blocking</th></tr></thead>
+    <tbody>
+      <tr><td class="num">15</td><td>macOS build/CI runner with Xcode (DH self-hosted Mac, or GitHub Actions macOS runners)</td><td>Builds must run on macOS with full Xcode — SwiftData/SwiftUI macros ship in Xcode, not Command Line Tools</td><td>Platform / CI team</td><td class="yes">Yes (release)</td></tr>
+      <tr><td class="num">16</td><td>App Store Connect API key + secure secrets storage (signing certs, keys) wired into CI</td><td>Automated, repeatable signing + notarization in the pipeline</td><td>Apple Dev admin / Platform</td><td class="yes">Yes (release)</td></tr>
+      <tr><td class="num">17</td><td>Artifact / release hosting for the <code>.dmg</code>/<code>.zip</code> (DH artifact registry, or a GCS/S3 bucket)</td><td>Somewhere to publish downloadable builds for testers and rollout</td><td>Platform / DevOps</td><td class="yes">Yes (release)</td></tr>
+      <tr><td class="num">18</td><td>Auto-update feed — <b>Sparkle</b> appcast hosting + EdDSA signing key</td><td>Fellow-parity silent auto-updates, no manual reinstall per release</td><td>Platform / DevOps</td><td class="no">Fast-follow</td></tr>
+      <tr><td class="num">19</td><td>Repo in the DH GitHub org + CI minutes</td><td>Source control + a place to run the build/release pipeline</td><td>Eng / GitHub admin</td><td class="yes">Yes (release)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4. Rollout / phasing</h2>
+  <ul>
+    <li><b>Wave 1 — full-feature build (now):</b> §3.1 + §3.2. Until granted, the app keeps working on EventKit; “Connect Google Calendar” shows a hint. Start the §3.1 admin approval immediately.</li>
+    <li><b>Wave 2 — collaboration (v3):</b> §3.3, after the backend decision lands.</li>
+    <li><b>Wave 3 — fleet rollout:</b> §3.4, once distribution is signed off.</li>
+  </ul>
+
+  <h2>5. Risks &amp; mitigations</h2>
+  <ul>
+    <li><b>Workspace-admin approval is the long-pole</b> → start the §3.1 conversation before anything else; everything calendar- and auth-related waits on it.</li>
+    <li><b><code>calendar.events</code> (write) may trigger heavier admin review</b> than read-only → we can ship Wave 1 on <code>calendar.readonly</code> and request write scope as a fast-follow if it stalls.</li>
+    <li><b>Data residency unknown</b> → we do not pre-build a backend; we request the <i>decision</i> first (§3.3, #10), keeping SwiftData as the offline cache so no rework is needed.</li>
+    <li><b>InfoSec sign-off can gate v3</b> → engage InfoSec in parallel with the backend decision, not after.</li>
+  </ul>
+
+  <h2>6. Open decisions for reviewers</h2>
+  <ol class="decisions">
+    <li><b>Calendar write now, or read-only first?</b> (scope = <code>calendar.events</code> vs <code>calendar.readonly</code>)</li>
+    <li><b>Who owns the backend choice</b> — is there a standard DH backend we must use, or is this ours to propose?</li>
+    <li><b>Confirm bundle id</b> <code>com.deliveryhero.fellow2</code> is free to reserve.</li>
+  </ol>
+
+</div>
+</body>
+</html>
