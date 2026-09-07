@@ -1,0 +1,39 @@
+web/src/lib/google-store.ts
+  s_8f62a27eb85283::t_fd4836b6e94272 1-218
+web/src/lib/crypto.ts
+  s_8f62a27eb85283::t_57d2a9764237aa 1-101
+web/src/app/api/auth/google/callback/route.ts
+  s_8f62a27eb85283::t_359f81e4dcf015 1-86
+web/src/app/api/calendar/sync/route.ts
+  s_8f62a27eb85283::t_d8a07d4c7e6e20 1-64
+web/src/lib/sync.ts
+  s_8f62a27eb85283::t_56ad1b66ee344d 1-206
+web/test/e2e/oauth.spec.ts
+  s_8f62a27eb85283::t_70436d64f89629 1-186
+web/playwright.config.ts
+  s_8f62a27eb85283::t_e250ebd3f5244e 31,35
+web/src/lib/google-calendar-api.ts
+  s_8f62a27eb85283::t_5909e5e36d9692 1-181
+web/src/app/api/auth/google/start/route.ts
+  s_8f62a27eb85283::t_3d0ce98617ded5 1-52
+web/src/lib/google-oauth.ts
+  s_8f62a27eb85283::t_8c0fdc8d229e38 1-189
+web/sql/schema.sql
+  s_8f62a27eb85283::t_a80d1f347965d3 123-152
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "2c6f1faa82822af305fc9ce5466ad326a8bb7c15",
+  "prompts": {},
+  "sessions": {
+    "s_8f62a27eb85283": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "124e0444-d600-4956-87b6-39306fc50554",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
