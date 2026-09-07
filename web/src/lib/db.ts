@@ -36,10 +36,44 @@ function useSqlite(): boolean {
 
 async function makeSqlite(): Promise<Db> {
   const { default: Database } = await import('better-sqlite3')
-  const file = process.env.FELLOW_SQLITE_PATH || ':memory:'
+  const { mkdirSync } = await import('node:fs')
+  const { dirname, isAbsolute, resolve } = await import('node:path')
+
+  const configured = process.env.FELLOW_SQLITE_PATH || ':memory:'
+  // A relative path is resolved against process.cwd(), which for a Next
+  // standalone build is .next/standalone - not the project root. Resolve it
+  // explicitly and create the directory, otherwise the first query fails with
+  // an opaque "directory does not exist".
+  const file =
+    configured === ':memory:' || isAbsolute(configured)
+      ? configured
+      : resolve(process.cwd(), configured)
+  if (file !== ':memory:') mkdirSync(dirname(file), { recursive: true })
+
   const db = new Database(file)
   db.pragma('journal_mode = WAL')
   db.pragma('foreign_keys = ON')
+
+  // SQLite is the local/test backend only, and there is no migration runner on
+  // this path, so apply the schema if the file is empty. Production MySQL DDL
+  // is applied out-of-band via the execute_sql MCP tool and never from here.
+  const hasTables = db
+    .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='meeting'")
+    .get()
+  if (!hasTables && process.env.FELLOW_SQLITE_AUTO_SCHEMA !== '0') {
+    const { readFileSync, existsSync } = await import('node:fs')
+    const { join } = await import('node:path')
+    // Try both layouts: repo root in dev, and the traced copy in standalone.
+    for (const candidate of [
+      join(process.cwd(), 'sql/schema.sql'),
+      join(process.cwd(), '../../sql/schema.sql'),
+    ]) {
+      if (existsSync(candidate)) {
+        db.exec(readFileSync(candidate, 'utf8'))
+        break
+      }
+    }
+  }
 
   return {
     async query<T = Row>(sql: string, params: Param[] = []): Promise<T[]> {

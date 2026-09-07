@@ -1,13 +1,23 @@
 import { defineConfig, devices } from '@playwright/test'
+import { join } from 'node:path'
 
 /**
  * Agent-runnable by design: one command, no watch mode, no prompts,
- * deterministic, exit 0/1. Failures print the failing locator and leave a
- * screenshot + trace behind.
+ * deterministic, exit 0/1. Failures leave a screenshot and a trace.
  *
  * Protoship has NO staging environment - every deploy goes straight to
  * production - so this suite is the gate that stands in for one.
+ *
+ * Two projects:
+ *   unit - pure Node (auth crypto, importer, calendar mapping). No browser,
+ *          no server. Fast, and runnable with SKIP_WEBSERVER=1.
+ *   ui   - drives the real app against SQLite, authenticating with genuine
+ *          RS256 tokens signed by a local test JWKS, so the production
+ *          verification path runs unmodified.
  */
+
+const UNIT_SPECS = /(auth|import|calendar|oauth)\.spec\.ts/
+
 export default defineConfig({
   testDir: './test/e2e',
   fullyParallel: false,
@@ -18,6 +28,9 @@ export default defineConfig({
   timeout: 30_000,
   expect: { timeout: 5_000 },
 
+  globalSetup: process.env.SKIP_WEBSERVER ? undefined : './test/harness/global-setup.ts',
+  globalTeardown: process.env.SKIP_WEBSERVER ? undefined : './test/harness/global-teardown.ts',
+
   use: {
     baseURL: 'http://127.0.0.1:3100',
     trace: 'retain-on-failure',
@@ -25,31 +38,33 @@ export default defineConfig({
   },
 
   projects: [
-    // Pure-node specs (auth crypto, importer) need no browser.
-    {
-      name: 'unit',
-      testMatch: /(auth|import|calendar|oauth)\.spec\.ts/,
-    },
+    { name: 'unit', testMatch: UNIT_SPECS },
     {
       name: 'ui',
-      testIgnore: /(auth|import|calendar|oauth)\.spec\.ts/,
+      testIgnore: UNIT_SPECS,
       use: { ...devices['Desktop Chrome'] },
     },
   ],
 
-  // Started only for the UI project; the unit project does not need it.
   webServer: process.env.SKIP_WEBSERVER
     ? undefined
     : {
-        command: 'npm run build && PORT=3100 node .next/standalone/server.js',
+        command: 'npm run build && node .next/standalone/server.js',
         url: 'http://127.0.0.1:3100/api/health',
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false,
         timeout: 180_000,
+        stdout: 'pipe',
+        stderr: 'pipe',
         env: {
+          PORT: '3100',
           FELLOW_DB_DRIVER: 'sqlite',
-          FELLOW_SQLITE_PATH: './test/.tmp/e2e.sqlite',
-          CF_ACCESS_ISSUER: 'https://test-access.local',
+          // Absolute: the standalone server runs from .next/standalone, so a
+          // relative path would resolve against the wrong directory.
+          FELLOW_SQLITE_PATH: join(process.cwd(), 'test/.tmp/e2e.sqlite'),
+          // Points the app's JWKS fetch at the local test server.
+          CF_ACCESS_ISSUER: 'http://127.0.0.1:3199',
           CF_ACCESS_AUD: 'fellow2-test-aud',
+          FELLOW_ENCRYPTION_KEY: 'test-encryption-key-long-enough-for-tests',
         },
       },
 })
