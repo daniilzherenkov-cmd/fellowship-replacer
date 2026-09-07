@@ -1,0 +1,30 @@
+web/test/e2e/import.spec.ts
+  s_8f62a27eb85283::t_f4c73adc42e086 157-208,214-239,241,246-268
+  s_8f62a27eb85283::t_673dffdffd3996 240,242-245
+  s_8f62a27eb85283::t_f21c2f30209cf0 209-213
+web/src/import/fellow.ts
+  s_8f62a27eb85283::t_6d0eca18183786 174-179,184-192
+  s_8f62a27eb85283::t_30f8c6da24f494 216-221
+  s_8f62a27eb85283::t_c5cf7f6202bbdb 152-173,180-183,193-215,222-239
+  s_8f62a27eb85283::t_628059223a370f 70,76-80
+  s_8f62a27eb85283::t_e211711f2da513 284-294,297-305,308,312-315
+  s_8f62a27eb85283::t_3014441e54bcf5 295-296
+docs/11-fellow-export-schema.md
+  s_8f62a27eb85283::t_a05a5a183fe2ee 1-115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "fdef071aa403bffd2510e76bc873b0f2860c0cae",
+  "prompts": {},
+  "sessions": {
+    "s_8f62a27eb85283": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "124e0444-d600-4956-87b6-39306fc50554",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
