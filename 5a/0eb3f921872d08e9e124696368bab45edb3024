@@ -1,0 +1,63 @@
+web/.gitignore
+  s_8f62a27eb85283::t_28624d837b0e5d 1-7
+web/src/components/ui/DueDatePill.tsx
+  s_8f62a27eb85283::t_69668dcb70fb6e 1-40
+web/test/e2e/import.spec.ts
+  s_8f62a27eb85283::t_214d0cd21285f5 1-156
+web/src/styles/globals.css
+  s_8f62a27eb85283::t_95215803ac551a 1-131
+web/src/app/layout.tsx
+  s_8f62a27eb85283::t_31073d2d56c49b 1-15
+web/test/harness/jwt.ts
+  s_8f62a27eb85283::t_801b21e6d84fbc 13
+  s_8f62a27eb85283::t_518c19f9c79ffa 34-35
+  s_8f62a27eb85283::t_ba28094b00cd20 1-12,14-33,36-104
+web/package.json
+  s_8f62a27eb85283::t_84f4971ff6fd72 1-15,20-22,25-28,32-33
+  s_8f62a27eb85283::t_c5301478ce4211 16-19,23-24,29-31
+web/tsconfig.json
+  s_8f62a27eb85283::t_03bc48c9292ed9 4-8,18,20-29,31-41
+  s_8f62a27eb85283::t_d5611ae21d0764 1-3,9-17,19,30,42
+web/src/lib/auth.ts
+  s_8f62a27eb85283::t_ffe7c0d4fc2683 22
+  s_8f62a27eb85283::t_aab22b0bebaaa2 73
+  s_8f62a27eb85283::t_b52397771fd02e 1-21,23-72,74-150
+web/src/lib/db.ts
+  s_8f62a27eb85283::t_9493b2feb5adfa 1-109
+web/src/components/ui/Avatar.tsx
+  s_8f62a27eb85283::t_dda0c7d795e578 1-89
+web/src/import/fellow.ts
+  s_8f62a27eb85283::t_4d2b58c9f56732 1-198
+web/src/components/ui/Checkbox.tsx
+  s_8f62a27eb85283::t_7f01bf28a5e064 1-80
+web/postcss.config.mjs
+  s_8f62a27eb85283::t_a44613dfdd04a9 1-5
+web/next.config.ts
+  s_8f62a27eb85283::t_93311224acc532 1-13
+web/playwright.config.ts
+  s_8f62a27eb85283::t_5b4638c66a9dc4 1-55
+web/src/app/api/health/route.ts
+  s_8f62a27eb85283::t_fd1f1195c230a5 1-16
+web/test/e2e/auth.spec.ts
+  s_8f62a27eb85283::t_1e2ed36ddfbe36 1-91
+web/sql/schema.sql
+  s_8f62a27eb85283::t_fd9fb33231cbc5 1-122
+web/package-lock.json
+  s_8f62a27eb85283::t_4605f491713043 1-2813
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "5a0eb3f921872d08e9e124696368bab45edb3024",
+  "prompts": {},
+  "sessions": {
+    "s_8f62a27eb85283": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "124e0444-d600-4956-87b6-39306fc50554",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
