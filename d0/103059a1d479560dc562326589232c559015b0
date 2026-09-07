@@ -1,0 +1,26 @@
+web/src/lib/calendar.ts
+  s_8f62a27eb85283::t_838f5e80ab5f8a 1-224
+web/test/fixtures/gcal-real-window.json
+  s_8f62a27eb85283::t_1f24feabc1de26 2-3820,3822-3825
+  s_8f62a27eb85283::t_265a3a91295969 1,3821
+web/playwright.config.ts
+  s_8f62a27eb85283::t_d85717dbcf9a71 31,35
+web/test/e2e/calendar.spec.ts
+  s_8f62a27eb85283::t_c9564162b839eb 1-205
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "d0103059a1d479560dc562326589232c559015b0",
+  "prompts": {},
+  "sessions": {
+    "s_8f62a27eb85283": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "124e0444-d600-4956-87b6-39306fc50554",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
