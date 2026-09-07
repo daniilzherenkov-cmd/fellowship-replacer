@@ -154,3 +154,115 @@ test.describe('importFellowExport', () => {
     )
   })
 })
+
+test.describe('calendar import', () => {
+  test('imports events, namespacing ids apart from notes', () => {
+    const report = importFellowExport(
+      {
+        notes: [],
+        calendars: [
+          {
+            name: 'me@deliveryhero.com',
+            events: [
+              {
+                guid: 'abc123',
+                title: 'Danya / Milena',
+                description: 'Weekly sync',
+                start: '2026-09-01T09:00:00+00:00',
+                end: '2026-09-01T09:30:00+00:00',
+              },
+            ],
+          },
+        ],
+      },
+      { includeCalendar: true },
+    )
+    expect(report.importedFromCalendar).toBe(1)
+    expect(report.meetings[0].externalId).toBe('gcal:abc123')
+    expect(report.meetings[0].kind).toBe('oneOnOne')
+    // Invite body is clearly marked as imported, not passed off as user notes.
+    expect(report.meetings[0].notepad).toContain('Imported from calendar invite')
+  })
+
+  test('drops placeholder-dated events', () => {
+    const report = importFellowExport(
+      {
+        calendars: [
+          {
+            events: [
+              {
+                guid: 'p1',
+                title: 'Undated',
+                start: '2000-01-01T00:00:00+00:00',
+                end: '2000-01-02T00:00:00+00:00',
+              },
+            ],
+          },
+        ],
+      },
+      { includeCalendar: true },
+    )
+    expect(report.importedFromCalendar).toBe(0)
+    expect(report.skippedUndatedEvents).toBe(1)
+  })
+
+  // Fellow's note ids and calendar guids are different identifier spaces
+  // (verified: 0 of 875 note ids match any guid), so de-duplication has to fall
+  // back to title+start. Without it, 8 of the 10 substantive notes in the real
+  // export would duplicate - and those are exactly the ones with content.
+  test('a note and its calendar event do not both create a meeting', () => {
+    const report = importFellowExport(
+      {
+        notes: [
+          {
+            id: 'n1',
+            title: 'Team sync',
+            start: '2026-09-01T09:00:00+00:00',
+            end: '2026-09-01T09:30:00+00:00',
+            content: ['Talking Points\nThe things to talk about', 'A real point'],
+          },
+        ],
+        calendars: [
+          {
+            events: [
+              {
+                guid: 'n1',
+                title: 'Team sync',
+                start: '2026-09-01T09:00:00+00:00',
+                end: '2026-09-01T09:30:00+00:00',
+              },
+            ],
+          },
+        ],
+      },
+      { includeCalendar: true },
+    )
+    // One meeting total: the note wins, because it carries the content.
+    expect(report.imported).toBe(1)
+    expect(report.importedFromCalendar).toBe(0)
+    expect(report.skippedDuplicateEvents).toBe(1)
+    expect(report.meetings).toHaveLength(1)
+    expect(report.meetings[0].talkingPoints).toEqual(['A real point'])
+  })
+
+  test('real export: calendar carries the actual history', async () => {
+    const fs = await import('node:fs')
+    test.skip(!fs.existsSync(REAL_EXPORT), 'real export not present on this machine')
+
+    const data = JSON.parse(fs.readFileSync(REAL_EXPORT, 'utf8')) as FellowExport
+    const report = importFellowExport(data, { includeCalendar: true, since: '2026-01-01' })
+
+    expect(report.totalEvents).toBeGreaterThan(2000)
+    expect(report.importedFromCalendar).toBeGreaterThan(1000)
+    expect(report.actionItemsCreated).toBe(0)
+
+    const oneOnOnes = report.meetings.filter((m) => m.kind === 'oneOnOne')
+    expect(oneOnOnes.length).toBeGreaterThan(50)
+
+    // eslint-disable-next-line no-console
+    console.log(
+      `[real export + calendar] ${report.importedFromCalendar} events imported ` +
+        `(${report.skippedUndatedEvents} undated), ${oneOnOnes.length} detected as 1:1`,
+    )
+  })
+})

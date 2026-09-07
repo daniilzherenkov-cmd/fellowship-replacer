@@ -67,11 +67,17 @@ export interface ImportedMeeting {
 
 export interface ImportReport {
   totalNotes: number
+  /** Meetings derived from notes (i.e. with real content). */
   imported: number
   skippedEmpty: number
   skippedUndated: number
   /** Always 0. Present so the report positively asserts nothing was invented. */
   actionItemsCreated: number
+  /** Calendar events seen / imported / dropped, when includeCalendar is set. */
+  totalEvents: number
+  importedFromCalendar: number
+  skippedUndatedEvents: number
+  skippedDuplicateEvents: number
   meetings: ImportedMeeting[]
 }
 
@@ -143,6 +149,94 @@ export function detectKind(title: string): 'oneOnOne' | 'team' | 'manual' {
 export interface ImportOptions {
   /** Keep the ~865 empty template shells. Off by default: they are noise. */
   includeEmpty?: boolean
+  /**
+   * Also import `calendars[].events[]`. This is where the real history lives:
+   * the sampled export has 2,354 events (2,205 properly dated, 1,700 in 2026,
+   * 201 of them 1:1-shaped) against only 8 substantive notes.
+   */
+  includeCalendar?: boolean
+  /** Drop events starting before this ISO date. Defaults to no lower bound. */
+  since?: string
+  /** Drop events starting after this ISO date. */
+  until?: string
+}
+
+/** Fellow exports undated placeholder events stamped at the epoch-ish date. */
+const PLACEHOLDER_DATE_PREFIX = '2000-01-01'
+
+/**
+ * Convert calendar events into meetings.
+ *
+ * Notes and events are merged on externalId, so an event that already has a
+ * note attached does not produce a second, empty meeting. Note-derived
+ * meetings win, since they carry content.
+ */
+export function matchKey(title: string, startIso: string): string {
+  // Minute precision: Fellow stores note and event times from the same source,
+  // so they agree exactly, but seconds/offset formatting can differ.
+  return `${title.trim().toLowerCase()}|${startIso.slice(0, 16)}`
+}
+
+export function importCalendarEvents(
+  events: FellowEvent[],
+  taken: ReadonlySet<string>,
+  options: ImportOptions = {},
+  /**
+   * title|start keys of meetings already created from notes. Needed because
+   * Fellow's note ids and calendar guids are DIFFERENT identifier spaces
+   * (verified: 0 of 875 note ids match any guid), so externalId alone cannot
+   * detect that a note and an event describe the same meeting. Without this,
+   * 8 of the 10 substantive notes in the sampled export duplicate - and those
+   * are precisely the meetings that have content.
+   */
+  takenByTime: ReadonlySet<string> = new Set(),
+): { meetings: ImportedMeeting[]; skippedUndated: number; skippedDuplicate: number } {
+  const meetings: ImportedMeeting[] = []
+  let skippedUndated = 0
+  let skippedDuplicate = 0
+  const seen = new Set<string>()
+
+  for (const ev of events) {
+    const start = ev.start ?? ''
+    const end = ev.end ?? ''
+    if (!start || !end || start.startsWith(PLACEHOLDER_DATE_PREFIX)) {
+      skippedUndated++
+      continue
+    }
+    if (options.since && start < options.since) continue
+    if (options.until && start > options.until) continue
+
+    // guid is Fellow's calendar event id. Namespaced separately from notes so
+    // the two sources cannot collide on a shared identifier.
+    const externalId = `gcal:${ev.guid ?? `${start}|${ev.title ?? ''}`}`
+    if (taken.has(externalId) || seen.has(externalId)) {
+      skippedDuplicate++
+      continue
+    }
+    // A note already covers this meeting and carries the user's actual
+    // content, so the bare calendar event would add nothing but a duplicate.
+    if (takenByTime.has(matchKey(ev.title ?? '', start))) {
+      skippedDuplicate++
+      continue
+    }
+    seen.add(externalId)
+
+    meetings.push({
+      id: randomUUID(),
+      externalId,
+      title: ev.title || 'Untitled',
+      startAt: start,
+      endAt: end,
+      kind: detectKind(ev.title || ''),
+      // The invite body is context, not the user's own notes. Kept so the
+      // meeting is not empty, clearly marked as imported.
+      notepad: ev.description ? `> Imported from calendar invite:\n${ev.description}` : '',
+      talkingPoints: [],
+      aiNotes: [],
+    })
+  }
+
+  return { meetings, skippedUndated, skippedDuplicate }
 }
 
 /**
@@ -187,12 +281,38 @@ export function importFellowExport(
     })
   }
 
+  const fromNotes = meetings.length
+  const events = options.includeCalendar
+    ? (data.calendars ?? []).flatMap((c) => c.events ?? [])
+    : []
+
+  let importedFromCalendar = 0
+  let skippedUndatedEvents = 0
+  let skippedDuplicateEvents = 0
+
+  if (events.length) {
+    const taken = new Set(meetings.map((m) => m.externalId))
+    const takenByTime = new Set(meetings.map((m) => matchKey(m.title, m.startAt)))
+    const cal = importCalendarEvents(events, taken, options, takenByTime)
+    meetings.push(...cal.meetings)
+    importedFromCalendar = cal.meetings.length
+    skippedUndatedEvents = cal.skippedUndated
+    skippedDuplicateEvents = cal.skippedDuplicate
+  }
+
+  // Newest first, matching the meetings archive's ordering.
+  meetings.sort((a, b) => b.startAt.localeCompare(a.startAt))
+
   return {
     totalNotes: notes.length,
-    imported: meetings.length,
+    imported: fromNotes,
     skippedEmpty,
     skippedUndated,
     actionItemsCreated: 0,
+    totalEvents: events.length,
+    importedFromCalendar,
+    skippedUndatedEvents,
+    skippedDuplicateEvents,
     meetings,
   }
 }
