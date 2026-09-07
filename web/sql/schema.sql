@@ -120,3 +120,33 @@ CREATE TABLE IF NOT EXISTS user_settings (
 -- from attendees and assigned action items instead. Rather than carry a table
 -- nothing reads, per-person history is derived the same way here. Revisit only
 -- if streams need to diverge from attendance.
+
+-- Google Calendar connection, one row per user.
+--
+-- The refresh token is a long-lived credential: it grants calendar access until
+-- explicitly revoked, so it is stored encrypted (AES-256-GCM, key from Vault
+-- via FELLOW_ENCRYPTION_KEY) and never sent to the client. Access tokens are
+-- short-lived and deliberately NOT persisted - they are re-minted on demand.
+CREATE TABLE IF NOT EXISTS google_connection (
+  owner_email          TEXT PRIMARY KEY,
+  refresh_token_cipher TEXT NOT NULL,
+  google_email         TEXT,
+  scope                TEXT,
+  -- Incremental sync cursor. Google may expire it at any time (410), which
+  -- forces a full resync; null means "next sync is a full one".
+  sync_token           TEXT,
+  last_sync_at         TEXT,
+  last_sync_error      TEXT,
+  created_at           TEXT NOT NULL,
+  updated_at           TEXT NOT NULL
+);
+
+-- Short-lived OAuth handshake state (CSRF token + PKCE verifier).
+-- Rows are single-use and expire in minutes; a sweep on write keeps this small.
+CREATE TABLE IF NOT EXISTS oauth_state (
+  state        TEXT PRIMARY KEY,
+  owner_email  TEXT NOT NULL,
+  verifier     TEXT NOT NULL,
+  created_at   TEXT NOT NULL,
+  expires_at   TEXT NOT NULL
+);
