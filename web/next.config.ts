@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
   // The container has no persistent filesystem - anything written at runtime is
   // lost on redeploy and is not shared across replicas. All state lives in MySQL.
   poweredByHeader: false,
+
+  // Next auto-generates web/AGENTS.md and web/CLAUDE.md, which would shadow the
+  // project's own CLAUDE.md for any work inside web/. The real instructions
+  // live at the repo root.
+  agentRules: false,
 }
 
 export default nextConfig
