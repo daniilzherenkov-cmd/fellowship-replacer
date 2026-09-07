@@ -28,11 +28,11 @@ export default defineConfig({
     // Pure-node specs (auth crypto, importer) need no browser.
     {
       name: 'unit',
-      testMatch: /(auth|import)\.spec\.ts/,
+      testMatch: /(auth|import|calendar)\.spec\.ts/,
     },
     {
       name: 'ui',
-      testIgnore: /(auth|import)\.spec\.ts/,
+      testIgnore: /(auth|import|calendar)\.spec\.ts/,
       use: { ...devices['Desktop Chrome'] },
     },
   ],

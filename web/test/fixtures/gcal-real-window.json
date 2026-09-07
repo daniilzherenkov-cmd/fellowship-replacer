@@ -1,0 +1,3825 @@
+{
+ "events": [
+  {
+   "id": "6nqenvr68flcvurv5qr85maug0",
+   "summary": "DH15 Anniversary: Wristband Collection Days!",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": null,
+   "conferenceUrl": null,
+   "start": {
+    "date": "2026-08-31T00:00:00Z"
+   },
+   "end": {
+    "date": "2026-09-04T00:00:00Z"
+   },
+   "organizer": {
+    "email": "person01@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "24f0pmj9bpka1lajgiak1cvcnb_20260901T070000Z",
+   "summary": "[Deep Work Block - Partner tools domain] ",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "24f0pmj9bpka1lajgiak1cvcnb_R20260804T070000",
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-01T09:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-01T11:50:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person02@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person03@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person04@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person05@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person06@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person07@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person08@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person09@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "11rgb55o1slibt0tjvea14rbip_20260901T080000Z",
+   "summary": "Shops Science standup",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "11rgb55o1slibt0tjvea14rbip_R20260630T080000",
+   "conferenceUrl": "https://meet.google.com/ewx-ppjw-rcd",
+   "start": {
+    "dateTime": "2026-09-01T10:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-01T10:15:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person10@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person11@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person12@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person13@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person14@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "uaau4sfor9jso3k27k69g5srqh_20260831T120000Z",
+   "summary": "1 on 1 + weekly catch up",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "uaau4sfor9jso3k27k69g5srqh_R20260629T120000",
+   "conferenceUrl": "https://meet.google.com/opo-ehzb-eyo",
+   "start": {
+    "dateTime": "2026-09-01T12:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-01T13:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person10@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "4t1f92las0s37ivki1bm9kudha_20260901T103000Z",
+   "summary": "Lunch",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "4t1f92las0s37ivki1bm9kudha",
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-01T13:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-01T14:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": []
+  },
+  {
+   "id": "4d4pt04fdhu4vgrrr9srvmjs17_20260901T123000Z",
+   "summary": "FOS - Office hours",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "4d4pt04fdhu4vgrrr9srvmjs17_R20260630T123000",
+   "conferenceUrl": "https://meet.google.com/inh-vzwp-zww",
+   "start": {
+    "dateTime": "2026-09-01T14:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-01T15:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person10@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person11@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person12@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person13@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person14@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "1eeen14v2tc4pkej7n4vtge5dj",
+   "summary": "[Live stream] Decoding DH - Q2 2026",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": null,
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-01T15:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-01T16:15:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person15@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "0ea5c9c1ppvec4l0gmft237evn",
+   "summary": "Auto-replacement IFx Peya - DH",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": null,
+   "conferenceUrl": "https://meet.google.com/cei-mkyt-hhi",
+   "start": {
+    "dateTime": "2026-09-01T16:30:00+02:00",
+    "timeZone": "America/Argentina/Buenos_Aires"
+   },
+   "end": {
+    "dateTime": "2026-09-01T17:00:00+02:00",
+    "timeZone": "America/Argentina/Buenos_Aires"
+   },
+   "organizer": {
+    "email": "person16@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person17@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person18@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person16@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person19@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "7ggljrpefnchl6a90fji1lqimc",
+   "summary": "Focus time",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "FOCUS_TIME",
+   "recurringEventId": null,
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-01T17:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-01T18:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": []
+  },
+  {
+   "id": "5hsm7jhfdav4cg5tp86b1ai4ot_20260902T073000Z",
+   "summary": "Product + Analytics Connect",
+   "description": "[redacted]",
+   "location": "Berlin | FSA-1-A-700_meeting (8)",
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "5hsm7jhfdav4cg5tp86b1ai4ot",
+   "conferenceUrl": "https://meet.google.com/ktk-zvku-szd",
+   "start": {
+    "dateTime": "2026-09-02T09:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-02T10:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person20@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person21@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person20@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person04@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person03@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person22@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person09@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "room-f507d2@resource.calendar.google.com",
+     "displayName": "Berlin | FSA-1-A-700_meeting (8)",
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": true
+    }
+   ]
+  },
+  {
+   "id": "qsr9ofgn6dd6dqd6ip7ir5gthe_20260902T081500Z",
+   "summary": "Shops Science weekly meeting",
+   "description": "[redacted]",
+   "location": "Berlin | FSA-1-A-702_meeting (4)",
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "qsr9ofgn6dd6dqd6ip7ir5gthe_R20260701T081500",
+   "conferenceUrl": "https://meet.google.com/kqz-zsev-hfq",
+   "start": {
+    "dateTime": "2026-09-02T10:15:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-02T11:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person10@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "room-2f0a4c@resource.calendar.google.com",
+     "displayName": "Berlin | FSA-1-A-702_meeting (4)",
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": true
+    },
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person11@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person12@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person13@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person23@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person14@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "5i4386shj3r42sk7asouos9k4r_20260902T083000Z",
+   "summary": "UX Research Office hours (Quick Commerce)",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "5i4386shj3r42sk7asouos9k4r_R20260715T083000",
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-02T10:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-02T11:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person24@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "4t1f92las0s37ivki1bm9kudha_20260902T103000Z",
+   "summary": "Lunch",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "4t1f92las0s37ivki1bm9kudha",
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-02T13:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-02T14:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": []
+  },
+  {
+   "id": "0r2pkk3bnratlc2k6she99hda5_20260902T120000Z",
+   "summary": "Talabat <> Shops Fulfillment [biweekly]",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "0r2pkk3bnratlc2k6she99hda5_R20260415T120000",
+   "conferenceUrl": "https://meet.google.com/pae-cixm-ous",
+   "start": {
+    "dateTime": "2026-09-02T14:00:00+02:00",
+    "timeZone": "Asia/Dubai"
+   },
+   "end": {
+    "dateTime": "2026-09-02T14:30:00+02:00",
+    "timeZone": "Asia/Dubai"
+   },
+   "organizer": {
+    "email": "person02@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person25@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "tentative",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person26@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person05@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person03@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person27@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person28@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person04@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person29@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person08@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person30@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person31@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person32@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "tentative",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person09@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person20@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "4mhfghns3ansps77vubm64o4m4",
+   "summary": "QS Data Science Vision/Strategy ",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": null,
+   "conferenceUrl": "https://meet.google.com/uqa-yxrj-xhz",
+   "start": {
+    "dateTime": "2026-09-02T15:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-02T16:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": [
+    {
+     "email": "person33@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": true,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "4qpat5s31cctdjiku67blohk00_20260902T140000Z",
+   "summary": "FOS - Open Hour",
+   "description": null,
+   "location": "Berlin | FSA-1-A-701_meeting (4)",
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "4qpat5s31cctdjiku67blohk00_R20260701T140000",
+   "conferenceUrl": "https://meet.google.com/ymy-yqqr-mtv",
+   "start": {
+    "dateTime": "2026-09-02T16:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-02T17:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person10@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person11@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person12@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person13@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person14@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "room-23a767@resource.calendar.google.com",
+     "displayName": "Berlin | FSA-1-A-701_meeting (4)",
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": true
+    }
+   ]
+  },
+  {
+   "id": "6u5tqshtk7slan64e1d46sef9m",
+   "summary": "gym",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": null,
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-02T17:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-02T18:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": []
+  },
+  {
+   "id": "57j0197945b74s2clmib5sprk3",
+   "summary": "bUrgeramt",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": null,
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-03T09:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-03T11:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": []
+  },
+  {
+   "id": "11rgb55o1slibt0tjvea14rbip_20260903T080000Z",
+   "summary": "Shops Science standup",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "11rgb55o1slibt0tjvea14rbip_R20260630T080000",
+   "conferenceUrl": "https://meet.google.com/ewx-ppjw-rcd",
+   "start": {
+    "dateTime": "2026-09-03T10:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-03T10:15:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person10@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person11@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person12@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person13@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person14@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "q9ol6aef3dnvi3rt0q7onk596n_20260903T083000Z",
+   "summary": "Pandora <> Shops Fulfillment [biweekly]",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "q9ol6aef3dnvi3rt0q7onk596n_R20260820T083000",
+   "conferenceUrl": "https://meet.google.com/bik-movg-xdw",
+   "start": {
+    "dateTime": "2026-09-03T10:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-03T11:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": [
+    {
+     "email": "person34@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person04@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person35@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person36@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person03@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person37@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person38@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person39@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person05@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person40@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person41@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person32@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person42@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person43@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": true,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person09@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person44@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person45@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "1dd3i7gvkiqa5q4jefrug6rk72",
+   "summary": "Replacements in Pandora",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": null,
+   "conferenceUrl": "https://meet.google.com/vxm-jrxz-ckn",
+   "start": {
+    "dateTime": "2026-09-03T11:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-03T11:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person09@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person09@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person07@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person39@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person46@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person05@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person43@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person47@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "50mg2eatiuui6pu8itdosjjp1q_20260903T093000Z",
+   "summary": "Partner Tools Domain - QC OS Weekly",
+   "description": "[redacted]",
+   "location": "Berlin | FSA-1-A-708_meeting (4)",
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "50mg2eatiuui6pu8itdosjjp1q_R20260903T093000",
+   "conferenceUrl": "https://meet.google.com/ozx-bnkr-hjs",
+   "start": {
+    "dateTime": "2026-09-03T11:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-03T12:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person48@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "room-d850fc@resource.calendar.google.com",
+     "displayName": "Berlin | FSA-1-A-708_meeting (4)",
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": true
+    },
+    {
+     "email": "room-c9c00a@resource.calendar.google.com",
+     "displayName": "Berlin | FSA-1-B-703_meeting (8)",
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": true
+    },
+    {
+     "email": "person49@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person50@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person51@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person52@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person53@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person54@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person55@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person20@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person56@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person57@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person58@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person59@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person60@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person61@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person62@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person12@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person63@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person05@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person64@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person65@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person66@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person67@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person21@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person68@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person69@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person70@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person07@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person71@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person72@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person04@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person73@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person08@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person32@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person09@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person74@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person11@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person75@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person30@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person76@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person77@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person03@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person78@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person79@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person80@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person81@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person82@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person83@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person84@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person06@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person85@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person86@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person87@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person13@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person88@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person89@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person90@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person22@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person91@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person92@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person93@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person94@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person95@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person96@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person97@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person98@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person99@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person100@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person101@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person102@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person103@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "4t1f92las0s37ivki1bm9kudha_20260903T103000Z",
+   "summary": "Lunch",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "4t1f92las0s37ivki1bm9kudha",
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-03T12:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-03T13:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": []
+  },
+  {
+   "id": "3bdkmk7tu7epuet2jkflvi0o76_20260903T120000Z",
+   "summary": "Daniel / person02",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "3bdkmk7tu7epuet2jkflvi0o76",
+   "conferenceUrl": "https://meet.google.com/gjy-wnbc-vcb",
+   "start": {
+    "dateTime": "2026-09-03T14:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-03T14:40:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person02@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "04bbijpfenq12oi7il0s35dt6a_20260903T123000Z",
+   "summary": "Item First Weekly Sync w Platforms ",
+   "description": "[redacted]",
+   "location": "Berlin | FSA-2-C-706_meeting (10)",
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "04bbijpfenq12oi7il0s35dt6a_R20260903T123000",
+   "conferenceUrl": "https://meet.google.com/ixo-cvrv-pzu",
+   "start": {
+    "dateTime": "2026-09-03T14:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-03T15:15:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person104@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person17@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person105@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person106@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person107@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person108@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person109@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person110@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person111@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person19@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person112@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person113@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person114@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person115@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person116@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person117@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person118@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person119@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person120@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person121@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person122@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person59@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person123@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person124@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person125@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person126@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person127@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person128@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person16@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person129@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person130@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person104@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person18@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person131@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person132@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person133@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person134@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person135@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person136@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person137@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person39@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person138@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person139@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person140@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person141@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person142@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person143@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person144@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person145@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person146@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person147@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person148@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "room-604153@resource.calendar.google.com",
+     "displayName": "Berlin | FSA-2-C-706_meeting (10)",
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": true
+    },
+    {
+     "email": "person149@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person150@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person151@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person152@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person153@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person51@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person154@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person155@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person156@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "2n42k3aegmsmgig0t2ktt1ib9k_20260903T130000Z",
+   "summary": "Hunger Station: Shops Fulfilment | Biweekly",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "2n42k3aegmsmgig0t2ktt1ib9k",
+   "conferenceUrl": "https://meet.google.com/enj-mujz-yso",
+   "start": {
+    "dateTime": "2026-09-03T15:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-03T15:45:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person09@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person04@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person151@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person05@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person153@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person157@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person32@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "tentative",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person158@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person159@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person160@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person03@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person133@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "tentative",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person161@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person09@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "11rgb55o1slibt0tjvea14rbip_20260904T080000Z",
+   "summary": "Shops Science standup",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "11rgb55o1slibt0tjvea14rbip_R20260630T080000",
+   "conferenceUrl": "https://meet.google.com/ewx-ppjw-rcd",
+   "start": {
+    "dateTime": "2026-09-04T10:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-04T10:15:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person10@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person11@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person12@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person13@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person14@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "3jq0jpdrt1us5vghr8gm35l6jq_20260904T090000Z",
+   "summary": "[Focus and Learning Hours - Partner Tools Domain] ",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "3jq0jpdrt1us5vghr8gm35l6jq_R20260828T090000",
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-04T11:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-04T17:05:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person02@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person04@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person03@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person05@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person06@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person07@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person08@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person09@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "60g6669t2kmcs3a7muavg6l39g_20260904T100000Z",
+   "summary": "[pre-checkout item replacement] [Pandora] Discovery Synch",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "60g6669t2kmcs3a7muavg6l39g_R20260717T100000",
+   "conferenceUrl": "https://meet.google.com/mjh-hvkv-dcy",
+   "start": {
+    "dateTime": "2026-09-04T12:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-04T12:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person47@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person47@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person162@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person163@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person164@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person165@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person09@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person166@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person34@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person35@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person38@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person41@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person167@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person39@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person168@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person169@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person40@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person170@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person43@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person171@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "4t1f92las0s37ivki1bm9kudha_20260904T103000Z",
+   "summary": "Lunch",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "4t1f92las0s37ivki1bm9kudha",
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-04T12:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-04T13:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": []
+  },
+  {
+   "id": "29ekrn78itlcrsbb7u2no5e0hv",
+   "summary": "Suggestion Engine - 2027+ Strategy",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": null,
+   "conferenceUrl": "https://meet.google.com/nhq-ockt-zsz",
+   "start": {
+    "dateTime": "2026-09-04T13:45:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-04T14:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": [
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person32@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "3i8dtuoidnf61u735occuqd6d6",
+   "summary": "gym",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": null,
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-04T15:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-04T16:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": []
+  },
+  {
+   "id": "2mgp5uhu34ecu0dn99evuqt4gs",
+   "summary": "Delivery Hero's 15th Anniversary Party | Save the Date",
+   "description": "[redacted]",
+   "location": "Palais in der Kulturbrauerei",
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": null,
+   "conferenceUrl": "https://meet.google.com/kig-fpnj-gri",
+   "start": {
+    "dateTime": "2026-09-04T17:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-05T01:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person01@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "7603c5t9bdmqkobm0nt1f7aiuf_20260907T090000Z",
+   "summary": "Shops Science Sprint plan",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "7603c5t9bdmqkobm0nt1f7aiuf_R20260824T090000",
+   "conferenceUrl": "https://meet.google.com/kke-hygu-yit",
+   "start": {
+    "dateTime": "2026-09-07T11:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-07T12:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person10@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person11@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person12@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person13@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person14@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "4t1f92las0s37ivki1bm9kudha_20260907T103000Z",
+   "summary": "Lunch",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "4t1f92las0s37ivki1bm9kudha",
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-07T12:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-07T13:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": []
+  },
+  {
+   "id": "30nus79etfphfgontda0hn53vt_20260907T120000Z",
+   "summary": "QC Item First sync (weekly)",
+   "description": "[redacted]",
+   "location": "Berlin | FSA-1-B-703_meeting (8)",
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "30nus79etfphfgontda0hn53vt_R20260907T120000",
+   "conferenceUrl": "https://meet.google.com/szg-mzhz-xcz",
+   "start": {
+    "dateTime": "2026-09-07T14:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-07T14:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person104@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person123@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person140@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person127@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person147@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person114@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person115@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person142@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person144@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "tentative",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person104@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person143@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person131@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person141@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person139@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person145@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person146@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person121@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person150@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person154@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person51@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person172@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person156@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person31@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "room-c9c00a@resource.calendar.google.com",
+     "displayName": "Berlin | FSA-1-B-703_meeting (8)",
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": true
+    }
+   ]
+  },
+  {
+   "id": "4gi4qjtlkn7to3qtmpa45l7mbd_20260907T140000Z",
+   "summary": "Product Weekly - Partner Tools",
+   "description": "[redacted]",
+   "location": "Berlin | FSA-1-C-707_meeting (8)",
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "4gi4qjtlkn7to3qtmpa45l7mbd_R20260831T140000",
+   "conferenceUrl": "https://meet.google.com/hjj-nfhj-kfg",
+   "start": {
+    "dateTime": "2026-09-07T16:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-07T16:25:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person02@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person09@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person04@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person03@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "room-2f0a4c@resource.calendar.google.com",
+     "displayName": "Berlin | FSA-1-A-702_meeting (4)",
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": true
+    },
+    {
+     "email": "room-5c6633@resource.calendar.google.com",
+     "displayName": "Berlin | FSA-1-C-707_meeting (8)",
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": true
+    }
+   ]
+  },
+  {
+   "id": "24f0pmj9bpka1lajgiak1cvcnb_20260908T070000Z",
+   "summary": "[Deep Work Block - Partner tools domain] ",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "24f0pmj9bpka1lajgiak1cvcnb_R20260804T070000",
+   "conferenceUrl": null,
+   "start": {
+    "dateTime": "2026-09-08T09:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-08T11:50:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person02@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person02@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person03@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "declined",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person04@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person05@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person06@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person07@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person08@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person09@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "needsAction",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "11rgb55o1slibt0tjvea14rbip_20260908T080000Z",
+   "summary": "Shops Science standup",
+   "description": null,
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": "11rgb55o1slibt0tjvea14rbip_R20260630T080000",
+   "conferenceUrl": "https://meet.google.com/ewx-ppjw-rcd",
+   "start": {
+    "dateTime": "2026-09-08T10:00:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-08T10:15:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "person10@deliveryhero.com",
+    "self": null
+   },
+   "attendees": [
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person11@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person12@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person13@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "person14@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  },
+  {
+   "id": "7fu65bh55q84fl340koppfk9li",
+   "summary": "LLM as a Judge for Local Shops",
+   "description": "[redacted]",
+   "location": null,
+   "status": "confirmed",
+   "eventType": "DEFAULT",
+   "recurringEventId": null,
+   "conferenceUrl": "https://meet.google.com/qxs-wxfq-pdx",
+   "start": {
+    "dateTime": "2026-09-08T10:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "end": {
+    "dateTime": "2026-09-08T11:30:00+02:00",
+    "timeZone": "Europe/Berlin"
+   },
+   "organizer": {
+    "email": "daniil.zherenkov@deliveryhero.com",
+    "self": true
+   },
+   "attendees": [
+    {
+     "email": "person10@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    },
+    {
+     "email": "daniil.zherenkov@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": true,
+     "self": true,
+     "resource": null
+    },
+    {
+     "email": "person173@deliveryhero.com",
+     "displayName": null,
+     "responseStatus": "accepted",
+     "organizer": null,
+     "self": null,
+     "resource": null
+    }
+   ]
+  }
+ ]
+}
