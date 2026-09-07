@@ -16,7 +16,7 @@ import { join } from 'node:path'
  *          verification path runs unmodified.
  */
 
-const UNIT_SPECS = /(auth|import|calendar|oauth)\.spec\.ts/
+const UNIT_SPECS = /(auth|import|calendar|oauth|ics)\.spec\.ts/
 
 export default defineConfig({
   testDir: './test/e2e',

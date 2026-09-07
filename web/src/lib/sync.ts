@@ -150,6 +150,30 @@ async function upsertMeeting(
 }
 
 /**
+ * Write normalised meetings into the database.
+ *
+ * Shared by both calendar sources - the Google API path and the .ics feed - so
+ * dedupe, attendee handling and the "never clobber the user's writing" rule
+ * exist in exactly one place.
+ */
+export async function upsertCalendarMeetings(
+  ownerEmail: string,
+  meetings: NormalisedMeeting[],
+): Promise<{ created: number; updated: number; peopleCreated: number }> {
+  await ensureSelfPerson(ownerEmail)
+  let created = 0
+  let updated = 0
+  let peopleCreated = 0
+  for (const meeting of meetings) {
+    const res = await upsertMeeting(ownerEmail, meeting)
+    if (res.created) created++
+    else updated++
+    peopleCreated += res.peopleCreated
+  }
+  return { created, updated, peopleCreated }
+}
+
+/**
  * Pull the calendar and write it in.
  *
  * Uses the stored sync token when present, falling back to a full window if
@@ -183,20 +207,11 @@ export async function syncCalendar(ownerEmail: string): Promise<SyncResult> {
     })
 
     const meetings = normaliseEvents(result.events)
-
-    let created = 0
-    let updated = 0
-    let peopleCreated = 0
-    for (const meeting of meetings) {
-      const res = await upsertMeeting(ownerEmail, meeting)
-      if (res.created) created++
-      else updated++
-      peopleCreated += res.peopleCreated
-    }
+    const written = await upsertCalendarMeetings(ownerEmail, meetings)
 
     await updateSyncState({ ownerEmail, syncToken: result.syncToken, error: null })
 
-    return { created, updated, peopleCreated, didFullResync: result.didFullResync }
+    return { ...written, didFullResync: result.didFullResync }
   } catch (err) {
     const message =
       err instanceof GoogleApiError ? `Calendar API error (${err.status})` : 'Sync failed'

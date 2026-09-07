@@ -104,7 +104,7 @@ const next = spawn('npx', ['next', 'dev', '-p', String(NEXT_PORT)], {
 
 // 3. Proxy that stamps every request with a signed Access assertion, the way
 //    Cloudflare would in front of the deployed app.
-createServer((clientReq, clientRes) => {
+const proxy = createServer((clientReq, clientRes) => {
   const proxied = httpRequest(
     {
       hostname: '127.0.0.1',
@@ -113,7 +113,11 @@ createServer((clientReq, clientRes) => {
       method: clientReq.method,
       headers: {
         ...clientReq.headers,
-        host: `127.0.0.1:${NEXT_PORT}`,
+        // Keep the host the BROWSER used, not the upstream port. Next validates
+        // Server Action requests against host/origin, so rewriting it makes
+        // every action fail with "Invalid Server Actions request". Dev-proxy
+        // only; production has no proxy in front of the app.
+        host: clientReq.headers.host ?? `localhost:${PROXY_PORT}`,
         'cf-access-jwt-assertion': mintToken(DEV_USER),
       },
     },
@@ -128,7 +132,35 @@ createServer((clientReq, clientRes) => {
     clientRes.end('Waiting for next dev to start...')
   })
   clientReq.pipe(proxied)
-}).listen(PROXY_PORT, () => {
+})
+
+// Next's HMR runs over a WebSocket. A plain HTTP proxy drops the upgrade
+// handshake, and without HMR the client bundle never fully hydrates - buttons
+// render but their onChange/onClick never fire, which looks exactly like an
+// application bug. Forward upgrades explicitly.
+proxy.on('upgrade', (req, socket, head) => {
+  const upstream = httpRequest({
+    hostname: '127.0.0.1',
+    port: NEXT_PORT,
+    path: req.url,
+    method: req.method,
+    headers: { ...req.headers, host: `127.0.0.1:${NEXT_PORT}` },
+  })
+  upstream.on('upgrade', (upstreamRes, upstreamSocket, upstreamHead) => {
+    const headers = Object.entries(upstreamRes.headers)
+      .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`)
+      .join('\r\n')
+    socket.write(`HTTP/1.1 101 Switching Protocols\r\n${headers}\r\n\r\n`)
+    if (upstreamHead?.length) socket.unshift(upstreamHead)
+    upstreamSocket.pipe(socket)
+    socket.pipe(upstreamSocket)
+  })
+  upstream.on('error', () => socket.destroy())
+  if (head?.length) upstream.write(head)
+  upstream.end()
+})
+
+proxy.listen(PROXY_PORT, () => {
   console.log(`\n  Fellow 2 dev: http://localhost:${PROXY_PORT}  (signed in as ${DEV_USER})\n`)
 })
 

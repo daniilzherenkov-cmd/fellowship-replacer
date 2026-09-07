@@ -3,6 +3,8 @@ import { requireIdentity } from '@/lib/auth'
 import { googleConfigured } from '@/lib/google-oauth'
 import { getConnection } from '@/lib/google-store'
 import { CalendarConnection } from '@/components/settings/CalendarConnection'
+import { IcsConnection } from '@/components/settings/IcsConnection'
+import { getIcsConnection } from '@/lib/ics-store'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,7 +17,10 @@ export default async function SettingsPage({
   const params = await searchParams
 
   const configured = googleConfigured()
-  const connection = configured ? await getConnection(identity.email) : null
+  const [connection, ics] = await Promise.all([
+    configured ? getConnection(identity.email) : Promise.resolve(null),
+    getIcsConnection(identity.email),
+  ])
 
   return (
     <div className="mx-auto w-full" style={{ maxWidth: 'var(--note-max-width)', padding: 32 }}>
@@ -29,6 +34,12 @@ export default async function SettingsPage({
         lastSyncError={connection?.lastSyncError ?? null}
         status={params.google ?? null}
         reason={params.reason ?? null}
+      />
+
+      <IcsConnection
+        connected={ics.connected}
+        maskedUrl={ics.maskedUrl}
+        lastSyncAt={ics.lastSyncAt}
       />
 
       <section className="mt-8">

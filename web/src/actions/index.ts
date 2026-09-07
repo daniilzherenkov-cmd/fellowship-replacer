@@ -125,6 +125,48 @@ export async function deleteActionItemAction(
 
 /* ----------------------------- calendar ---------------------------- */
 
+/**
+ * Connect a Google Calendar secret .ics address.
+ *
+ * Validated by actually fetching it, so a wrong or truncated address fails
+ * immediately with a useful message rather than being saved and silently never
+ * syncing.
+ */
+export async function connectIcsAction(
+  url: string,
+): Promise<{ ok: boolean; error?: string; created?: number; totalEvents?: number }> {
+  const owner = await me()
+  const { syncIcsCalendar, saveIcsUrl } = await import('@/lib/ics-store')
+
+  const trial = await syncIcsCalendar(owner, url)
+  if (!trial.ok) return { ok: false, error: trial.error }
+
+  await saveIcsUrl(owner, url)
+  revalidatePath('/calendar')
+  revalidatePath('/meetings')
+  revalidatePath('/people')
+  revalidatePath('/settings')
+  return { ok: true, created: trial.created, totalEvents: trial.totalEvents }
+}
+
+export async function syncIcsAction(): Promise<{ ok: boolean; error?: string; created?: number }> {
+  const owner = await me()
+  const { syncIcsCalendar } = await import('@/lib/ics-store')
+  const result = await syncIcsCalendar(owner)
+  revalidatePath('/calendar')
+  revalidatePath('/meetings')
+  revalidatePath('/people')
+  revalidatePath('/settings')
+  return result.ok ? { ok: true, created: result.created } : { ok: false, error: result.error }
+}
+
+export async function disconnectIcsAction(): Promise<void> {
+  const owner = await me()
+  const { removeIcsUrl } = await import('@/lib/ics-store')
+  await removeIcsUrl(owner)
+  revalidatePath('/settings')
+}
+
 export async function syncCalendarAction(): Promise<{ ok: boolean; error?: string }> {
   const owner = await me()
   const { syncCalendar } = await import('@/lib/sync')
