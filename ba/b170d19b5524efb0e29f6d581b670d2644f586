@@ -1,0 +1,28 @@
+web/playwright.config.ts
+  s_8f62a27eb85283::t_b0f0928f5db0cf 19
+web/scripts/dev-with-auth.mjs
+  s_8f62a27eb85283::t_03b487b177a9d0 130-136,138-141,145-148,179-183
+  s_8f62a27eb85283::t_890e49a2a92249 184
+web/test/e2e/weekgrid.spec.ts
+  s_8f62a27eb85283::t_5ce6a43b052e0c 1-149
+web/src/components/calendar/WeekGrid.tsx
+  s_8f62a27eb85283::t_1e5633d1880e3a 4,6-18,21,26-31,53,57-74,78-102,105-107,117-127,144,146-153,163-169,181-209,212-371,378-381,384-385,388,395-399,407-411,413-414,418-422,425-428,431-438
+  s_8f62a27eb85283::t_8ffeff8fc8ac7c 75-77,103-104,108,110-116,128-143,145,154,156,159-161,392,415-416
+  s_8f62a27eb85283::t_af6c553af947b6 109,155,157-158,162
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "bab170d19b5524efb0e29f6d581b670d2644f586",
+  "prompts": {},
+  "sessions": {
+    "s_8f62a27eb85283": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "124e0444-d600-4956-87b6-39306fc50554",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
