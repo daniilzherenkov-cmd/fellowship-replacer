@@ -1,0 +1,19 @@
+web/src/lib/auth.ts
+  s_8f62a27eb85283::t_84dad9f32a03a9 45-60,139-144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "61272081c98eca0b3f1bc5c8f96d9f888f99bfbf",
+  "prompts": {},
+  "sessions": {
+    "s_8f62a27eb85283": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "124e0444-d600-4956-87b6-39306fc50554",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
