@@ -14,18 +14,11 @@ const nextConfig: NextConfig = {
   // live at the repo root.
   agentRules: false,
 
-  // better-sqlite3 is a TEST-ONLY backend (lib/db.ts uses it when DB_HOST is
-  // unset). It is a native module whose .node binary is produced by an install
-  // script, so a production image built with `npm ci --ignore-scripts` ships the
-  // package WITHOUT its binary and the server dies at boot - the container never
-  // passes readiness and the edge reports "no healthy upstream".
-  //
-  // Excluding it from the trace keeps it out of the standalone bundle entirely.
-  // The dynamic import in makeSqlite() is only reached in local/test runs, where
-  // node_modules is present anyway.
-  outputFileTracingExcludes: {
-    '*': ['node_modules/better-sqlite3/**', 'node_modules/bindings/**'],
-  },
+  // NOTE: better-sqlite3 (test-only, native) is kept out of the production image
+  // by `npm prune --omit=dev` in the Dockerfile, NOT by outputFileTracingExcludes.
+  // Excluding it from the trace leaves a DANGLING SYMLINK in .next/standalone
+  // that Docker's COPY follows and fails on. Pruning removes the package before
+  // tracing runs, so no broken link is ever created.
 }
 
 export default nextConfig

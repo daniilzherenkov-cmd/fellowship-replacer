@@ -44,7 +44,21 @@ function useSqlite(): boolean {
 }
 
 async function makeSqlite(): Promise<Db> {
-  const { default: Database } = await import('better-sqlite3')
+  // Resolved at runtime so Next's static tracer cannot follow it. A literal
+  // `import('better-sqlite3')` gets traced into .next/standalone WITHOUT its
+  // compiled .node binary (the Dockerfile installs with --ignore-scripts), and
+  // the import then throws at boot on Alpine - the pod never becomes ready and
+  // the edge serves "no healthy upstream". This module is test-only; production
+  // uses MySQL and must never load it.
+  const sqliteModule = 'better-sqlite3'
+  const { default: Database } = (await import(/* webpackIgnore: true */ sqliteModule)) as {
+    default: new (path: string) => {
+      pragma(s: string): void
+      prepare(s: string): { all(...a: unknown[]): unknown; run(...a: unknown[]): unknown; get(...a: unknown[]): unknown }
+      exec(s: string): void
+      close(): void
+    }
+  }
   const { mkdirSync } = await import('node:fs')
   const { dirname, isAbsolute, resolve } = await import('node:path')
 
