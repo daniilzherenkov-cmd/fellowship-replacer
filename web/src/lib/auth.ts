@@ -42,6 +42,22 @@ interface Jwk {
 }
 
 let jwksCache: { keys: Jwk[]; fetchedAt: number } | null = null
+let warnedMissingAudience = false
+
+/** Log once, not per request. */
+function warnMissingAudienceOnce(): void {
+  if (warnedMissingAudience) return
+  warnedMissingAudience = true
+  console.warn(
+    JSON.stringify({
+      level: 'warn',
+      msg:
+        'CF_ACCESS_AUD is not set. Access tokens issued for OTHER apps on this ' +
+        'Cloudflare Access instance will be accepted. Set it to this app\'s ' +
+        'Access application audience tag.',
+    }),
+  )
+}
 
 function issuer(): string {
   return process.env.CF_ACCESS_ISSUER?.replace(/\/$/, '') || DEFAULT_ISSUER
@@ -120,6 +136,12 @@ export async function verifyAccessJwt(token: string): Promise<AccessIdentity | n
     if (expectedAud) {
       const aud = Array.isArray(payload.aud) ? payload.aud : [payload.aud]
       if (!aud.includes(expectedAud)) return null
+    } else if (process.env.NODE_ENV === 'production') {
+      // Every app on this platform sits behind the SAME Access instance, so
+      // without an audience check a token minted for someone else's app would
+      // authenticate here. Signature/issuer/expiry still hold, but this is
+      // weaker than intended - make it visible rather than silently degraded.
+      warnMissingAudienceOnce()
     }
 
     if (!payload.email || !payload.sub) return null
