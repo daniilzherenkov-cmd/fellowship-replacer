@@ -29,13 +29,36 @@ export interface Db {
 
 let instance: Db | null = null
 
-/** True when running against SQLite (tests, local dev without MySQL). */
+/**
+ * True when running against SQLite (tests, local dev without MySQL).
+ *
+ * Requires an EXPLICIT opt-in via FELLOW_DB_DRIVER. It used to fall back to
+ * SQLite whenever DB_HOST was unset, which is dangerous in a container: a
+ * missing DB_HOST would silently start an in-memory database that looks healthy
+ * and quietly loses every write, instead of failing loudly. better-sqlite3 is
+ * also excluded from the production bundle (see next.config.ts), so attempting
+ * it there would throw at import anyway.
+ */
 function useSqlite(): boolean {
-  return process.env.FELLOW_DB_DRIVER === 'sqlite' || !process.env.DB_HOST
+  return process.env.FELLOW_DB_DRIVER === 'sqlite'
 }
 
 async function makeSqlite(): Promise<Db> {
-  const { default: Database } = await import('better-sqlite3')
+  // Resolved at runtime so Next's static tracer cannot follow it. A literal
+  // `import('better-sqlite3')` gets traced into .next/standalone WITHOUT its
+  // compiled .node binary (the Dockerfile installs with --ignore-scripts), and
+  // the import then throws at boot on Alpine - the pod never becomes ready and
+  // the edge serves "no healthy upstream". This module is test-only; production
+  // uses MySQL and must never load it.
+  const sqliteModule = 'better-sqlite3'
+  const { default: Database } = (await import(/* webpackIgnore: true */ sqliteModule)) as {
+    default: new (path: string) => {
+      pragma(s: string): void
+      prepare(s: string): { all(...a: unknown[]): unknown; run(...a: unknown[]): unknown; get(...a: unknown[]): unknown }
+      exec(s: string): void
+      close(): void
+    }
+  }
   const { mkdirSync } = await import('node:fs')
   const { dirname, isAbsolute, resolve } = await import('node:path')
 

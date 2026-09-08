@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
   // project's own CLAUDE.md for any work inside web/. The real instructions
   // live at the repo root.
   agentRules: false,
+
+  // NOTE: better-sqlite3 (test-only, native) is kept out of the production image
+  // by `npm prune --omit=dev` in the Dockerfile, NOT by outputFileTracingExcludes.
+  // Excluding it from the trace leaves a DANGLING SYMLINK in .next/standalone
+  // that Docker's COPY follows and fails on. Pruning removes the package before
+  // tracing runs, so no broken link is ever created.
 }
 
 export default nextConfig
