@@ -1,0 +1,21 @@
+web/src/lib/db.ts
+  s_8f62a27eb85283::t_b17f130c6c21ce 32-41,43
+web/next.config.ts
+  s_8f62a27eb85283::t_5ee88c9ce89929 16-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "d0632346db07f9c99ef76399bda1fdef9773dd51",
+  "prompts": {},
+  "sessions": {
+    "s_8f62a27eb85283": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "124e0444-d600-4956-87b6-39306fc50554",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}

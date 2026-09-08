@@ -1,0 +1,23 @@
+web/Dockerfile
+  s_8f62a27eb85283::t_c3880e4309a797 1-55
+web/src/lib/db.ts
+  s_8f62a27eb85283::t_3f71b579b9fc9e 47-61
+web/next.config.ts
+  s_8f62a27eb85283::t_36a52f2c10a353 17-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "1f9624c5cf9f5a2283fc0b7ae5924f02d4068770",
+  "prompts": {},
+  "sessions": {
+    "s_8f62a27eb85283": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "124e0444-d600-4956-87b6-39306fc50554",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
