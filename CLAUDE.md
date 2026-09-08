@@ -1,9 +1,31 @@
 # Fellow 2 — Project Context (read me first)
 
-## What this is
-A **native macOS app** that replaces the meeting-management layer of **Fellow** (fellow.app → now fellow.ai), which Delivery Hero pays ~$30k/mo for. Built by Daniel ("Danya") Zherenkov at the request of **Milena** (QC lead) — a high-visibility internal initiative. Codename **"Fellow 2"**.
+> ## ⚠️ THE APP IS NOW A WEB APP, IN `web/`
+>
+> **Working on the app? Read [`web/README.md`](web/README.md) first**, then
+> `cd web && npm install && npm run dev` (opens on :3000, auto signed-in).
+>
+> Everything below the "Build / run" heading describes the **old SwiftUI build**
+> and is retained only as background. `Fellow2/` is the behavioural
+> specification - excellent for interaction detail, no longer developed.
+>
+> Three rules that are easy to get wrong in the web app, all with real incident
+> history behind them:
+> - **Never** add a `?? process.env.DEV_USER_EMAIL` auth fallback. Fail closed.
+> - **Every** query filters on `owner_email`. There is no unscoped read path.
+> - Native modules must not reach the production bundle (see the README's
+>   Deployment section - this took the app down twice).
 
-**MVP scope (v1): local-only, single-user, NO AI/transcription.** Milena writes notes by hand. The value is a faithful, fast, on-device Fellow-style notes/1:1/action-item tool at **$0/seat**.
+## What this is
+A web app that replaces the meeting-management layer of **Fellow** (fellow.app → now fellow.ai), which Delivery Hero pays ~$30k/mo for. **It was originally built as a native macOS app; that pivot is the single biggest thing to know about this repo.** Built by Daniel ("Danya") Zherenkov at the request of **Milena** (QC lead) — a high-visibility internal initiative. Codename **"Fellow 2"**.
+
+**MVP scope (v1): single-user, NO AI/transcription.** Milena writes notes by hand. The value is a faithful, fast Fellow-style notes/1:1/action-item tool at **$0/seat**.
+
+⚠️ **No longer "local-only / on-device".** Data now lives in a server-side
+database, which reverses the reasoning that made an InfoSec review unnecessary.
+1:1 notes are HR-adjacent, and the current host admits any company SSO account
+to every app - so per-user scoping in the app is the only barrier. Keep the
+deployment a **prototype** until a properly access-controlled backend is agreed.
 
 ## The four must-have features (all implemented in the skeleton)
 1. **Per-person 1:1 history** — each person has a persistent "Stream" of past 1:1s.
@@ -12,8 +34,9 @@ A **native macOS app** that replaces the meeting-management layer of **Fellow** 
 4. **Fellow-grade native UX** — this is the priority; match Fellow's look/behavior closely.
 
 ## Repo layout
-- `docs/` — research + specs. Start at [docs/00-README.md](docs/00-README.md). Key ones: `02` design brief, `03` tech, `04` MVP spec, `06` setup/run, `07` Google Calendar + real-time sync.
-- `Fellow2/` — the SwiftUI app source (models, services, `Views/`, `DesignSystem.swift`).
+- **`web/` — the live application** (Next.js). Start at [web/README.md](web/README.md).
+- `docs/` — research + specs. Start at [docs/00-README.md](docs/00-README.md), which flags what is superseded. Key ones: `02` design brief, `04` MVP spec, `11` Fellow export schema, `12` Google OAuth request.
+- `Fellow2/` — the SwiftUI source, kept as the **behavioural spec**. Not maintained.
 - `Fellow2 - Design/` — a **React/Tailwind prototype** exported from Figma Make (the visual reference; `pnpm i && pnpm dev` to view). NOT the shippable app.
 - `project.yml` — **XcodeGen** spec → generates `Fellow2.xcodeproj`.
 - `Package.swift` — only a lightweight syntax harness (see Build below).

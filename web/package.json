@@ -9,7 +9,6 @@
     "start": "node .next/standalone/server.js",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "import:fellow": "node --experimental-strip-types src/import/cli.ts",
     "postbuild": "rm -rf .next/standalone/.next/static .next/standalone/sql && cp -r .next/static .next/standalone/.next/static && cp -r sql .next/standalone/sql && mkdir -p .next/standalone/public && (cp -r public/. .next/standalone/public/ 2>/dev/null || true)",
     "dev:raw": "next dev -p 3000"
   },
