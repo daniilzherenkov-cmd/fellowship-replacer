@@ -1,0 +1,35 @@
+{
+  "name": "fellow2-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev-with-auth.mjs",
+    "build": "next build && npm run postbuild",
+    "start": "node .next/standalone/server.js",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "import:fellow": "node --experimental-strip-types src/import/cli.ts",
+    "postbuild": "rm -rf .next/standalone/.next/static .next/standalone/sql && cp -r .next/static .next/standalone/.next/static && cp -r sql .next/standalone/sql && mkdir -p .next/standalone/public && (cp -r public/. .next/standalone/public/ 2>/dev/null || true)",
+    "dev:raw": "next dev -p 3000"
+  },
+  "dependencies": {
+    "mysql2": "^3.11.0",
+    "next": "^16.3.4",
+    "node-ical": "^0.20.1",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/postcss": "^4.1.12",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "better-sqlite3": "^11.7.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^4.1.12",
+    "typescript": "^5.7.0"
+  }
+}

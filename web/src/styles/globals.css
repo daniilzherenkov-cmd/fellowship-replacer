@@ -1,0 +1,131 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   Fellow 2 design tokens.
+
+   Ported 1:1 from Fellow2/DesignSystem.swift. Every colour there is an adaptive
+   Color(light:dark:) pair resolved per NSAppearance, so each one becomes two CSS
+   values here: the light value on :root, the dark value under .dark.
+
+   Do NOT inline hex values in components. That is exactly what went wrong in the
+   Figma Make prototype, where the palette drifted from the Swift source.
+   --------------------------------------------------------------------------- */
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Colour - light half of each Swift pair */
+  --color-accent: #2563eb;
+  --color-accent-subtle: #eff6ff;
+  --color-ai: #9333ea;          /* reserved; "Ask Fellow" is cut from MVP */
+  --color-due: #f59e0b;
+  --color-now: #22c55e;
+  --color-overdue: #ef4444;
+  --color-sidebar: #f9fafb;
+  --color-hover: #f0f1f3;
+  --color-hairline: #e5e7eb;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+
+  /* Canvas. In Swift these came from AppKit (.textBackgroundColor /
+     .windowBackgroundColor), not from Theme - hence separate tokens. */
+  --color-canvas: #ffffff;
+  --color-window: #f7f7f7;
+
+  /* Spacing - 8pt grid (docs/02 §3). Swift had no scale; every value was a
+     literal at the call site. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radius (docs/02 §3): cards/popovers 10, rows/inputs 6, pills 999.
+     --radius-checkbox is 5 to match ActionCheckbox's RoundedRectangle. */
+  --radius-card: 10px;
+  --radius-row: 6px;
+  --radius-checkbox: 5px;
+  --radius-pill: 999px;
+
+  /* Elevation: flat surfaces + 1px hairlines. Shadows ONLY on popovers/menus. */
+  --shadow-popover: 0 8px 24px rgb(0 0 0 / 0.12);
+
+  /* Type. SF Pro on macOS, Inter as the cross-platform fallback. */
+  --font-ui: ui-sans-serif, -apple-system, 'SF Pro Text', 'Inter', system-ui,
+    'Segoe UI', Roboto, sans-serif;
+
+  /* Layout */
+  --rail-width: 64px;
+  --topbar-height: 48px;
+  --agenda-width: 268px;
+  --note-max-width: 760px;
+}
+
+.dark {
+  --color-accent: #60a5fa;
+  --color-accent-subtle: #1e3a8a;
+  --color-ai: #c084fc;
+  --color-due: #fbbf24;
+  --color-now: #4ade80;
+  --color-overdue: #f87171;
+  --color-sidebar: #111827;
+  --color-hover: #1f2937;
+  --color-hairline: #374151;
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #9ca3af;
+  /* Note: Swift swaps secondary/tertiary in dark rather than defining a third
+     value - textTertiary is #6B7280 dark, which is textSecondary's light value. */
+  --color-text-tertiary: #6b7280;
+
+  --color-canvas: #0f172a;
+  --color-window: #111827;
+}
+
+/* Expose tokens to Tailwind utilities (bg-accent, text-secondary, ...). */
+@theme inline {
+  --color-accent: var(--color-accent);
+  --color-accent-subtle: var(--color-accent-subtle);
+  --color-ai: var(--color-ai);
+  --color-due: var(--color-due);
+  --color-now: var(--color-now);
+  --color-overdue: var(--color-overdue);
+  --color-sidebar: var(--color-sidebar);
+  --color-hover: var(--color-hover);
+  --color-hairline: var(--color-hairline);
+  --color-canvas: var(--color-canvas);
+  --color-window: var(--color-window);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-tertiary: var(--color-text-tertiary);
+  --radius-card: var(--radius-card);
+  --radius-row: var(--radius-row);
+  --radius-pill: var(--radius-pill);
+  --font-ui: var(--font-ui);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-text-primary);
+  font-family: var(--font-ui);
+  font-size: 14px; /* body/items per docs/02 §2 */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The note body is a reading/writing surface: comfortable density, never a
+   dashboard. Inputs inherit type so inline-edit fields look like text. */
+input,
+textarea,
+button {
+  font: inherit;
+  color: inherit;
+}
