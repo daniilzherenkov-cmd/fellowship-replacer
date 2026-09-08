@@ -205,6 +205,41 @@ test.describe('unified action list', () => {
   })
 })
 
+test.describe('calendar week view', () => {
+  test('toggles between Today and Week', async ({ signedIn }) => {
+    await signedIn.goto('/calendar')
+    // Today is the default.
+    await expect(signedIn.getByRole('tab', { name: 'today' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    )
+    await signedIn.getByRole('tab', { name: 'week' }).click()
+    await expect(signedIn.getByRole('tab', { name: 'week' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    )
+  })
+
+  test('renders a 7-column grid with weekday headers', async ({ signedIn }) => {
+    await signedIn.goto('/calendar')
+    await signedIn.getByRole('tab', { name: 'week' }).click()
+    for (const day of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']) {
+      await expect(signedIn.getByText(day, { exact: true })).toBeVisible()
+    }
+  })
+
+  test('shows a meeting in the week grid and opens it', async ({ signedIn }) => {
+    const url = await createMeeting(signedIn, 'Week grid meeting')
+    await signedIn.goto('/calendar')
+    await signedIn.getByRole('tab', { name: 'week' }).click()
+
+    const chip = signedIn.getByTestId('week-event').filter({ hasText: 'Week grid meeting' })
+    await expect(chip).toHaveCount(1)
+    await chip.click()
+    await expect(signedIn).toHaveURL(url)
+  })
+})
+
 test.describe('per-user isolation', () => {
   test('one user cannot see or open another user\'s meeting', async ({ page, browser }) => {
     // User A creates a meeting.

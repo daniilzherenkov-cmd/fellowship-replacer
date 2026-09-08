@@ -41,6 +41,14 @@ export interface IcsParseOptions {
   skipAllDay?: boolean
   /** Drop events with no other attendee - focus blocks, Lunch. Default true. */
   skipSolo?: boolean
+  /**
+   * Drop events Google redacted to "Busy". Default true.
+   *
+   * These carry CLASS:PRIVATE, no real title and no attendees - Google strips
+   * them server-side before the feed is sent, so nothing can recover the
+   * content. Keeping them fills the archive with identical untitled rows.
+   */
+  skipRedacted?: boolean
   /** The viewer's own address, so they are excluded from attendee lists. */
   selfEmail?: string
 }
@@ -48,6 +56,8 @@ export interface IcsParseOptions {
 export interface IcsParseResult {
   meetings: NormalisedMeeting[]
   totalEvents: number
+  /** Events Google redacted to "Busy" before sending the feed. */
+  redacted: number
   expandedOccurrences: number
   skippedAllDay: number
   skippedSolo: number
@@ -63,6 +73,7 @@ interface IcalAttendee {
 interface IcalEvent {
   type?: string
   uid?: string
+  class?: string
   summary?: string
   description?: string
   location?: string
@@ -120,6 +131,23 @@ function classify(people: number): MeetingKind {
 
 function isAllDay(event: IcalEvent): boolean {
   return event.start?.dateOnly === true
+}
+
+/**
+ * Google redacts events the user marked private (and events on calendars shared
+ * as free/busy only) before they reach the feed: the title becomes "Busy", and
+ * the attendee list is stripped entirely. This is server-side, so the real
+ * content is genuinely unavailable - not a parsing gap.
+ *
+ * Detected by CLASS:PRIVATE, or by the placeholder title with no attendees,
+ * since not every producer sets CLASS.
+ */
+export function isRedacted(event: IcalEvent): boolean {
+  const cls = event.class?.toUpperCase()
+  if (cls === 'PRIVATE' || cls === 'CONFIDENTIAL') return true
+  const title = event.summary?.trim().toLowerCase()
+  const noAttendees = attendeeList(event).length === 0
+  return noAttendees && (title === 'busy' || title === 'private' || title === 'blocked')
 }
 
 /** Occurrence keys are compared by minute, matching how EXDATE is stored. */
@@ -181,7 +209,7 @@ export async function parseIcsFeed(
   body: string,
   options: IcsParseOptions,
 ): Promise<IcsParseResult> {
-  const { from, to, skipAllDay = true, skipSolo = true } = options
+  const { from, to, skipAllDay = true, skipSolo = true, skipRedacted = true } = options
 
   // node-ical is CommonJS: under an ESM dynamic import the module object is
   // wrapped in `.default`, but not in every bundler/runtime combination - so
@@ -200,15 +228,24 @@ export async function parseIcsFeed(
   let skippedAllDayCount = 0
   let skippedSoloCount = 0
   let skippedCancelled = 0
+  let redacted = 0
   let truncated = false
 
   const push = (m: NormalisedMeeting | null, event: IcalEvent): void => {
     if (!m) return
+    const wasRedacted = isRedacted(event)
+    if (wasRedacted) {
+      redacted++
+      if (skipRedacted) return
+    }
     if (skipAllDay && isAllDay(event)) {
       skippedAllDayCount++
       return
     }
-    if (skipSolo && m.kind === 'manual' && m.attendees.length === 0) {
+    // Redacted events have no attendees by construction (Google strips them),
+    // so the solo filter would drop them even when the caller asked to keep
+    // them. Exempt them explicitly.
+    if (!wasRedacted && skipSolo && m.kind === 'manual' && m.attendees.length === 0) {
       skippedSoloCount++
       return
     }
@@ -300,6 +337,7 @@ export async function parseIcsFeed(
     skippedAllDay: skippedAllDayCount,
     skippedSolo: skippedSoloCount,
     skippedCancelled,
+    redacted,
     truncated,
   }
 }

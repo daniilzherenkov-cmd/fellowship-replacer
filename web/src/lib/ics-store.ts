@@ -75,6 +75,7 @@ export interface IcsSyncResult {
   updated?: number
   peopleCreated?: number
   totalEvents?: number
+  redacted?: number
   truncated?: boolean
   error?: string
 }
@@ -129,6 +130,7 @@ export async function syncIcsCalendar(
       updated: written.updated,
       peopleCreated: written.peopleCreated,
       totalEvents: parsed.totalEvents,
+      redacted: parsed.redacted,
       truncated: parsed.truncated,
     }
   } catch (err) {

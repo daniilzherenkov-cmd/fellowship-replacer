@@ -41,7 +41,11 @@ export function IcsConnection({
     setUrl('')
     setMessage(
       `Imported ${result.created ?? 0} meeting${result.created === 1 ? '' : 's'}` +
-        (result.totalEvents ? ` from ${result.totalEvents} calendar entries.` : '.'),
+        (result.totalEvents ? ` from ${result.totalEvents} calendar entries.` : '.') +
+        (result.redacted
+          ? ` ${result.redacted} private event${result.redacted === 1 ? ' was' : 's were'} skipped -` +
+            ' Google sends those as "Busy" with no title or attendees.'
+          : ''),
     )
     router.refresh()
   }
@@ -53,7 +57,13 @@ export function IcsConnection({
     const result = await syncIcsAction()
     setBusy(false)
     if (!result.ok) setError(result.error ?? 'Sync failed.')
-    else setMessage('Calendar refreshed.')
+    else
+      setMessage(
+        'Calendar refreshed.' +
+          (result.redacted
+            ? ` ${result.redacted} private event${result.redacted === 1 ? '' : 's'} skipped.`
+            : ''),
+      )
     router.refresh()
   }
 
@@ -179,6 +189,14 @@ export function IcsConnection({
           {error}
         </p>
       )}
+
+      <p className="mt-3 text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+        Events you marked <strong>private</strong> in Google arrive as
+        &ldquo;Busy&rdquo; with no title and no attendees - Google removes that detail
+        before sending the feed, so it cannot be recovered here. Those are skipped
+        rather than filling your archive with untitled rows. Signing in with Google
+        (once available) does return them.
+      </p>
 
       {/* Stated plainly rather than buried: this address is as sensitive as a
           password, and the user needs to know it is revocable. */}

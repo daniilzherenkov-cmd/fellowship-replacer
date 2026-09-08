@@ -134,7 +134,13 @@ export async function deleteActionItemAction(
  */
 export async function connectIcsAction(
   url: string,
-): Promise<{ ok: boolean; error?: string; created?: number; totalEvents?: number }> {
+): Promise<{
+  ok: boolean
+  error?: string
+  created?: number
+  totalEvents?: number
+  redacted?: number
+}> {
   const owner = await me()
   const { syncIcsCalendar, saveIcsUrl } = await import('@/lib/ics-store')
 
@@ -146,10 +152,20 @@ export async function connectIcsAction(
   revalidatePath('/meetings')
   revalidatePath('/people')
   revalidatePath('/settings')
-  return { ok: true, created: trial.created, totalEvents: trial.totalEvents }
+  return {
+    ok: true,
+    created: trial.created,
+    totalEvents: trial.totalEvents,
+    redacted: trial.redacted,
+  }
 }
 
-export async function syncIcsAction(): Promise<{ ok: boolean; error?: string; created?: number }> {
+export async function syncIcsAction(): Promise<{
+  ok: boolean
+  error?: string
+  created?: number
+  redacted?: number
+}> {
   const owner = await me()
   const { syncIcsCalendar } = await import('@/lib/ics-store')
   const result = await syncIcsCalendar(owner)
@@ -157,7 +173,9 @@ export async function syncIcsAction(): Promise<{ ok: boolean; error?: string; cr
   revalidatePath('/meetings')
   revalidatePath('/people')
   revalidatePath('/settings')
-  return result.ok ? { ok: true, created: result.created } : { ok: false, error: result.error }
+  return result.ok
+    ? { ok: true, created: result.created, redacted: result.redacted }
+    : { ok: false, error: result.error }
 }
 
 export async function disconnectIcsAction(): Promise<void> {

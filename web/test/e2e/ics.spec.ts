@@ -244,3 +244,48 @@ test.describe('maskIcsUrl', () => {
     expect(maskIcsUrl('nonsense')).toBe('the saved address')
   })
 })
+
+test.describe('private / redacted events', () => {
+  // Google strips the title AND the attendee list server-side for events the
+  // user marked private, so they arrive as "Busy" with nothing usable. Danya
+  // hit this on a real import: the archive filled with identical rows.
+  const BUSY = `BEGIN:VEVENT
+DTSTART:20260910T100000Z
+DTEND:20260910T103000Z
+UID:private1@google.com
+SUMMARY:Busy
+CLASS:PRIVATE
+END:VEVENT`
+
+  test('skips redacted events by default and counts them', async () => {
+    const result = await parseIcsFeed(feed(BUSY), WINDOW)
+    expect(result.meetings).toHaveLength(0)
+    expect(result.redacted).toBe(1)
+  })
+
+  test('can keep them when explicitly asked', async () => {
+    const result = await parseIcsFeed(feed(BUSY), { ...WINDOW, skipRedacted: false })
+    expect(result.meetings).toHaveLength(1)
+    expect(result.redacted).toBe(1)
+  })
+
+  test('detects the shape even without CLASS:PRIVATE', async () => {
+    const noClass = BUSY.replace('CLASS:PRIVATE\n', '')
+    const result = await parseIcsFeed(feed(noClass), WINDOW)
+    expect(result.redacted).toBe(1)
+  })
+
+  test('does not mistake a real meeting titled "Busy season kickoff"', async () => {
+    const real = `BEGIN:VEVENT
+DTSTART:20260910T100000Z
+DTEND:20260910T103000Z
+UID:real@google.com
+SUMMARY:Busy season kickoff
+ATTENDEE:mailto:a@deliveryhero.com
+ATTENDEE:mailto:b@deliveryhero.com
+END:VEVENT`
+    const result = await parseIcsFeed(feed(real), WINDOW)
+    expect(result.redacted).toBe(0)
+    expect(result.meetings).toHaveLength(1)
+  })
+})

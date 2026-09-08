@@ -17,6 +17,7 @@ import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { AvatarStack } from '../ui/Avatar'
 import { createMeetingAction } from '@/actions'
+import { WeekGrid, weekDaysFor } from './WeekGrid'
 import type { Meeting } from '@/lib/queries'
 
 function sameDay(a: Date, b: Date): boolean {
@@ -31,6 +32,7 @@ export function CalendarView({ meetings }: { meetings: Meeting[] }) {
   const router = useRouter()
   const [selectedDate, setSelectedDate] = useState(() => new Date())
   const [creating, setCreating] = useState(false)
+  const [mode, setMode] = useState<'today' | 'week'>('today')
 
   const dayMeetings = useMemo(
     () => meetings.filter((m) => sameDay(new Date(m.startAt), selectedDate)),
@@ -38,6 +40,17 @@ export function CalendarView({ meetings }: { meetings: Meeting[] }) {
   )
 
   const isToday = sameDay(selectedDate, new Date())
+
+  const weekMeetings = useMemo(() => {
+    const days = weekDaysFor(selectedDate)
+    const start = days[0]
+    const end = new Date(days[6])
+    end.setHours(23, 59, 59, 999)
+    return meetings.filter((m) => {
+      const t = new Date(m.startAt).getTime()
+      return t >= start.getTime() && t <= end.getTime()
+    })
+  }, [meetings, selectedDate])
 
   // Only meaningful on today: index of the first meeting still to come.
   const nowLineIndex = useMemo(() => {
@@ -93,6 +106,31 @@ export function CalendarView({ meetings }: { meetings: Meeting[] }) {
           </NavButton>
         </div>
 
+        <div
+          className="mx-2 mb-2 flex gap-1 p-[2px]"
+          style={{ borderRadius: 'var(--radius-row)', background: 'var(--color-sidebar)' }}
+          role="tablist"
+          aria-label="Calendar view"
+        >
+          {(['today', 'week'] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              role="tab"
+              aria-selected={mode === m}
+              onClick={() => setMode(m)}
+              className="flex-1 cursor-pointer border-0 py-[4px] text-[12px] font-medium capitalize"
+              style={{
+                borderRadius: 4,
+                background: mode === m ? 'var(--color-canvas)' : 'transparent',
+                color: mode === m ? 'var(--color-accent)' : 'var(--color-text-secondary)',
+              }}
+            >
+              {m}
+            </button>
+          ))}
+        </div>
+
         <div className="px-2 pb-2">
           <button
             type="button"
@@ -129,10 +167,20 @@ export function CalendarView({ meetings }: { meetings: Meeting[] }) {
         </div>
       </aside>
 
-      <div className="flex flex-1 items-center justify-center p-8">
-        <p className="text-[13px]" style={{ color: 'var(--color-text-tertiary)' }}>
-          Select a meeting to open its note.
-        </p>
+      <div className="min-w-0 flex-1 overflow-auto">
+        {mode === 'week' ? (
+          <WeekGrid
+            meetings={weekMeetings}
+            anchorDate={selectedDate}
+            onSelect={(id) => router.push(`/meetings/${id}`)}
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center p-8">
+            <p className="text-[13px]" style={{ color: 'var(--color-text-tertiary)' }}>
+              Select a meeting to open its note.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )
