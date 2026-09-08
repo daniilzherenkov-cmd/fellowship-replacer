@@ -1,0 +1,20 @@
+web/src/app/page.tsx
+  s_8f62a27eb85283::t_f63282d0749e7d 1-2
+  s_8f62a27eb85283::t_9791840d50e365 3-17,20-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "9e575a66d01ad99401ce226f626dce481895b3d2",
+  "prompts": {},
+  "sessions": {
+    "s_8f62a27eb85283": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "124e0444-d600-4956-87b6-39306fc50554",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
