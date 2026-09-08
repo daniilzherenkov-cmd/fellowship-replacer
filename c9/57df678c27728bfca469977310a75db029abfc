@@ -1,0 +1,36 @@
+web/src/components/settings/IcsConnection.tsx
+  s_8f62a27eb85283::t_0712f67b1fba19 44-48,60-66,193-199
+  s_8f62a27eb85283::t_bb0b843439c109 200
+web/src/components/calendar/CalendarView.tsx
+  s_8f62a27eb85283::t_915de5dcf1b52e 20,35,44-54,109-133,170-183
+web/src/lib/ics.ts
+  s_8f62a27eb85283::t_7a9c1eb93f13b5 236-237,245-248
+  s_8f62a27eb85283::t_c738e0055fd9ca 44-51,59-60,76,136-152,212,231,238-240,340
+web/src/components/calendar/WeekGrid.tsx
+  s_8f62a27eb85283::t_28fcd8b15401c8 1-58,86-170
+  s_8f62a27eb85283::t_7741309b39050e 59-85
+web/src/lib/ics-store.ts
+  s_8f62a27eb85283::t_74fc2718ffbab9 78,133
+web/src/actions/index.ts
+  s_8f62a27eb85283::t_74fc2718ffbab9 137-143,155-160,163-168,176-178
+web/test/e2e/app.spec.ts
+  s_8f62a27eb85283::t_487f50d92cc15c 208-242
+web/test/e2e/ics.spec.ts
+  s_8f62a27eb85283::t_4329c8d527feae 247-291
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "c957df678c27728bfca469977310a75db029abfc",
+  "prompts": {},
+  "sessions": {
+    "s_8f62a27eb85283": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "124e0444-d600-4956-87b6-39306fc50554",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
