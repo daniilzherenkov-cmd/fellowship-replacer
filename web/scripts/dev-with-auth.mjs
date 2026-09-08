@@ -127,11 +127,23 @@ const proxy = createServer((clientReq, clientRes) => {
     },
   )
   proxied.on('error', () => {
-    // next dev is still booting.
-    clientRes.writeHead(503, { 'content-type': 'text/plain' })
-    clientRes.end('Waiting for next dev to start...')
+    // next dev is still booting, or the client went away mid-flight.
+    if (!clientRes.headersSent) {
+      clientRes.writeHead(503, { 'content-type': 'text/plain' })
+      clientRes.end('Waiting for next dev to start...')
+    } else {
+      clientRes.end()
+    }
   })
+  // A browser navigating away mid-request produces EPIPE/ECONNRESET on these
+  // sockets. Unhandled, they take the whole proxy down mid-session.
+  clientReq.on('error', () => proxied.destroy())
+  clientRes.on('error', () => proxied.destroy())
   clientReq.pipe(proxied)
+})
+
+proxy.on('clientError', (_err, socket) => {
+  if (socket.writable) socket.end('HTTP/1.1 400 Bad Request\r\n\r\n')
 })
 
 // Next's HMR runs over a WebSocket. A plain HTTP proxy drops the upgrade
@@ -162,6 +174,12 @@ proxy.on('upgrade', (req, socket, head) => {
 
 proxy.listen(PROXY_PORT, () => {
   console.log(`\n  Fellow 2 dev: http://localhost:${PROXY_PORT}  (signed in as ${DEV_USER})\n`)
+})
+
+process.on('uncaughtException', (err) => {
+  // Socket teardown races are routine here and must not kill the dev server.
+  if (['EPIPE', 'ECONNRESET', 'ERR_STREAM_DESTROYED'].includes(err?.code)) return
+  throw err
 })
 
 for (const signal of ['SIGINT', 'SIGTERM']) {
