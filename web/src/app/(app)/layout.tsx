@@ -17,7 +17,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <div style={{ maxWidth: 420 }}>
           <h1 className="mb-2 text-[17px] font-semibold">Not signed in</h1>
           <p className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
-            Fellow 2 identifies you through Delivery Hero single sign-on. Open the app
+            Fellow Hero identifies you through Delivery Hero single sign-on. Open the app
             from its <code>dhapps.ai</code> address so that sign-in can complete.
           </p>
         </div>

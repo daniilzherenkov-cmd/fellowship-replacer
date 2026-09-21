@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 /* ---------------------------------------------------------------------------
-   Fellow 2 design tokens.
+   Fellow Hero design tokens.
 
    Ported 1:1 from Fellow2/DesignSystem.swift. Every colour there is an adaptive
    Color(light:dark:) pair resolved per NSAppearance, so each one becomes two CSS
@@ -128,4 +128,18 @@ textarea,
 button {
   font: inherit;
   color: inherit;
+}
+
+/* Spinner for the calendar sync button. Respects reduced-motion: the disabled
+   state and the result readout already communicate progress without spinning. */
+@keyframes fellow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [style*='fellow-spin'] {
+    animation: none !important;
+  }
 }

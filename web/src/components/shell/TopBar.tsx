@@ -60,7 +60,7 @@ export function TopBar({ userEmail }: { userEmail: string | null }) {
         >
           DH
         </span>
-        <span className="text-[13px] font-medium">Fellow 2</span>
+        <span className="text-[13px] font-medium">Fellow Hero</span>
       </div>
 
       <div className="ml-auto flex items-center gap-3">

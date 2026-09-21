@@ -112,10 +112,35 @@ async function makeSqlite(): Promise<Db> {
   }
 }
 
+/**
+ * Fail with a diagnosis rather than a symptom.
+ *
+ * DB_PASSWORD arrives from Vault via instrumentation.ts, not as a container env
+ * var. When that loading is broken the raw failure is
+ * `ER_ACCESS_DENIED_ERROR for app_<APP_ID>`, which reads like a permissions
+ * problem in the database and sent a real debugging session down that path.
+ * Naming the actual cause here saves that hunt next time.
+ */
+function assertDbConfigured(appId: string | undefined): asserts appId is string {
+  const missing: string[] = []
+  if (!appId) missing.push('APP_ID')
+  if (!process.env.DB_HOST) missing.push('DB_HOST')
+  if (!process.env.DB_PASSWORD) missing.push('DB_PASSWORD')
+  if (missing.length === 0) return
+
+  throw new Error(
+    `Database is not configured - missing ${missing.join(', ')}. ` +
+      'On Protoship, DB_PASSWORD is loaded from Vault at startup by ' +
+      'instrumentation.ts; if it is absent, check the Vault lines in the pod ' +
+      'log. DB_HOST and APP_ID are injected by the platform. For local dev ' +
+      'set FELLOW_DB_DRIVER=sqlite instead.',
+  )
+}
+
 async function makeMysql(): Promise<Db> {
   const mysql = await import('mysql2/promise')
   const appId = process.env.APP_ID
-  if (!appId) throw new Error('APP_ID is not set - cannot derive database name')
+  assertDbConfigured(appId)
 
   // Protoship derives both the schema name and the user from APP_ID; only the
   // password is supplied (from Vault, remapped out of db-credentials).

@@ -53,8 +53,9 @@ export function CalendarConnection({
     >
       <h2 className="m-0 text-[16px] font-semibold">Google Calendar</h2>
       <p className="mb-3 mt-[2px] text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
-        Fellow 2 reads your calendar so your meetings and the people in them appear
-        automatically. Read-only: it never creates or changes events.
+        Fellow Hero reads your calendar so your meetings and the people in them appear
+        automatically. It asks for permission to edit events too, so it can create
+        meetings later, but nothing in the app writes to your calendar today.
       </p>
 
       {status === 'connected' && <Banner tone="ok">Google Calendar connected.</Banner>}
@@ -67,7 +68,7 @@ export function CalendarConnection({
         <Banner tone="info">
           Google Calendar is not set up in this deployment yet. It needs a Google
           Workspace OAuth client, which is being requested - see{' '}
-          <code>docs/12</code>. Everything else in Fellow 2 works without it: you can
+          <code>docs/12</code>. Everything else in Fellow Hero works without it: you can
           create meetings by hand from the Calendar tab.
         </Banner>
       ) : connected ? (

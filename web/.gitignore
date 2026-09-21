@@ -6,3 +6,14 @@ playwright-report/
 *.tsbuildinfo
 next-env.d.ts
 .dev/
+
+# Credentials. NEVER commit these.
+# The Google OAuth client secret lives in Protoship's Vault (add_secret), and
+# locally in .env.local. A downloaded client_secret_*.json from the Cloud
+# console must stay outside the repo entirely.
+.env
+.env.*
+!.env.example
+client_secret*.json
+*credentials*.json
+service-account*.json

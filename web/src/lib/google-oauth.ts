@@ -26,11 +26,24 @@ const TOKEN_ENDPOINT = 'https://oauth2.googleapis.com/token'
 const REVOKE_ENDPOINT = 'https://oauth2.googleapis.com/revoke'
 
 /**
- * Read-only is deliberate for v1. The write scope (calendar.events) triggers a
- * heavier Workspace-admin review, and nothing in v1 creates or edits events.
- * Widen only when the product actually needs it.
+ * Read AND write, deliberately.
+ *
+ * v1 only reads, so `calendar.readonly` would cover it today. We ask for
+ * `calendar.events` anyway because the scope is fixed when the OAuth client is
+ * created by the Cloud admins, and widening it later means going back through
+ * that request: the cost of asking now is one line, the cost of asking later is
+ * another round trip through a team that does not own this app.
+ *
+ * Fellow (the tool this replaces) creates events and Meet links, so a faithful
+ * clone needs write eventually. `calendar.events` grants access to events only,
+ * NOT to calendar settings, ACLs, or calendar creation - it is the narrowest
+ * scope that covers both directions.
+ *
+ * Note this changes the consent screen: users will be told the app can "view and
+ * edit events on all your calendars" rather than view-only. That is the honest
+ * description of what we are asking for.
  */
-export const CALENDAR_SCOPE = 'https://www.googleapis.com/auth/calendar.readonly'
+export const CALENDAR_SCOPE = 'https://www.googleapis.com/auth/calendar.events'
 
 export interface OAuthConfig {
   clientId: string

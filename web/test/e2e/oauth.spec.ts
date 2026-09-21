@@ -119,10 +119,19 @@ test.describe('consent URL', () => {
     expect(url.searchParams.get('prompt')).toBe('consent')
   })
 
-  test('requests read-only calendar scope only', () => {
+  test('requests the events scope, and nothing broader', () => {
     const url = new URL(buildAuthUrl({ config, state: 'st', challenge: 'ch' }))
-    expect(url.searchParams.get('scope')).toBe(CALENDAR_SCOPE)
-    expect(url.searchParams.get('scope')).toContain('readonly')
+    const scope = url.searchParams.get('scope')
+
+    expect(scope).toBe(CALENDAR_SCOPE)
+    // Read AND write: Fellow creates events, so a clone needs to as well.
+    expect(scope).toBe('https://www.googleapis.com/auth/calendar.events')
+
+    // Guard against a careless widening. Bare `calendar` would also grant
+    // settings and ACL access; `calendar.events` is events only. Exactly one
+    // scope is requested - no space-separated extras.
+    expect(scope).not.toBe('https://www.googleapis.com/auth/calendar')
+    expect(scope).not.toContain(' ')
   })
 
   test('carries state and the PKCE challenge', () => {
