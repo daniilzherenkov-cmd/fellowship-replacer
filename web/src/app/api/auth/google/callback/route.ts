@@ -5,7 +5,7 @@
  * Security notes:
  *  - `state` is verified against a stored single-use row. This is the CSRF
  *    defence: without it an attacker could trick a signed-in user into
- *    attaching the ATTACKER's Google account to the user's Fellow 2 data.
+ *    attaching the ATTACKER's Google account to the user's Fellow Hero data.
  *  - The state row also carries the owner email, and the callback checks it
  *    matches the currently authenticated user. A code obtained in one session
  *    cannot be redeemed into another user's account.

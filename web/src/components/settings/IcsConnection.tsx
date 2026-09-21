@@ -83,7 +83,7 @@ export function IcsConnection({
       <h2 className="m-0 text-[16px] font-semibold">Calendar address (no sign-in needed)</h2>
       <p className="mb-3 mt-[2px] text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
         Works today, without waiting for Google sign-in to be approved. Paste the private
-        address of your calendar and Fellow 2 will keep your meetings up to date.
+        address of your calendar and Fellow Hero will keep your meetings up to date.
       </p>
 
       {connected ? (
@@ -208,7 +208,7 @@ export function IcsConnection({
         }}
       >
         <strong>Treat this address like a password.</strong> Anyone who has it can read your
-        whole calendar, and it does not expire on its own. Fellow 2 stores it encrypted and
+        whole calendar, and it does not expire on its own. Fellow Hero stores it encrypted and
         never shows it again. If it is ever exposed, use{' '}
         <em>Reset private URLs</em> in Google Calendar settings to invalidate it.
       </p>

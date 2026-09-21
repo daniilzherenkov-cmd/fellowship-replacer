@@ -52,4 +52,9 @@ RUN addgroup -g 1001 -S appuser \
 USER appuser
 
 EXPOSE 8080
-CMD ["node", "server.js"]
+# ABSOLUTE path, deliberately. GDP does not preserve the image's WORKDIR when it
+# runs the container, so a relative CMD resolves against / and dies with
+# "Cannot find module '/server.js'" in a crash loop. Every one of the 85 apps on
+# this platform uses an absolute CMD; this is a platform contract, not a style
+# choice. Do not shorten this back to "server.js".
+CMD ["node", "/app/server.js"]

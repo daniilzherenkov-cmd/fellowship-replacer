@@ -1,5 +1,5 @@
 /**
- * Google Calendar -> Fellow 2 meetings.
+ * Google Calendar -> Fellow Hero meetings.
  *
  * Field shapes here were verified against the live Calendar API for Danya's
  * account (40 events, Sept 2026), not inferred from documentation.

@@ -1,5 +1,5 @@
 /**
- * Fellow export -> Fellow 2.
+ * Fellow export -> Fellow Hero.
  *
  * Written against a REAL export (~/Downloads/exports/1411719/export.json,
  * 1.6 MB, 875 notes), not the documentation, because Fellow's help centre only

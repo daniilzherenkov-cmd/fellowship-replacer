@@ -1,6 +1,8 @@
 import { headers } from 'next/headers'
 import { requireIdentity } from '@/lib/auth'
 import { listMeetings } from '@/lib/queries'
+import { getConnection } from '@/lib/google-store'
+import { googleConfigured } from '@/lib/google-oauth'
 import { CalendarView } from '@/components/calendar/CalendarView'
 
 export const dynamic = 'force-dynamic'
@@ -20,5 +22,17 @@ export default async function CalendarPage() {
     to: to.toISOString(),
   })
 
-  return <CalendarView meetings={meetings} />
+  // Whether to offer "Sync now". Deliberately fail-safe: this only decides
+  // whether one icon renders, so a lookup failure must not take down the whole
+  // calendar. Worst case the button is hidden and Settings still works.
+  let connected = false
+  if (googleConfigured()) {
+    try {
+      connected = Boolean(await getConnection(identity.email))
+    } catch {
+      connected = false
+    }
+  }
+
+  return <CalendarView meetings={meetings} googleConnected={connected} />
 }

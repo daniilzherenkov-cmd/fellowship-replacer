@@ -16,7 +16,11 @@ import { join } from 'node:path'
  *          verification path runs unmodified.
  */
 
-const UNIT_SPECS = /(auth|import|calendar|oauth|ics|weekgrid)\.spec\.ts/
+// Specs that are pure logic - no browser, no server. Anything NOT listed here
+// is treated as a UI spec and will be run against a real browser, so a new
+// pure-logic spec omitted from this list silently becomes a slow browser test
+// (or fails for want of a page). Add new unit specs here.
+const UNIT_SPECS = /(auth|import|calendar|oauth|ics|weekgrid|syncbutton)\.spec\.ts/
 
 export default defineConfig({
   testDir: './test/e2e',

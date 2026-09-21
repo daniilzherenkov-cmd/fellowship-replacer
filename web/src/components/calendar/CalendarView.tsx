@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation'
 import { AvatarStack } from '../ui/Avatar'
 import { createMeetingAction } from '@/actions'
 import { WeekGrid, weekDaysFor } from './WeekGrid'
+import { SyncButton } from './SyncButton'
 import type { Meeting } from '@/lib/queries'
 
 function sameDay(a: Date, b: Date): boolean {
@@ -28,7 +29,14 @@ function sameDay(a: Date, b: Date): boolean {
   )
 }
 
-export function CalendarView({ meetings }: { meetings: Meeting[] }) {
+export function CalendarView({
+  meetings,
+  googleConnected = false,
+}: {
+  meetings: Meeting[]
+  /** Controls whether "Sync now" is offered. Defaults off so no dead control appears. */
+  googleConnected?: boolean
+}) {
   const router = useRouter()
   const [selectedDate, setSelectedDate] = useState(() => new Date())
   const [creating, setCreating] = useState(false)
@@ -104,6 +112,7 @@ export function CalendarView({ meetings }: { meetings: Meeting[] }) {
           <NavButton label="Next day" onClick={() => shiftDay(1)}>
             ›
           </NavButton>
+          <SyncButton connected={googleConnected} />
         </div>
 
         <div

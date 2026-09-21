@@ -185,12 +185,21 @@ export async function disconnectIcsAction(): Promise<void> {
   revalidatePath('/settings')
 }
 
-export async function syncCalendarAction(): Promise<{ ok: boolean; error?: string }> {
+export async function syncCalendarAction(): Promise<{
+  ok: boolean
+  error?: string
+  created?: number
+  updated?: number
+}> {
   const owner = await me()
   const { syncCalendar } = await import('@/lib/sync')
   const result = await syncCalendar(owner)
   revalidatePath('/calendar')
   revalidatePath('/meetings')
   revalidatePath('/people')
-  return result.error ? { ok: false, error: result.error } : { ok: true }
+  if (result.error) return { ok: false, error: result.error }
+  // Counts come back so the caller can say what changed ("3 new") rather than
+  // the uninformative "Synced." A sync that found nothing is worth showing too:
+  // it tells the user the feature worked and their calendar really is empty.
+  return { ok: true, created: result.created, updated: result.updated }
 }

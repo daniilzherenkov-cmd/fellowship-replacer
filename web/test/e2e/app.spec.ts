@@ -296,6 +296,17 @@ test.describe('settings', () => {
     })
     expect(res.status()).toBe(503)
   })
+
+  test('the calendar offers no Sync button when Google is not connected', async ({
+    signedIn,
+  }) => {
+    // A control that cannot work should not be on screen. This deployment has
+    // no OAuth credentials, so the calendar header must not show "Sync now" -
+    // otherwise the first thing a new user clicks is a dead button.
+    await signedIn.goto('/calendar')
+    await expect(signedIn.getByRole('heading', { level: 1 })).toBeVisible()
+    await expect(signedIn.getByRole('button', { name: 'Sync calendar' })).toHaveCount(0)
+  })
 })
 
 test.describe('navigation', () => {
