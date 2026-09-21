@@ -1,0 +1,79 @@
+web/playwright.config.ts
+  s_8f62a27eb85283::t_7a9e7e4125a40c 19-23
+web/src/components/settings/CalendarConnection.tsx
+  s_8f62a27eb85283::t_4163e8d34a09f8 56,71
+  s_8f62a27eb85283::t_8a9c51caac9508 57-58
+web/test/e2e/oauth.spec.ts
+  s_8f62a27eb85283::t_130644caa4daaa 122,124-134
+web/src/components/calendar/SyncButton.tsx
+  s_8f62a27eb85283::t_ea936ea849f163 1-18,20-124
+  s_8f62a27eb85283::t_8a9e1637ce493c 19
+web/src/styles/globals.css
+  s_8f62a27eb85283::t_4163e8d34a09f8 4
+  s_8f62a27eb85283::t_f0507fa293f639 132-145
+web/test/e2e/syncbutton.spec.ts
+  s_8f62a27eb85283::t_ee6843a252cd58 11
+  s_8f62a27eb85283::t_22d51ce8e25720 1-10,12-59
+web/test/e2e/app.spec.ts
+  s_8f62a27eb85283::t_2e85e748b6d506 299-309
+web/src/instrumentation.ts
+  s_8f62a27eb85283::t_f5ea8ab6b365c8 1-17
+web/src/app/(app)/calendar/page.tsx
+  s_8f62a27eb85283::t_4773ddeeb24e8a 4-5
+  s_8f62a27eb85283::t_94a0350ceb4f18 25-37
+web/src/app/layout.tsx
+  s_8f62a27eb85283::t_4163e8d34a09f8 5
+web/src/app/(app)/error.tsx
+  s_8f62a27eb85283::t_20db518baa3e3c 1-58
+web/src/lib/secrets.ts
+  s_8f62a27eb85283::t_e6b090860bbe26 1-137
+web/src/lib/db.ts
+  s_8f62a27eb85283::t_41ef24a42dfe2b 115-139,143
+web/src/lib/calendar.ts
+  s_8f62a27eb85283::t_4163e8d34a09f8 2
+web/src/components/shell/TopBar.tsx
+  s_8f62a27eb85283::t_4163e8d34a09f8 63
+web/src/app/api/auth/google/callback/route.ts
+  s_8f62a27eb85283::t_4163e8d34a09f8 8
+web/src/components/settings/IcsConnection.tsx
+  s_8f62a27eb85283::t_4163e8d34a09f8 86,211
+web/src/import/fellow.ts
+  s_8f62a27eb85283::t_4163e8d34a09f8 2
+web/src/lib/google-oauth.ts
+  s_8f62a27eb85283::t_24a71bbe4ecd35 29-44,46
+web/src/components/calendar/CalendarView.tsx
+  s_8f62a27eb85283::t_41cf9f9c75f04f 32-39
+  s_8f62a27eb85283::t_00ee132fb6fcdb 21
+  s_8f62a27eb85283::t_72def8e50306de 115
+web/Dockerfile
+  s_8f62a27eb85283::t_5e34123daaebac 55-60
+web/src/actions/index.ts
+  s_8f62a27eb85283::t_4ed9777601da00 188-193,200-204
+web/src/app/api/health/route.ts
+  s_8f62a27eb85283::t_45b07c26f6e3ef 45-49,52-54
+  s_8f62a27eb85283::t_734e0d26194d4e 2,4-7,9-16,19-20,23-44,50-51,55-63
+web/.gitignore
+  s_8f62a27eb85283::t_0d0d64bc82e6d4 9-19
+web/src/app/(app)/layout.tsx
+  s_8f62a27eb85283::t_4163e8d34a09f8 20
+web/src/components/calendar/sync-messages.ts
+  s_8f62a27eb85283::t_b938d4a08b5e13 1-42
+web/public/version.txt
+  s_8f62a27eb85283::t_effbe21fb9bb97 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "2d307f5f91cf79ff8dc7293df5a002dd80906bf7",
+  "prompts": {},
+  "sessions": {
+    "s_8f62a27eb85283": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "124e0444-d600-4956-87b6-39306fc50554",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
