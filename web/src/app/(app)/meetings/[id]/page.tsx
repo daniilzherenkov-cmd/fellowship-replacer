@@ -1,7 +1,12 @@
 import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { requireIdentity } from '@/lib/auth'
-import { carriedForwardFor, getMeeting, listPeople } from '@/lib/queries'
+import {
+  canAccessSharedNote,
+  carriedForwardFor,
+  getMeeting,
+  listPeople,
+} from '@/lib/queries'
 import { MeetingNote } from '@/components/note/MeetingNote'
 
 export const dynamic = 'force-dynamic'
@@ -27,5 +32,28 @@ export default async function MeetingPage({ params }: { params: Promise<{ id: st
     carried = null
   }
 
-  return <MeetingNote meeting={meeting} people={people} carried={carried} />
+  // Shared notes are opt-in by membership, which sync derives from the
+  // calendar invite. A meeting with no membership row renders exactly as it
+  // always has, so this ships dark for everything not yet shared.
+  //
+  // Fails soft: sharing is an enhancement, and it must never be the reason a
+  // note fails to open.
+  let sharedExternalId: string | null = null
+  try {
+    if (meeting.externalId && (await canAccessSharedNote(meeting.externalId, identity.email))) {
+      sharedExternalId = meeting.externalId
+    }
+  } catch {
+    sharedExternalId = null
+  }
+
+  return (
+    <MeetingNote
+      meeting={meeting}
+      people={people}
+      carried={carried}
+      sharedExternalId={sharedExternalId}
+      selfEmail={identity.email}
+    />
+  )
 }

@@ -13,6 +13,18 @@ import { revalidatePath } from 'next/cache'
 import { requireIdentity } from '@/lib/auth'
 import * as q from '@/lib/queries'
 import type { SearchHit } from '@/lib/queries'
+import { count } from '@/lib/metrics'
+import {
+  enforceLength,
+  rateLimit,
+  LimitExceededError,
+  MAX_DOCUMENT_CHARS,
+  MAX_ROW_CHARS,
+  MAX_TITLE_CHARS,
+  MAX_LOCATION_CHARS,
+  MAX_DESCRIPTION_CHARS,
+  MAX_NOTE_WRITES_PER_MINUTE,
+} from '@/lib/limits'
 
 async function me(): Promise<string> {
   const h = await headers()
@@ -44,6 +56,13 @@ export async function updateMeetingAction(
   meetingId: string,
   fields: { title?: string; notepad?: string; privateNotes?: string },
 ): Promise<void> {
+  // Reject rather than truncate: silently cutting someone's note loses work
+  // and never tells them.
+  if (fields.title !== undefined) enforceLength('title', fields.title, MAX_TITLE_CHARS)
+  if (fields.notepad !== undefined) enforceLength('notepad', fields.notepad, MAX_DOCUMENT_CHARS)
+  if (fields.privateNotes !== undefined) {
+    enforceLength('private notes', fields.privateNotes, MAX_DOCUMENT_CHARS)
+  }
   const owner = await me()
   await q.updateMeeting(owner, meetingId, fields)
   // A hand-created meeting has no attendees to classify from, so re-derive the
@@ -73,6 +92,7 @@ export async function updateTalkingPointAction(
   id: string,
   fields: { text?: string; isCovered?: boolean },
 ): Promise<void> {
+  if (fields.text !== undefined) enforceLength('talking point', fields.text, MAX_ROW_CHARS)
   const owner = await me()
   await q.updateTalkingPoint(owner, id, fields)
 }
@@ -105,6 +125,7 @@ export async function updateActionItemAction(
     assigneeId?: string | null
   },
 ): Promise<void> {
+  if (fields.text !== undefined) enforceLength('action item', fields.text, MAX_ROW_CHARS)
   const owner = await me()
   await q.updateActionItem(owner, id, fields)
   // Checking an item anywhere must check it everywhere - the unified list and
@@ -194,6 +215,7 @@ export async function syncCalendarAction(): Promise<{
 }> {
   const owner = await me()
   const { syncCalendar } = await import('@/lib/sync')
+  count('syncRuns')
   const result = await syncCalendar(owner)
   revalidatePath('/calendar')
   revalidatePath('/meetings')
@@ -246,6 +268,12 @@ export async function createMeetingFullAction(input: CreateMeetingInput): Promis
   googleError?: string
 }> {
   const owner = await me()
+
+  enforceLength('title', input.title, MAX_TITLE_CHARS)
+  if (input.location) enforceLength('location', input.location, MAX_LOCATION_CHARS)
+  if (input.description) {
+    enforceLength('description', input.description, MAX_DESCRIPTION_CHARS)
+  }
 
   const attendees = input.attendeeIds ?? []
   let externalId: string | null = null
@@ -435,4 +463,46 @@ export async function sendTestPushAction(): Promise<{ ok: boolean; sent: number 
     }
   }
   return { ok: sent > 0, sent }
+}
+
+/**
+ * Write a shared note and fan it out to everyone else on the channel.
+ *
+ * Authorization is the same single rule the stream uses. The caller's own
+ * connection receives the echo too; the client ignores it by revision.
+ */
+export async function writeSharedNoteAction(
+  externalId: string,
+  content: string,
+): Promise<{ ok: boolean; revision?: number; error?: string }> {
+  const owner = await me()
+  const allowed = await q.canAccessSharedNote(externalId, owner)
+  if (!allowed) return { ok: false }
+
+  // A shared note is broadcast IN FULL to every subscriber, so an oversized
+  // write is a fan-out problem before it is a storage one.
+  try {
+    enforceLength('note', content, MAX_DOCUMENT_CHARS)
+  } catch (err) {
+    if (err instanceof LimitExceededError) return { ok: false, error: 'too_long' }
+    throw err
+  }
+
+  // Per user, not per note: the cost being bounded is this process's, and
+  // one person with several notes open still shares it.
+  if (!rateLimit(`note:${owner}`, MAX_NOTE_WRITES_PER_MINUTE)) {
+    return { ok: false, error: 'rate_limited' }
+  }
+
+  const saved = await q.writeSharedNote(externalId, content, owner)
+  count('noteWrites')
+  const { publish } = await import('@/lib/note-hub')
+  publish(externalId, {
+    type: 'content',
+    externalId,
+    content: saved.content,
+    revision: saved.revision,
+    updatedBy: saved.updatedBy,
+  })
+  return { ok: true, revision: saved.revision }
 }

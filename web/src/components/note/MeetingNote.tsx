@@ -21,6 +21,7 @@ import { timeLeftLabel } from './time-left'
 import { CarriedForward } from './CarriedForward'
 import { useRowDrag, moveItem } from './useRowDrag'
 import { BulletTextarea } from './BulletTextarea'
+import { SharedNotepad } from './SharedNotepad'
 import type { ActionItem, MeetingDetail, Person } from '@/lib/queries'
 import {
   addActionItemAction,
@@ -44,10 +45,15 @@ const FILTER_TO_REGISTERED = false
 
 export function MeetingNote({
   meeting,
+  sharedExternalId = null,
+  selfEmail = '',
   carried = null,
   people,
 }: {
   meeting: MeetingDetail
+  /** Set when this meeting has a shared note the caller may join. */
+  sharedExternalId?: string | null
+  selfEmail?: string
   carried?: { items: ActionItem[]; fromMeetingId: string; fromTitle: string } | null
   people: Person[]
 }) {
@@ -401,12 +407,23 @@ export function MeetingNote({
       </Section>
 
       <Section title="Notepad" subtitle="Anything else to write down?">
-        <BulletTextarea
-          value={notepad}
-          onChange={saveNotepad}
-          placeholder="Start typing…"
-          label="Notepad"
-        />
+        {sharedExternalId ? (
+          <SharedNotepad
+            externalId={sharedExternalId}
+            initial={notepad}
+            selfEmail={selfEmail}
+            // Mirror into the owner's own row too, so the note survives
+            // sharing being turned off or the channel being unavailable.
+            onLocalChange={saveNotepad}
+          />
+        ) : (
+          <BulletTextarea
+            value={notepad}
+            onChange={saveNotepad}
+            placeholder="Start typing…"
+            label="Notepad"
+          />
+        )}
       </Section>
 
       {/* Fellow gives the manager a private panel on a 1:1: coaching notes

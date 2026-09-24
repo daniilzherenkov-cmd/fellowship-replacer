@@ -1269,3 +1269,157 @@ export async function claimReminder(meetingId: string, ownerEmail: string): Prom
     return false
   }
 }
+
+/* ---------------------------- shared notes ---------------------------- */
+
+export interface SharedNote {
+  externalId: string
+  content: string
+  updatedAt: string
+  updatedBy: string
+  revision: number
+}
+
+/**
+ * THE authorization rule for shared notes. One rule, one place.
+ *
+ * Membership is written server-side from the calendar event's attendee list
+ * (see syncSharedNoteMembers), so a client can never assert its own access.
+ * Everything else about sharing depends on this returning the right answer,
+ * which is why it is deliberately trivial and has its own tests.
+ */
+export async function canAccessSharedNote(
+  externalId: string,
+  email: string,
+): Promise<boolean> {
+  if (!externalId || !email) return false
+  const db = await getDb()
+  const rows = await db.query<{ n: number }>(
+    'SELECT COUNT(*) AS n FROM shared_note_member WHERE external_id = ? AND LOWER(email) = LOWER(?)',
+    [externalId, email],
+  )
+  return Number(rows[0]?.n ?? 0) > 0
+}
+
+/**
+ * Record who may see a meeting's shared note.
+ *
+ * Called during calendar sync. The owner is always a member: they were at
+ * the meeting by definition. Attendees come from the invite.
+ *
+ * Additive only - it never removes a member, because losing access silently
+ * partway through a conversation is worse than keeping a stale one, and an
+ * attendee list can churn for reasons that are not "they were uninvited".
+ */
+export async function syncSharedNoteMembers(
+  externalId: string,
+  emails: string[],
+): Promise<void> {
+  if (!externalId) return
+  const db = await getDb()
+  const ts = now()
+  for (const raw of emails) {
+    const email = raw.trim().toLowerCase()
+    if (!email) continue
+    const existing = await db.query<{ email: string }>(
+      'SELECT email FROM shared_note_member WHERE external_id = ? AND email = ?',
+      [externalId, email],
+    )
+    if (existing.length) continue
+    await db.exec(
+      'INSERT INTO shared_note_member (external_id, email, created_at) VALUES (?, ?, ?)',
+      [externalId, email, ts],
+    )
+  }
+}
+
+export async function getSharedNote(externalId: string): Promise<SharedNote | null> {
+  const db = await getDb()
+  const rows = await db.query<{
+    external_id: string
+    content: string
+    updated_at: string
+    updated_by: string
+    revision: number
+  }>(
+    'SELECT external_id, content, updated_at, updated_by, revision FROM shared_note WHERE external_id = ?',
+    [externalId],
+  )
+  if (!rows.length) return null
+  const r = rows[0]
+  return {
+    externalId: r.external_id,
+    content: r.content,
+    updatedAt: r.updated_at,
+    updatedBy: r.updated_by,
+    revision: Number(r.revision),
+  }
+}
+
+/**
+ * Last-write-wins.
+ *
+ * Honest about what that means: two people typing in the same paragraph at
+ * the same instant, one loses those keystrokes. Acceptable for two people in
+ * a 1:1 who are talking to each other. The revision counter is what lets a
+ * client ignore the echo of its own write and notice it missed one, and it
+ * is the seam a CRDT would slot into later.
+ */
+export async function writeSharedNote(
+  externalId: string,
+  content: string,
+  updatedBy: string,
+): Promise<SharedNote> {
+  const db = await getDb()
+  const ts = now()
+  const existing = await getSharedNote(externalId)
+
+  if (!existing) {
+    await db.exec(
+      `INSERT INTO shared_note (external_id, content, updated_at, updated_by, revision)
+       VALUES (?, ?, ?, ?, 1)`,
+      [externalId, content, ts, updatedBy],
+    )
+    return { externalId, content, updatedAt: ts, updatedBy, revision: 1 }
+  }
+
+  const revision = existing.revision + 1
+  await db.exec(
+    `UPDATE shared_note SET content = ?, updated_at = ?, updated_by = ?, revision = ?
+      WHERE external_id = ?`,
+    [content, ts, updatedBy, revision, externalId],
+  )
+  return { externalId, content, updatedAt: ts, updatedBy, revision }
+}
+
+/** The external_id of a meeting the caller owns, or null. */
+export async function externalIdForMeeting(
+  ownerEmail: string,
+  meetingId: string,
+): Promise<string | null> {
+  const db = await getDb()
+  const rows = await db.query<{ external_id: string | null }>(
+    'SELECT external_id FROM meeting WHERE id = ? AND owner_email = ? AND deleted_at IS NULL',
+    [meetingId, ownerEmail],
+  )
+  return rows[0]?.external_id ?? null
+}
+
+/**
+ * Give back a reminder claim after every send for it failed.
+ *
+ * The claim is taken BEFORE sending, so a crash between claiming and sending
+ * cannot produce a duplicate. The cost of that ordering is that a transient
+ * failure, one FCM blip, would otherwise mark the reminder sent forever and
+ * lose it silently. Releasing the claim lets the next tick try again.
+ *
+ * Only called when NOTHING was delivered. A partial success keeps the claim,
+ * because re-sending would double-notify the devices that did receive it.
+ */
+export async function releaseReminder(meetingId: string, ownerEmail: string): Promise<void> {
+  const db = await getDb()
+  await db.exec('DELETE FROM reminder_sent WHERE meeting_id = ? AND owner_email = ?', [
+    meetingId,
+    ownerEmail,
+  ])
+}

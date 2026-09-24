@@ -13,9 +13,12 @@
  * "everyone gets two notifications".
  */
 
+import { logInfo, logError } from './logger'
+import { count } from './metrics'
 import {
   dueRemindersToSend,
   claimReminder,
+  releaseReminder,
   listPushSubscriptions,
   deletePushSubscription,
 } from './queries'
@@ -87,6 +90,9 @@ export async function sendDueReminders(): Promise<{ sent: number; failed: number
       meetingId: reminder.meetingId,
     })
 
+    let deliveredHere = 0
+    let goneHere = 0
+
     for (const sub of subscriptions) {
       try {
         await webpush.sendNotification(
@@ -97,15 +103,29 @@ export async function sendDueReminders(): Promise<{ sent: number; failed: number
           payload,
         )
         sent += 1
+        deliveredHere += 1
+        count('pushSent')
       } catch (err) {
         failed += 1
+        count('pushFailed')
         // 404 or 410 means the browser threw the subscription away; keeping
         // it would mean failing forever on every future tick.
         const status = (err as { statusCode?: number }).statusCode
         if (status === 404 || status === 410) {
+          goneHere += 1
           await deletePushSubscription(sub.endpoint).catch(() => {})
         }
       }
+    }
+
+    // Nothing was delivered, and not because the subscriptions are dead:
+    // this was a transient failure. Give the claim back so the next tick
+    // retries, rather than marking the reminder sent and losing it.
+    //
+    // A partial success KEEPS the claim, because re-sending would
+    // double-notify whichever devices did receive it.
+    if (deliveredHere === 0 && goneHere < subscriptions.length) {
+      await releaseReminder(reminder.meetingId, reminder.ownerEmail).catch(() => {})
     }
   }
 
@@ -121,19 +141,19 @@ export async function sendDueReminders(): Promise<{ sent: number; failed: number
 export function startReminderScheduler(): void {
   if (timer) return
   if (!vapidConfigured()) {
-    console.info('[push] VAPID not configured - reminder scheduler not started')
+    logInfo('push_scheduler_skipped', { reason: 'vapid_not_configured' })
     return
   }
 
-  console.info('[push] reminder scheduler started')
+  logInfo('push_scheduler_started', {})
   timer = setInterval(() => {
     if (running) return
     running = true
     sendDueReminders()
       .then(({ sent, failed }) => {
-        if (sent || failed) console.info(`[push] sent ${sent}, failed ${failed}`)
+        if (sent || failed) logInfo('push_tick', { sent, failed })
       })
-      .catch((err) => console.error('[push] tick failed', err))
+      .catch((err) => logError('push_tick_failed', { error: String(err).slice(0, 200) }))
       .finally(() => {
         running = false
       })

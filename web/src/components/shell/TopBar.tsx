@@ -88,14 +88,18 @@ export function TopBar({ userEmail }: { userEmail: string | null }) {
           className="p-1 no-underline"
           style={{ color: 'var(--color-text-secondary)' }}
         >
-          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <circle cx="10" cy="10" r="2.6" stroke="currentColor" strokeWidth="1.4" />
+          {/* A proper toothed cog. The previous icon was a circle with
+              radiating spokes, which reads as a sun, and sat next to an
+              actual sun in the theme toggle. */}
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
-              d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.3 4.7l-1.4 1.4M6.1 13.9l-1.4 1.4M15.3 15.3l-1.4-1.4M6.1 6.1 4.7 4.7"
+              d="M19.4 13a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
               stroke="currentColor"
-              strokeWidth="1.4"
+              strokeWidth="1.6"
               strokeLinecap="round"
+              strokeLinejoin="round"
             />
+            <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6" />
           </svg>
         </a>
       </div>

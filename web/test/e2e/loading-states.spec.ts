@@ -7,6 +7,7 @@
  */
 
 import { test, expect } from '../harness/auth-fixture'
+import { mintUiToken, PRIMARY_USER } from '../harness/auth-fixture'
 
 test.describe('loading feedback', () => {
   test('every section has a loading skeleton defined', async ({ signedIn }) => {
@@ -105,5 +106,47 @@ test.describe('meeting reminders', () => {
     // Longer than the first-run dialog's delay, so a prompt would have fired.
     await signedIn.waitForTimeout(2000)
     expect(requested).toBe(false)
+  })
+})
+
+test.describe('metrics', () => {
+  /**
+   * The app runs one replica with a 200MB ceiling, and measurement showed
+   * RSS climbing towards it under load. These exist so "how busy is it and
+   * how close to the limit" is answerable rather than guessed at, which is
+   * the mistake that made them necessary.
+   */
+  test('the snapshot reports memory against the actual limit', async ({ signedIn }) => {
+    const res = await signedIn.request.get('/api/metrics', {
+      headers: { 'cf-access-jwt-assertion': mintUiToken(PRIMARY_USER) },
+    })
+    expect(res.status()).toBe(200)
+    const body = await res.json()
+
+    expect(body.memory.rssMb).toBeGreaterThan(0)
+    // A bare RSS number is useless without the ceiling beside it.
+    expect(body.memory.limitMb).toBeGreaterThan(0)
+    expect(body.memory.rssFraction).toBeGreaterThan(0)
+    expect(body.counters).toHaveProperty('pageRenders')
+    expect(body.ratesPerMinute).toHaveProperty('pageRenders')
+  })
+
+  test('it counts page renders', async ({ signedIn }) => {
+    const read = async () => {
+      const r = await signedIn.request.get('/api/metrics', {
+        headers: { 'cf-access-jwt-assertion': mintUiToken(PRIMARY_USER) },
+      })
+      return (await r.json()).counters.pageRenders as number
+    }
+    const before = await read()
+    await signedIn.goto('/calendar')
+    await signedIn.goto('/actions')
+    expect(await read()).toBeGreaterThan(before)
+  })
+
+  test('it refuses an unauthenticated caller', async ({ page }) => {
+    // Not user data, but no reason to hand out the shape of your traffic.
+    const res = await page.request.get('/api/metrics')
+    expect(res.status()).toBe(401)
   })
 })

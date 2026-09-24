@@ -22,7 +22,7 @@ import { join } from 'node:path'
 // (or fails for want of a page). Add new unit specs here.
 const SCREEN_SPECS = /\.screens\.spec\.ts/
 
-const UNIT_SPECS = /(auth|import|calendar|oauth|ics|weekgrid|syncbutton|dialect|mention|actions-filter|timeleft|reorder|notepad|reminders|push-client)\.spec\.ts/
+const UNIT_SPECS = /(auth|import|calendar|oauth|ics|weekgrid|syncbutton|dialect|mention|actions-filter|timeleft|reorder|notepad|reminders|push-client|reminder-claim|limits|last-route)\.spec\.ts/
 
 export default defineConfig({
   testDir: './test/e2e',
