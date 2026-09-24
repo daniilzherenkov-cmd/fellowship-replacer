@@ -1,0 +1,333 @@
+web/.node-version
+  s_9b11f8d124a4ca::t_e26f2ce96df74a 1
+web/src/components/note/bullets.ts
+  s_9b11f8d124a4ca::t_4ef17f3b968c5b 1-89
+web/src/components/note/MeetingNote.tsx
+  s_9b11f8d124a4ca::t_fb5a65f1983cbe 346,392
+  s_9b11f8d124a4ca::t_63b97eddcc3bd0 22,34-35,148-181,322-323,325-334,361-362,364-373
+  s_9b11f8d124a4ca::t_49b9b9faa43fd1 14,39-44,107-117,182-189,335,376
+  s_9b11f8d124a4ca::t_8c6eac6c7bb383 19,32-33,126-147,273-281,465-550
+  s_9b11f8d124a4ca::t_cb9cab2164123b 23,404,406,408,411-427
+  s_9b11f8d124a4ca::t_622987da962782 20,118-125,220-232
+  s_9b11f8d124a4ca::t_1320fde38fcd0c 21,24,47,51
+  s_9b11f8d124a4ca::t_1d001eacb1f616 293-320
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 200,204,217,241,264,283,443-444,457
+  s_9b11f8d124a4ca::t_33610ef1be7227 64-78
+  s_9b11f8d124a4ca::t_06b1beeac43340 233-240,242-263,265-271
+  s_9b11f8d124a4ca::t_d0ff9a73ca6b4c 379-385
+  s_9b11f8d124a4ca::t_74c947937e362e 79,551-552
+web/src/app/(app)/people/page.tsx
+  s_9b11f8d124a4ca::t_559af62ddf9d9f 2,7,19-28,32-33,36-59,67,88
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 71-72
+  s_9b11f8d124a4ca::t_404fff611840e0 5,11-18,61-64,66,77-86,89-156
+  s_9b11f8d124a4ca::t_342eff96003e3a 60,65
+web/src/lib/db.ts
+  s_9b11f8d124a4ca::t_0a758e134fa460 4-6,8-18,22,56-57,101
+web/src/components/settings/IcsConnection.tsx
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 83-84,91,93,100,110,124,134,157,169,183,188,193,204
+web/test/e2e/mention.spec.ts
+  s_9b11f8d124a4ca::t_247abe664eb3cc 1-43
+  s_9b11f8d124a4ca::t_ad20ef1da49640 44-83
+web/test/e2e/loading-states.spec.ts
+  s_9b11f8d124a4ca::t_44527617edbe64 57,66
+  s_9b11f8d124a4ca::t_5da5158a5c9691 58-65,67,70,73,75,78-88,90-92,105-106
+  s_9b11f8d124a4ca::t_45648b0018b39b 36-54
+  s_9b11f8d124a4ca::t_710ed323dbe5c7 1-35
+  s_9b11f8d124a4ca::t_28adffd4057fcb 55-56,68-69,76-77,89,93-104,107-109
+  s_9b11f8d124a4ca::t_0cd5db4e214edf 71-72,74
+web/src/components/note/BulletTextarea.tsx
+  s_9b11f8d124a4ca::t_cb9cab2164123b 1-10,12-42,58-78
+  s_9b11f8d124a4ca::t_d116521f9a300e 11,43-57
+web/src/instrumentation.ts
+  s_9b11f8d124a4ca::t_86c69458e02ec1 17-23
+web/.gitignore
+  s_9b11f8d124a4ca::t_de47aa7ffff3d3 20
+web/playwright.config.ts
+  s_9b11f8d124a4ca::t_76baff4850fb48 23,47,50,91-100
+  s_9b11f8d124a4ca::t_9002314e041d0b 25
+  s_9b11f8d124a4ca::t_b54b5d7e8cf619 80-86
+  s_9b11f8d124a4ca::t_f11af8bace03b7 53-66
+  s_9b11f8d124a4ca::t_6672bb412fe726 24
+web/src/app/(app)/settings/page.tsx
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 28,51-52
+  s_9b11f8d124a4ca::t_4bfde4a5fda527 47
+  s_9b11f8d124a4ca::t_0d6db5a972c612 7,46,48
+  s_9b11f8d124a4ca::t_07da1f5c79ea51 49
+web/test/e2e/connect-prompt.screens.spec.ts
+  s_9b11f8d124a4ca::t_dca0a47841caf6 15
+  s_9b11f8d124a4ca::t_dc0622acf6e0f5 1-14,16-51
+web/test/e2e/oauth.spec.ts
+  s_9b11f8d124a4ca::t_c323dc5d5d0828 17,197-229
+  s_9b11f8d124a4ca::t_a79287262f26f6 230
+web/src/components/ui/DueDatePill.tsx
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 29
+web/src/app/(app)/people/[id]/page.tsx
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 29,31,36,51,54,66,68,80-81
+web/src/components/calendar/SyncButton.tsx
+  s_9b11f8d124a4ca::t_41c0fc378f361b 16,52-61,105-108
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 102
+web/src/app/(app)/meetings/page.tsx
+  s_9b11f8d124a4ca::t_cedc23cdb6c766 223-225,244,248-249
+  s_9b11f8d124a4ca::t_50b4e705fd539b 5,7,40-47,49-82,126,250
+  s_9b11f8d124a4ca::t_80c78030ba13f9 6,39,99,102,105-109,127-130,134
+  s_9b11f8d124a4ca::t_f74f7dedff5c84 135
+  s_9b11f8d124a4ca::t_24a7c79190e700 31-38,48,83-86,88-98,100-101,103-104,131-133,144,162
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 166-167,177,204-205
+  s_9b11f8d124a4ca::t_42795cbda81c81 4,8,111-115,137-143,145-161,226-243,245-247
+  s_9b11f8d124a4ca::t_16472f40b315a1 110,136
+web/src/components/shell/FirstRunPush.tsx
+  s_9b11f8d124a4ca::t_af6d1f6343e9b8 1-117
+web/src/lib/push.ts
+  s_9b11f8d124a4ca::t_0c5a87e84ca0f1 1-144
+web/src/app/(app)/calendar/loading.tsx
+  s_9b11f8d124a4ca::t_ebf33ee2420f0f 1-43
+web/src/lib/sync.ts
+  s_9b11f8d124a4ca::t_385aba509fad30 114-115,124-125,136,138,149-150
+  s_9b11f8d124a4ca::t_a3eb41bec4b5b9 113,117-123,126-128,135,137,147-148
+web/src/app/(app)/meetings/[id]/page.tsx
+  s_9b11f8d124a4ca::t_1320fde38fcd0c 4,21-30
+web/test/e2e/dialect.spec.ts
+  s_9b11f8d124a4ca::t_f02965af7ae423 1-76
+web/test/e2e/calendar.spec.ts
+  s_9b11f8d124a4ca::t_d70a21058c8e27 133,144-151,154,162-166,169,176-177
+  s_9b11f8d124a4ca::t_05e2a7a7b108fa 216-241
+  s_9b11f8d124a4ca::t_9ec70c705ba825 242
+web/src/components/calendar/ConnectPrompt.tsx
+  s_9b11f8d124a4ca::t_a8a85ea8ce5a0a 1-78,80,82-87,89-126,128-130,132-142,144-149,151-159
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 79,81,88,127,131,143,150
+web/src/components/ui/Avatar.tsx
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 81
+web/package.json
+  s_9b11f8d124a4ca::t_3b54da2d657a41 15-16
+  s_9b11f8d124a4ca::t_b54b5d7e8cf619 14,40
+  s_9b11f8d124a4ca::t_dc0622acf6e0f5 11
+  s_9b11f8d124a4ca::t_e26f2ce96df74a 36-38
+  s_9b11f8d124a4ca::t_15a27fde5ff28c 23-24,32
+web/src/components/note/time-left.ts
+  s_9b11f8d124a4ca::t_74eb0c2dbd6180 1-44
+web/src/components/settings/ReminderSettings.tsx
+  s_9b11f8d124a4ca::t_4bfde4a5fda527 4,6-9,12-14,16-18,21-30,43-44,47,49-55,57,59,65,69-70,81,87,90,92-100,102-109
+  s_9b11f8d124a4ca::t_5bf4a0e62d1ba9 1-3,5,10-11,15,19-20,31-42,45-46,48,56,58,60-64,66-68,71-80,82-86,88-89,91,101,110-127
+web/test/e2e/push-client.spec.ts
+  s_9b11f8d124a4ca::t_9002314e041d0b 1-38
+web/src/lib/google-calendar-api.ts
+  s_9b11f8d124a4ca::t_04133b8b3fda86 62,312-338
+  s_9b11f8d124a4ca::t_a471f1f4daca8a 83-84,217-279,281-311,339
+  s_9b11f8d124a4ca::t_8eebafc2b4b295 63-82,136,142
+  s_9b11f8d124a4ca::t_a6e9049232f679 42-51,119,280
+  s_9b11f8d124a4ca::t_8c1c7bcb7abf68 85
+web/src/components/note/useRowDrag.ts
+  s_9b11f8d124a4ca::t_c120b85cc6b558 1-81
+web/test/e2e/actions-filter.spec.ts
+  s_9b11f8d124a4ca::t_0d54601c17cf9d 1-8,10-29,35,37-56,58-74,80-89,127-128
+  s_9b11f8d124a4ca::t_c122df8b66d71e 9,30-34,36,57,75-79,90-126
+web/src/components/meetings/AutoLoadMore.tsx
+  s_9b11f8d124a4ca::t_24f748dc364832 1-93
+web/test/harness/setup.ts
+  s_9b11f8d124a4ca::t_af42544f33ab28 17,54-62,67-74,77-94
+web/test/e2e/reminders.spec.ts
+  s_9b11f8d124a4ca::t_d0602804463c0a 11,72-85
+  s_9b11f8d124a4ca::t_1998ebdf0b3881 1-10,12-71,86-87
+web/public/sw.js
+  s_9b11f8d124a4ca::t_86c69458e02ec1 1-57
+web/src/components/ui/Skeleton.tsx
+  s_9b11f8d124a4ca::t_18f4a3641dbdc3 83-96
+  s_9b11f8d124a4ca::t_bb031abe41ffa9 1-82
+web/src/components/ui/RowMenu.tsx
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 77
+web/test/e2e/archive-scroll.spec.ts
+  s_9b11f8d124a4ca::t_8ecaa3ecd34da9 1-53
+web/test/e2e/window-limit.spec.ts
+  s_9b11f8d124a4ca::t_97c572d5553f04 52-56
+  s_9b11f8d124a4ca::t_e1d6071f0db436 1-51,57-58
+web/src/components/shell/IconRail.tsx
+  s_9b11f8d124a4ca::t_7a2def2e22d2a1 12,24-32,40-41,65-67,72,74,76,81-83
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 87
+web/src/styles/globals.css
+  s_9b11f8d124a4ca::t_6483e553f34860 62-83,86,142
+  s_9b11f8d124a4ca::t_bb031abe41ffa9 168-193
+web/src/lib/reminders.ts
+  s_9b11f8d124a4ca::t_1998ebdf0b3881 1-73
+web/src/components/shell/TopBar.tsx
+  s_9b11f8d124a4ca::t_ebab6c561f0cc7 13,68
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 59,64,70,79
+web/src/app/(app)/actions/loading.tsx
+  s_9b11f8d124a4ca::t_ebf33ee2420f0f 1-28
+web/src/app/(app)/settings/loading.tsx
+  s_9b11f8d124a4ca::t_ebf33ee2420f0f 1-22
+web/test/e2e/reorder.spec.ts
+  s_9b11f8d124a4ca::t_c120b85cc6b558 1-45
+web/src/lib/push-client.ts
+  s_9b11f8d124a4ca::t_9002314e041d0b 1-13,15-17,21-46
+  s_9b11f8d124a4ca::t_0bd4d47620fe9a 14,18-20
+web/src/components/meetings/ScrollToToday.tsx
+  s_9b11f8d124a4ca::t_f74f7dedff5c84 1-24
+web/test/e2e/notepad.spec.ts
+  s_9b11f8d124a4ca::t_4ef17f3b968c5b 1-37,40,44-77
+  s_9b11f8d124a4ca::t_174eb00f5f7c7b 38-39,41-43
+web/src/components/calendar/NewMeetingDialog.tsx
+  s_9b11f8d124a4ca::t_579b273b38061b 20,133,158-171
+  s_9b11f8d124a4ca::t_bb3af6f1490e96 1-19,21-132,134-157,172-396
+web/src/app/(app)/layout.tsx
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 21-22
+  s_9b11f8d124a4ca::t_4bfde4a5fda527 6,53-55
+  s_9b11f8d124a4ca::t_daf4a79a094334 5,7,31-48,52
+web/scripts/smoke.sh
+  s_9b11f8d124a4ca::t_3b54da2d657a41 1-67
+web/src/lib/calendar.ts
+  s_9b11f8d124a4ca::t_b82a548dc4ca17 147-155,157,159,161,173
+web/test/e2e/search.spec.ts
+  s_9b11f8d124a4ca::t_dd77d09fce430b 1-23,25-30,32-37,39-47,49-55,57-59
+  s_9b11f8d124a4ca::t_9e3fff77c9fcbd 24,31,38,48,56
+web/sql/005-push-subscriptions.sql
+  s_9b11f8d124a4ca::t_521943812df3a0 1-33
+web/src/components/calendar/WeekGrid.tsx
+  s_9b11f8d124a4ca::t_de4804d92a1fab 63-70,72
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 228,250,258,278,291,315,391,458,465
+  s_9b11f8d124a4ca::t_02ea4b53fd454b 183,188-192,335-350,354
+web/src/lib/google-oauth.ts
+  s_9b11f8d124a4ca::t_a6e9049232f679 46-55,184,212,234
+  s_9b11f8d124a4ca::t_cd9908be047abf 78-100
+  s_9b11f8d124a4ca::t_111139088f3dd6 101-102
+web/src/components/calendar/AutoSync.tsx
+  s_9b11f8d124a4ca::t_b0fce58f40c625 1-86
+web/test/e2e/app.spec.ts
+  s_9b11f8d124a4ca::t_d116521f9a300e 77-79
+  s_9b11f8d124a4ca::t_0c0ff17b5b08e1 16-19,21-22
+web/test/e2e/weekgrid.spec.ts
+  s_9b11f8d124a4ca::t_fa1e36b554c619 33-34
+  s_9b11f8d124a4ca::t_3afa0ab82d908d 35-36
+  s_9b11f8d124a4ca::t_3bcb30dd3225e1 37
+web/src/app/page.tsx
+  s_9b11f8d124a4ca::t_f54874925d1d88 27
+web/src/components/shell/usePushSubscription.ts
+  s_9b11f8d124a4ca::t_af6d1f6343e9b8 1-99
+web/src/app/(app)/calendar/page.tsx
+  s_9b11f8d124a4ca::t_43a6c4f90dc189 10-27,29-33,35-40,70-72
+  s_9b11f8d124a4ca::t_e1e7178142521d 52,55-57,68
+  s_9b11f8d124a4ca::t_acb27666169415 3,42-45,69
+  s_9b11f8d124a4ca::t_efb9b5ac7ffbc8 50,53,63-67,73-74
+web/src/components/calendar/CalendarView.tsx
+  s_9b11f8d124a4ca::t_acb27666169415 96-109
+  s_9b11f8d124a4ca::t_e1e7178142521d 23,39,50-51,160
+  s_9b11f8d124a4ca::t_07078be6bc90c4 231-232
+  s_9b11f8d124a4ca::t_18edcbdcf23dbb 329-332,361,363-369,384,386-391
+  s_9b11f8d124a4ca::t_0e318d41c0cbb8 24-25,40,52-53,67,140-155,161-169,236,274
+  s_9b11f8d124a4ca::t_b25db7e1d554f5 131-133,136,185,191
+  s_9b11f8d124a4ca::t_86cdb2ef6fa03b 16,41-43,54-58,61-66,68,76-95
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 178,219,237,251,278,303,314,362,372,385
+  s_9b11f8d124a4ca::t_4aeb37c6b42c73 194-202
+  s_9b11f8d124a4ca::t_efb9b5ac7ffbc8 22,38,48-49
+  s_9b11f8d124a4ca::t_7e76bb3d107282 110
+web/scripts/db-setup.sh
+  s_9b11f8d124a4ca::t_af42544f33ab28 1-44
+web/src/lib/queries.ts
+  s_9b11f8d124a4ca::t_9fed37d81dc09a 128-130,140-143,145-155,224-226,228
+  s_9b11f8d124a4ca::t_0aed6e6b99339d 215-222,234-242
+  s_9b11f8d124a4ca::t_f8c430c563c760 95-96,100-110
+  s_9b11f8d124a4ca::t_6acb6cbc9f439c 116-118,697-699
+  s_9b11f8d124a4ca::t_0d889f97eabe2f 1057-1113
+  s_9b11f8d124a4ca::t_13970b30c6e0bf 917-921
+  s_9b11f8d124a4ca::t_385aba509fad30 66-68,176-177,193-194,229
+  s_9b11f8d124a4ca::t_43ad3f7549d564 332-343,350-365,367-381
+  s_9b11f8d124a4ca::t_8337b56087c0f1 982-1009,1020-1023,1038,1041-1042,1049-1050,1052-1056
+  s_9b11f8d124a4ca::t_2804c14e229035 22-31,78
+  s_9b11f8d124a4ca::t_f866fcf2877334 866-916,922-925
+  s_9b11f8d124a4ca::t_04133b8b3fda86 926-981
+  s_9b11f8d124a4ca::t_2f1d6ea68f547b 725-865
+  s_9b11f8d124a4ca::t_1d5bc717dd6841 1010-1019,1024-1037,1039-1040,1043-1048,1051
+  s_9b11f8d124a4ca::t_d73ba2b03a5298 674-676
+  s_9b11f8d124a4ca::t_13c39bffea6331 61-63,174-175,190-191,257
+  s_9b11f8d124a4ca::t_03c2d7df661fa0 541-545,547-550
+  s_9b11f8d124a4ca::t_42795cbda81c81 1114-1131
+  s_9b11f8d124a4ca::t_155d6aaa2b2860 1132-1271
+  s_9b11f8d124a4ca::t_7589da350f99ee 419-422
+  s_9b11f8d124a4ca::t_7a5ff8351c9ccf 385-402,452
+  s_9b11f8d124a4ca::t_2ae17c5c2e5ce0 64-65,178,192,258,406
+web/src/components/actions/filters.ts
+  s_9b11f8d124a4ca::t_63db0e4fef0c0d 1-11,22,24-33,35-48,52-63,65-67
+  s_9b11f8d124a4ca::t_2e3f9f0285dc89 12-21,23,34,49-51,64
+web/src/components/calendar/TimeSlotPicker.tsx
+  s_9b11f8d124a4ca::t_4e37c76a70b0b8 1-239
+web/src/components/note/CarriedForward.tsx
+  s_9b11f8d124a4ca::t_788ec57cdc0163 1-14,16-43,45-49,51-96,98-118
+  s_9b11f8d124a4ca::t_1320fde38fcd0c 15,44,50,97
+web/sql/003-meeting-conference-location.sql
+  s_9b11f8d124a4ca::t_c15887d4b66bc8 1-9
+web/src/components/note/ActionItemRow.tsx
+  s_9b11f8d124a4ca::t_d0ff9a73ca6b4c 113-119,124-128,130-131
+  s_9b11f8d124a4ca::t_979dfbf93188ab 29,31-32,59,134-137
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 185,223
+web/src/components/note/TalkingPointRow.tsx
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 185
+  s_9b11f8d124a4ca::t_0fca02d30e76e7 82-105
+  s_9b11f8d124a4ca::t_4d7b95f478d07e 22-24,28,33-37,44-48,132-184,186-195
+web/src/components/shell/GlobalSearch.tsx
+  s_9b11f8d124a4ca::t_ebab6c561f0cc7 1-206
+web/src/components/shell/UpcomingBanner.tsx
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 63,75,88
+  s_9b11f8d124a4ca::t_35c09a8b9dee35 1-62,64-74,76-87,89-95
+web/src/actions/index.ts
+  s_9b11f8d124a4ca::t_bd1a15203ca210 45
+  s_9b11f8d124a4ca::t_0d889f97eabe2f 367-385
+  s_9b11f8d124a4ca::t_e4d823b921386b 15,207-218
+  s_9b11f8d124a4ca::t_9002314e041d0b 219,386-438
+  s_9b11f8d124a4ca::t_d0ec44d0b35a0a 315-366
+  s_9b11f8d124a4ca::t_72fff510aadd16 220-293,304-314
+  s_9b11f8d124a4ca::t_7a5ff8351c9ccf 294-303
+web/Dockerfile
+  s_9b11f8d124a4ca::t_23dd0d1b8c36a5 12,17-25,37-38
+  s_9b11f8d124a4ca::t_e26f2ce96df74a 6-11,27,41
+web/src/components/actions/ActionsList.tsx
+  s_9b11f8d124a4ca::t_4e63e9391a1d38 14,18-22,42-58,61-62,74-83,86,95-110,143-168,170-197,203-205,252-285
+  s_9b11f8d124a4ca::t_2e3f9f0285dc89 23,41,59-60,63-73,111-142,286
+  s_9b11f8d124a4ca::t_63db0e4fef0c0d 169
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 201-202,216,223
+  s_9b11f8d124a4ca::t_c784b2d8d520ec 287
+web/sql/004-private-notes.sql
+  s_9b11f8d124a4ca::t_b1511aad6fa866 1-15
+web/README.md
+  s_9b11f8d124a4ca::t_fdb15288e4613b 51,53-54,73-92,181,244-251
+  s_9b11f8d124a4ca::t_b81520b13d3e51 59-72
+web/sql/schema.mysql.sql
+  s_9b11f8d124a4ca::t_62bb28a3764638 1,3-5,7-8,10-12,14-19,22-32,36-43,55-58,62-64,68-77,81-95,98-108,110-115,118-124
+  s_9b11f8d124a4ca::t_fbf9e0dd00a91b 44-47
+  s_9b11f8d124a4ca::t_b1511aad6fa866 52-54
+  s_9b11f8d124a4ca::t_c15887d4b66bc8 48-51
+  s_9b11f8d124a4ca::t_521943812df3a0 126-135,138-144
+web/sql/002-meeting-rsvp-allday.sql
+  s_9b11f8d124a4ca::t_fbf9e0dd00a91b 1-13
+web/src/components/settings/CalendarConnection.tsx
+  s_9b11f8d124a4ca::t_41c0fc378f361b 111-115
+  s_9b11f8d124a4ca::t_0a6454dbdf8d49 54-55,76,92,104,121,146
+web/scripts/dev-with-auth.mjs
+  s_9b11f8d124a4ca::t_b54b5d7e8cf619 98-104
+web/src/app/api/auth/google/callback/route.ts
+  s_9b11f8d124a4ca::t_d66eef4138cdd3 17,82-93
+  s_9b11f8d124a4ca::t_888276f968f3df 15,23
+  s_9b11f8d124a4ca::t_2e0d3a01563b0b 94
+web/.nvmrc
+  s_9b11f8d124a4ca::t_e26f2ce96df74a 1
+web/test/e2e/timeleft.spec.ts
+  s_9b11f8d124a4ca::t_74eb0c2dbd6180 1-44
+web/next.config.ts
+  s_9b11f8d124a4ca::t_b54b5d7e8cf619 17-20
+web/package-lock.json
+  s_9b11f8d124a4ca::t_628bf5a20a0f18 15-16,24,28-30,1138-1147,1160-1171,1211-1215,1217-1221,1331-1335,1337,1548-1556,1608-1628,1963-1967,2289,2455-2494
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "f9270b741995a96e6124d7e849d4d7bc308becd9",
+  "prompts": {},
+  "sessions": {
+    "s_9b11f8d124a4ca": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "78272c85-3b86-4f98-be61-00bf083ac019",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
