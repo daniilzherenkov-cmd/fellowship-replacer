@@ -143,3 +143,22 @@ CREATE TABLE IF NOT EXISTS reminder_sent (
   sent_at     varchar(32)  NOT NULL,
   PRIMARY KEY (meeting_id, owner_email)
 );
+
+-- Real-time shared notes (docs/16). Keyed on the external_id Google gives
+-- every attendee identically. Additive: no shared_note row means the note
+-- behaves exactly as a single-owner note.
+CREATE TABLE IF NOT EXISTS shared_note (
+  external_id  varchar(400) NOT NULL PRIMARY KEY,
+  content      mediumtext   NOT NULL,
+  updated_at   varchar(32)  NOT NULL,
+  updated_by   varchar(320) NOT NULL,
+  revision     bigint       NOT NULL DEFAULT 0
+);
+
+-- Membership is derived from the calendar invite, written server-side.
+CREATE TABLE IF NOT EXISTS shared_note_member (
+  external_id varchar(400) NOT NULL,
+  email       varchar(320) NOT NULL,
+  created_at  varchar(32)  NOT NULL,
+  PRIMARY KEY (external_id, email)
+);

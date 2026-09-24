@@ -16,6 +16,7 @@ import { getDb } from './db'
 import { normaliseEvents, type NormalisedMeeting, type NormalisedPerson } from './calendar'
 import { fetchAllEvents, defaultWindow, GoogleApiError } from './google-calendar-api'
 import { getAccessToken, getConnection, updateSyncState } from './google-store'
+import { syncSharedNoteMembers } from './queries'
 
 export interface SyncResult {
   created: number
@@ -163,6 +164,25 @@ async function upsertMeeting(
       'INSERT INTO meeting_attendee (meeting_id, person_id) VALUES (?, ?)',
       [meetingId, personId],
     )
+  }
+
+  // Shared-note membership, derived from the invite rather than asserted by
+  // any client. The owner is always a member: they were at the meeting by
+  // definition. Additive, so losing an attendee from a later invite does not
+  // silently revoke access mid-conversation. See docs/16.
+  //
+  // Fails soft: this is an additive side table, and a failure here must not
+  // break calendar sync, which is the feature people actually depend on.
+  if (meeting.externalId) {
+    try {
+      const emails = [
+        ownerEmail,
+        ...meeting.attendees.map((a) => a.email).filter(Boolean),
+      ]
+      await syncSharedNoteMembers(meeting.externalId, emails)
+    } catch {
+      // Sync continues; membership catches up on the next pass.
+    }
   }
 
   return { created, peopleCreated }

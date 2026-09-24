@@ -14,6 +14,7 @@
  */
 
 import { useEffect, useMemo, useState, useTransition } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import { AvatarStack } from '../ui/Avatar'
 import { createMeetingAction } from '@/actions'
@@ -22,6 +23,7 @@ import { SyncButton } from './SyncButton'
 import { ConnectPrompt } from './ConnectPrompt'
 import { AutoSync } from './AutoSync'
 import { NewMeetingDialog } from './NewMeetingDialog'
+import { rememberRoute } from '@/lib/last-route'
 import type { Meeting, Person } from '@/lib/queries'
 
 function sameDay(a: Date, b: Date): boolean {
@@ -30,6 +32,39 @@ function sameDay(a: Date, b: Date): boolean {
     a.getMonth() === b.getMonth() &&
     a.getDate() === b.getDate()
   )
+}
+
+/** Local calendar date as YYYY-MM-DD. toISOString() would shift the day in any
+ *  timezone behind UTC, which is how a date picked at 21:00 became tomorrow. */
+function ymd(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}
+
+/**
+ * Put view state in the URL WITHOUT a server round trip.
+ *
+ * Which day you are on and whether you are in Week view have to survive a
+ * reload: this page is `force-dynamic`, so routing through router.replace
+ * would re-run the server component and make every arrow click and every
+ * Today/Week toggle wait on a fetch. history.replaceState is understood by
+ * the App Router, so the URL and the client state stay in step for free.
+ *
+ * It records the route itself because the RememberRoute effect hangs off
+ * useSearchParams, and there is no guarantee a replaceState edit re-runs it.
+ */
+function patchUrl(updates: Record<string, string | null>): void {
+  if (typeof window === 'undefined') return
+  const params = new URLSearchParams(window.location.search)
+  for (const [key, value] of Object.entries(updates)) {
+    if (value === null) params.delete(key)
+    else params.set(key, value)
+  }
+  const query = params.toString()
+  const path = query ? `${window.location.pathname}?${query}` : window.location.pathname
+  if (path === window.location.pathname + window.location.search) return
+  window.history.replaceState(null, '', path)
+  rememberRoute(path)
 }
 
 export function CalendarView({
@@ -41,6 +76,7 @@ export function CalendarView({
   anchorDate,
   windowFrom,
   windowTo,
+  note = null,
 }: {
   meetings: Meeting[]
   /** Controls whether "Sync now" is offered. Defaults off so no dead control appears. */
@@ -56,8 +92,15 @@ export function CalendarView({
   /** Bounds of the loaded slice; navigating outside re-anchors the URL. */
   windowFrom?: string
   windowTo?: string
+  /**
+   * The selected meeting's note, rendered by the server and passed in as a
+   * slot. Keeps this component free of data fetching while the note still
+   * renders beside the agenda.
+   */
+  note?: React.ReactNode
 }) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   // Seeded from the server's anchor so a shared or reloaded URL lands on the
   // right day. Local state keeps arrow clicks instant; the effect below only
   // re-anchors when the user leaves the slice the server sent.
@@ -66,7 +109,36 @@ export function CalendarView({
   )
   const [createAt, setCreateAt] = useState<Date | null>(null)
   const [loadingSlice, startTransition] = useTransition()
-  const [mode, setMode] = useState<'today' | 'week'>('today')
+  /**
+   * Today or Week, seeded from the URL.
+   *
+   * This used to be plain client state, so a reload always dropped you back
+   * into Today even though the rest of the screen was restored. The toggle
+   * writes `?v=week` back into the URL, which also makes the view part of
+   * what "reopen where I left off" restores.
+   */
+  const [mode, setMode] = useState<'today' | 'week'>(() =>
+    searchParams.get('v') === 'week' ? 'week' : 'today',
+  )
+
+  /** Which note is open, so the agenda can show which card you are reading. */
+  const openNoteId = searchParams.get('note')
+
+  function selectMode(next: 'today' | 'week') {
+    setMode(next)
+    // An open note fills the right pane in both views, so the toggle would
+    // look dead while one is up. Switching the view closes it.
+    if (openNoteId) {
+      const query = new URLSearchParams(window.location.search)
+      query.delete('note')
+      if (next === 'week') query.set('v', 'week')
+      else query.delete('v')
+      const qs = query.toString()
+      startTransition(() => router.replace(qs ? `/calendar?${qs}` : '/calendar', { scroll: false }))
+      return
+    }
+    patchUrl({ v: next === 'week' ? 'week' : null })
+  }
 
   const dayMeetings = useMemo(
     () => meetings.filter((m) => sameDay(new Date(m.startAt), selectedDate)),
@@ -89,10 +161,23 @@ export function CalendarView({
     const hi = new Date(windowTo).getTime() - 86_400_000
     if (t >= lo && t <= hi) return
 
-    const pad = (n: number) => String(n).padStart(2, '0')
-    const d = `${selectedDate.getFullYear()}-${pad(selectedDate.getMonth() + 1)}-${pad(selectedDate.getDate())}`
-    startTransition(() => router.replace(`/calendar?d=${d}`, { scroll: false }))
+    const params = new URLSearchParams(
+      typeof window === 'undefined' ? '' : window.location.search,
+    )
+    // Keep ?note= and ?v=: re-anchoring is a data fetch, not a change of view.
+    params.set('d', ymd(selectedDate))
+    startTransition(() => router.replace(`/calendar?${params.toString()}`, { scroll: false }))
   }, [selectedDate, windowFrom, windowTo, router])
+
+  /**
+   * Mirror the selected day into the URL so a reload lands on it.
+   *
+   * Cleared when the day IS today, on purpose: coming back tomorrow should
+   * open tomorrow, not pin you to the date you happened to close the tab on.
+   */
+  useEffect(() => {
+    patchUrl({ d: sameDay(selectedDate, new Date()) ? null : ymd(selectedDate) })
+  }, [selectedDate])
 
   // ⌘N, as docs/04 asked for. Ignored while typing so it does not hijack a
   // browser shortcut inside a note field.
@@ -135,6 +220,39 @@ export function CalendarView({
     const next = new Date(selectedDate)
     next.setDate(next.getDate() + delta * (mode === 'week' ? 7 : 1))
     setSelectedDate(next)
+  }
+
+  /**
+   * Open a note WITHOUT leaving the calendar.
+   *
+   * This used to router.push to /meetings/[id], which replaced the whole
+   * screen and took the agenda with it. Fellow keeps the day's list on the
+   * left and renders the note beside it, so you can move between meetings
+   * without going back each time.
+   *
+   * A search param rather than client state, so the note survives a reload
+   * and can be linked to. /meetings/[id] still exists for direct links from
+   * search and back-links.
+   */
+  function openNote(meetingId: string) {
+    // Read the live URL rather than useSearchParams: ?d= and ?v= are written
+    // with history.replaceState, which the hook is not guaranteed to observe.
+    const query = new URLSearchParams(window.location.search)
+    query.set('note', meetingId)
+    startTransition(() => router.replace(`/calendar?${query.toString()}`, { scroll: false }))
+  }
+
+  /**
+   * Close the note and go back to whatever was behind it.
+   *
+   * Without this there was no way out of a note opened from the week grid:
+   * the note replaces the grid, and the only route back was editing the URL.
+   */
+  function closeNote() {
+    const query = new URLSearchParams(window.location.search)
+    query.delete('note')
+    const qs = query.toString()
+    startTransition(() => router.replace(qs ? `/calendar?${qs}` : '/calendar', { scroll: false }))
   }
 
   /**
@@ -215,7 +333,7 @@ export function CalendarView({
               type="button"
               role="tab"
               aria-selected={mode === m}
-              onClick={() => setMode(m)}
+              onClick={() => selectMode(m)}
               className="flex-1 cursor-pointer border-0 py-[4px] text-[length:var(--text-sm)] font-medium capitalize"
               style={{
                 borderRadius: 4,
@@ -256,7 +374,11 @@ export function CalendarView({
           {dayMeetings.map((meeting, i) => (
             <div key={meeting.id}>
               {i === nowLineIndex && <NowLine />}
-              <AgendaCard meeting={meeting} onOpen={() => router.push(`/meetings/${meeting.id}`)} />
+              <AgendaCard
+                meeting={meeting}
+                selected={meeting.id === openNoteId}
+                onOpen={() => openNote(meeting.id)}
+              />
             </div>
           ))}
 
@@ -266,11 +388,29 @@ export function CalendarView({
       </aside>
 
       <div className="min-w-0 flex-1 overflow-auto">
-        {mode === 'week' ? (
+        {note ? (
+          <div className="relative h-full">
+            <button
+              type="button"
+              onClick={closeNote}
+              data-testid="close-note"
+              className="absolute right-3 top-3 z-10 cursor-pointer px-[10px] py-[3px] text-[length:var(--text-sm)] font-medium"
+              style={{
+                borderRadius: 'var(--radius-pill)',
+                border: '1px solid var(--color-hairline)',
+                background: 'var(--color-canvas)',
+                color: 'var(--color-text-secondary)',
+              }}
+            >
+              {mode === 'week' ? '‹ Week' : '‹ Close'}
+            </button>
+            {note}
+          </div>
+        ) : mode === 'week' ? (
           <WeekGrid
             meetings={weekMeetings}
             anchorDate={selectedDate}
-            onSelect={(id) => router.push(`/meetings/${id}`)}
+            onSelect={(id) => openNote(id)}
             onCreateAt={(at) => openCreate(at)}
           />
         ) : (
@@ -319,7 +459,17 @@ function NowLine() {
   )
 }
 
-function AgendaCard({ meeting, onOpen }: { meeting: Meeting; onOpen: () => void }) {
+function AgendaCard({
+  meeting,
+  onOpen,
+  selected = false,
+}: {
+  meeting: Meeting
+  onOpen: () => void
+  /** The note open beside the agenda. Light-blue tint, accent title; never
+   *  the solid-blue list selection, as the header comment explains. */
+  selected?: boolean
+}) {
   const [hover, setHover] = useState(false)
   const start = new Date(meeting.startAt)
   const end = new Date(meeting.endAt)
@@ -341,7 +491,11 @@ function AgendaCard({ meeting, onOpen }: { meeting: Meeting; onOpen: () => void 
       style={{
         borderRadius: 8,
         // Transparent when idle - no grey film, matching Fellow.
-        background: hover ? 'var(--color-hover)' : 'transparent',
+        background: selected
+          ? 'var(--color-accent-subtle)'
+          : hover
+            ? 'var(--color-hover)'
+            : 'transparent',
       }}
     >
       <span
@@ -362,7 +516,11 @@ function AgendaCard({ meeting, onOpen }: { meeting: Meeting; onOpen: () => void 
             className="truncate text-[length:var(--text-md)] font-medium"
             style={{
               textDecoration: declined ? 'line-through' : undefined,
-              color: declined ? 'var(--color-text-tertiary)' : undefined,
+              color: declined
+                ? 'var(--color-text-tertiary)'
+                : selected
+                  ? 'var(--color-accent)'
+                  : undefined,
             }}
           >
             {meeting.title}

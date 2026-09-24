@@ -21,4 +21,16 @@ export async function register() {
   // VAPID keys arrive from Vault.
   const { startReminderScheduler } = await import('./lib/push')
   startReminderScheduler()
+
+  // Shared-note channels live in this process's memory, which is only
+  // correct while the service runs a single replica. Say so loudly at boot
+  // if that has changed, because the failure mode otherwise is two people
+  // silently not seeing each other. See docs/16.
+  const { assertSingleReplica } = await import('./lib/note-hub')
+  assertSingleReplica()
+
+  // A metrics line to stdout every minute. Loki keeps the history, so there
+  // is nothing to poll and nothing to install.
+  const { startMetricsReporter } = await import('./lib/metrics')
+  startMetricsReporter()
 }

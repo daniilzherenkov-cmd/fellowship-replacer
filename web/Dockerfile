@@ -45,7 +45,20 @@ ENV NODE_ENV=production
 ENV PORT=8080
 # Keep V8's heap under the cgroup limit so an OOM is a clean JS error rather
 # than a silent SIGKILL that stalls the readiness probe.
-ENV NODE_OPTIONS="--max-old-space-size=300"
+#
+# This said 300 against a `memory: 200` limit in app.yaml, which is the exact
+# opposite of what the line above claims: V8 would happily grow past the
+# container ceiling and be killed by the cgroup, with no JS error and no
+# explanation. The arithmetic that matters is:
+#
+#   RSS = old space + young gen + native + code
+#
+# Measured RSS is ~98MB with a mostly empty heap, so roughly 60-70MB of that
+# is non-heap. 128 leaves headroom inside 200 and makes V8 collect hard, and
+# then throw a catchable OOM, before the cgroup intervenes.
+#
+# If this is ever raised, raise `memory` in app.yaml FIRST.
+ENV NODE_OPTIONS="--max-old-space-size=128"
 
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static

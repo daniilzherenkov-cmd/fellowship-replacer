@@ -1,6 +1,13 @@
 import { headers } from 'next/headers'
 import { requireIdentity } from '@/lib/auth'
-import { listMeetings, listPeople } from '@/lib/queries'
+import {
+  listMeetings,
+  listPeople,
+  getMeeting,
+  canAccessSharedNote,
+  carriedForwardFor,
+} from '@/lib/queries'
+import { MeetingNote } from '@/components/note/MeetingNote'
 import { getConnection } from '@/lib/google-store'
 import { googleConfigured } from '@/lib/google-oauth'
 import { CalendarView } from '@/components/calendar/CalendarView'
@@ -23,10 +30,10 @@ const WINDOW_DAYS = 14
 export default async function CalendarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ d?: string }>
+  searchParams: Promise<{ d?: string; note?: string }>
 }) {
   const identity = await requireIdentity(await headers())
-  const { d } = await searchParams
+  const { d, note: noteId } = await searchParams
 
   // `d` comes from our own links, but it is still user input in the URL.
   const parsed = d ? new Date(`${d}T00:00:00`) : new Date()
@@ -60,8 +67,52 @@ export default async function CalendarPage({
     }
   }
 
+  // The selected note, rendered here and handed to CalendarView as a slot so
+  // the agenda stays on screen beside it. Fails soft: a stale ?note= from a
+  // deleted meeting should show the calendar, not an error.
+  let note: React.ReactNode = null
+  if (noteId) {
+    try {
+      const [detail, people] = await Promise.all([
+        getMeeting(identity.email, noteId),
+        listPeople(identity.email),
+      ])
+      if (detail) {
+        let sharedExternalId: string | null = null
+        try {
+          if (
+            detail.externalId &&
+            (await canAccessSharedNote(detail.externalId, identity.email))
+          ) {
+            sharedExternalId = detail.externalId
+          }
+        } catch {
+          sharedExternalId = null
+        }
+        let carried = null
+        try {
+          carried = await carriedForwardFor(identity.email, noteId)
+        } catch {
+          carried = null
+        }
+        note = (
+          <MeetingNote
+            meeting={detail}
+            people={people}
+            carried={carried}
+            sharedExternalId={sharedExternalId}
+            selfEmail={identity.email}
+          />
+        )
+      }
+    } catch {
+      note = null
+    }
+  }
+
   return (
     <CalendarView
+      note={note}
       meetings={meetings}
       googleConnected={connected}
       googleConfigured={configured}

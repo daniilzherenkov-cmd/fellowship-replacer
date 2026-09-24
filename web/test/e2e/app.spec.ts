@@ -232,15 +232,72 @@ test.describe('calendar week view', () => {
     }
   })
 
-  test('shows a meeting in the week grid and opens it', async ({ signedIn }) => {
+  test('shows a meeting in the week grid and opens it beside the agenda', async ({
+    signedIn,
+  }) => {
     const url = await createMeeting(signedIn, 'Week grid meeting')
+    const id = url.split('/').pop()
     await signedIn.goto('/calendar')
     await signedIn.getByRole('tab', { name: 'week' }).click()
 
     const chip = signedIn.getByTestId('week-event').filter({ hasText: 'Week grid meeting' })
     await expect(chip).toHaveCount(1)
     await chip.click()
-    await expect(signedIn).toHaveURL(url)
+
+    // Opening a note no longer replaces the screen. Fellow keeps the day's
+    // list on the left and renders the note beside it, so you can move
+    // between meetings without navigating back each time.
+    await expect(signedIn).toHaveURL(new RegExp(`/calendar\\?.*note=${id}`))
+    await expect(signedIn.getByLabel('Meeting title')).toBeVisible()
+  })
+
+  test('week view survives a reload', async ({ signedIn }) => {
+    await signedIn.goto('/calendar')
+    await signedIn.getByRole('tab', { name: 'week' }).click()
+    // The view has to be in the URL, or the reload below cannot restore it.
+    await expect(signedIn).toHaveURL(/v=week/)
+
+    await signedIn.reload()
+    await expect(signedIn.getByRole('tab', { name: 'week' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    )
+    await expect(signedIn.getByText('Wed', { exact: true })).toBeVisible()
+  })
+
+  test('closes a note opened from the week grid and returns to the grid', async ({
+    signedIn,
+  }) => {
+    await createMeeting(signedIn, 'Back to the grid')
+    await signedIn.goto('/calendar')
+    await signedIn.getByRole('tab', { name: 'week' }).click()
+
+    const chip = signedIn.getByTestId('week-event').filter({ hasText: 'Back to the grid' })
+    await chip.click()
+    await expect(signedIn.getByLabel('Meeting title')).toBeVisible()
+
+    // Without this control the note is a dead end: it replaces the grid and
+    // the only way back was editing the URL by hand.
+    await signedIn.getByTestId('close-note').click()
+    await expect(signedIn.getByLabel('Meeting title')).toHaveCount(0)
+    await expect(signedIn.getByText('Wed', { exact: true })).toBeVisible()
+    await expect(signedIn).toHaveURL(/v=week/)
+  })
+
+  test('remembers the week view across a visit to another screen', async ({ signedIn }) => {
+    await signedIn.goto('/calendar')
+    await signedIn.getByRole('tab', { name: 'week' }).click()
+    await expect(signedIn).toHaveURL(/v=week/)
+
+    // `/` restores the last screen, which must include the view, not just
+    // the path.
+    await signedIn.goto('/actions')
+    await signedIn.goto('/')
+    await expect(signedIn).toHaveURL(/\/actions/)
+
+    await signedIn.goto('/calendar?v=week')
+    await signedIn.goto('/')
+    await expect(signedIn).toHaveURL(/v=week/)
   })
 })
 
@@ -324,5 +381,44 @@ test.describe('navigation', () => {
       await signedIn.getByRole('link', { name: new RegExp(name) }).click()
       await expect(signedIn.getByRole('heading', { name: heading, level: 1 })).toBeVisible()
     }
+  })
+})
+
+test.describe('opening a note keeps the calendar', () => {
+  /**
+   * The behaviour Danya flagged: clicking a meeting used to router.push to
+   * /meetings/[id], replacing the whole screen and taking the agenda with
+   * it. Fellow keeps the day's list visible and renders the note beside it.
+   */
+  test('the agenda survives opening a note', async ({ signedIn }) => {
+    await createMeeting(signedIn, 'Agenda survives')
+    await signedIn.goto('/calendar')
+
+    const card = signedIn.getByTestId('agenda-card').filter({ hasText: 'Agenda survives' })
+    await card.first().click()
+
+    // The note is open AND the agenda is still there.
+    await expect(signedIn.getByLabel('Meeting title')).toBeVisible()
+    await expect(signedIn.getByTestId('agenda-card').first()).toBeVisible()
+    await expect(signedIn.getByRole('button', { name: '+ New meeting' })).toBeVisible()
+  })
+
+  test('the open note survives a reload, because it is in the URL', async ({ signedIn }) => {
+    await createMeeting(signedIn, 'Reload survives')
+    await signedIn.goto('/calendar')
+    await signedIn.getByTestId('agenda-card').filter({ hasText: 'Reload survives' }).first().click()
+    await expect(signedIn.getByLabel('Meeting title')).toBeVisible()
+
+    await signedIn.reload()
+    // Client state would have been lost here; a search param is not.
+    await expect(signedIn.getByLabel('Meeting title')).toBeVisible()
+  })
+
+  test('/meetings/[id] still works for direct links', async ({ signedIn }) => {
+    // Search hits and action-item back-links point at the full page, so it
+    // must keep working on its own.
+    const url = await createMeeting(signedIn, 'Direct link works')
+    await signedIn.goto(url)
+    await expect(signedIn.getByLabel('Meeting title')).toHaveValue('Direct link works')
   })
 })

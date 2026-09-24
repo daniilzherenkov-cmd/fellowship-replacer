@@ -4,7 +4,9 @@ import { TopBar } from '@/components/shell/TopBar'
 import { IconRail } from '@/components/shell/IconRail'
 import { UpcomingBanner } from '@/components/shell/UpcomingBanner'
 import { FirstRunPush } from '@/components/shell/FirstRunPush'
+import { RememberRoute } from '@/components/shell/RememberRoute'
 import { listMeetings } from '@/lib/queries'
+import { count } from '@/lib/metrics'
 
 export const dynamic = 'force-dynamic'
 
@@ -28,6 +30,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     )
   }
 
+  // Every app page renders this shell, so it is the one place that sees all
+  // page traffic without needing middleware.
+  count('pageRenders')
+
   // Just today's meetings, for the upcoming-meeting bar. Narrow window so the
   // shell stays cheap on every page. Fails soft: the bar is a nicety and must
   // never be the reason a page 500s.
@@ -49,6 +55,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex h-full flex-col">
       <TopBar userEmail={identity.email} />
+      <RememberRoute />
       <UpcomingBanner meetings={today} />
       {/* Asks about reminders once, on a first visit, through our own dialog
           before the browser's permission prompt. */}
