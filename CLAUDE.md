@@ -1,80 +1,172 @@
-# Fellow 2 — Project Context (read me first)
+# Fellow Hero - Project Context (read me first)
 
-> ## ⚠️ THE APP IS NOW A WEB APP, IN `web/`
+> **The app is a web app, in `web/`.** Read [`web/README.md`](web/README.md),
+> then `cd web && npm install && npm run dev` (port 3000, auto signed-in).
 >
-> **Working on the app? Read [`web/README.md`](web/README.md) first**, then
-> `cd web && npm install && npm run dev` (opens on :3000, auto signed-in).
->
-> Everything below the "Build / run" heading describes the **old SwiftUI build**
-> and is retained only as background. `Fellow2/` is the behavioural
-> specification - excellent for interaction detail, no longer developed.
->
-> Three rules that are easy to get wrong in the web app, all with real incident
-> history behind them:
+> Three rules that are easy to get wrong, all with real incident history:
 > - **Never** add a `?? process.env.DEV_USER_EMAIL` auth fallback. Fail closed.
 > - **Every** query filters on `owner_email`. There is no unscoped read path.
-> - Native modules must not reach the production bundle (see the README's
->   Deployment section - this took the app down twice).
+> - Native modules must not reach the production bundle. There are none left;
+>   keep it that way (see Gotchas).
 
 ## What this is
-A web app that replaces the meeting-management layer of **Fellow** (fellow.app → now fellow.ai), which Delivery Hero pays ~$30k/mo for. **It was originally built as a native macOS app; that pivot is the single biggest thing to know about this repo.** Built by Daniel ("Danya") Zherenkov at the request of **Milena** (QC lead) — a high-visibility internal initiative. Codename **"Fellow 2"**.
+A web app replacing the meeting-management layer of **Fellow** (fellow.app),
+which Delivery Hero pays ~$30k/mo for. Built by Daniel ("Danya") Zherenkov at
+the request of **Milena** (QC lead). Codename **Fellow Hero**, deployed at
+<https://fellow2.dhapps.ai>.
 
-**MVP scope (v1): single-user, NO AI/transcription.** Milena writes notes by hand. The value is a faithful, fast Fellow-style notes/1:1/action-item tool at **$0/seat**.
+**MVP scope: single-user, NO AI/transcription.** Notes are written by hand. The
+value is a faithful, fast Fellow-style notes/1:1/action-item tool at $0/seat.
 
-⚠️ **No longer "local-only / on-device".** Data now lives in a server-side
-database, which reverses the reasoning that made an InfoSec review unnecessary.
-1:1 notes are HR-adjacent, and the current host admits any company SSO account
-to every app - so per-user scoping in the app is the only barrier. Keep the
-deployment a **prototype** until a properly access-controlled backend is agreed.
+⚠️ Data lives in a server-side database. 1:1 notes are HR-adjacent, and the
+host admits any company SSO account to every app, so **per-user scoping in the
+app is the only barrier**. Keep the deployment a **prototype** until a properly
+access-controlled backend is agreed. `CF_ACCESS_AUD` is still unset, which
+means an Access token minted for another `*.dhapps.ai` app is accepted here.
 
-## The four must-have features (all implemented in the skeleton)
-1. **Per-person 1:1 history** — each person has a persistent "Stream" of past 1:1s.
-2. **In-meeting checklists** — action items inside the note.
-3. **One unified "ultimate" to-do list** — all action items across every meeting, with back-links to source.
-4. **Fellow-grade native UX** — this is the priority; match Fellow's look/behavior closely.
+## The four must-have features
+1. **Per-person 1:1 history** - each person has a persistent stream of past 1:1s.
+2. **In-meeting checklists** - action items inside the note.
+3. **One unified to-do list** - every action item, with back-links to source.
+4. **Fellow-grade UX** - the priority. Match Fellow's look and behaviour closely.
 
 ## Repo layout
-- **`web/` — the live application** (Next.js). Start at [web/README.md](web/README.md).
-- `docs/` — research + specs. Start at [docs/00-README.md](docs/00-README.md), which flags what is superseded. Key ones: `02` design brief, `04` MVP spec, `11` Fellow export schema, `12` Google OAuth request.
-- `Fellow2/` — the SwiftUI source, kept as the **behavioural spec**. Not maintained.
-- `Fellow2 - Design/` — a **React/Tailwind prototype** exported from Figma Make (the visual reference; `pnpm i && pnpm dev` to view). NOT the shippable app.
-- `project.yml` — **XcodeGen** spec → generates `Fellow2.xcodeproj`.
-- `Package.swift` — only a lightweight syntax harness (see Build below).
+- **`web/` - the live application** (Next.js). Start at [web/README.md](web/README.md).
+- `docs/` - research and specs. Start at [docs/00-README.md](docs/00-README.md).
+  Recent: `13` post-launch fixes. Key: `02` design brief, `04` MVP spec,
+  `11` Fellow export schema, `12` Google OAuth request.
+- `Fellow2 - Design/` - React/Tailwind prototype exported from Figma Make, the
+  **visual reference** (`pnpm i && pnpm dev`). Not the shippable app.
 
-## Build / run (IMPORTANT for agents)
-- **Full Xcode is required** to build/run. `swift build` does **NOT** work for the app: SwiftData/SwiftUI **macro plugins ship inside Xcode**, not Command Line Tools.
-- **Syntax-check headlessly** (what to run after edits, since this environment may lack Xcode):
-  ```bash
-  xcrun swiftc -parse -sdk "$(xcrun --show-sdk-path)" Fellow2/*.swift Fellow2/Views/*.swift 2>&1 | grep "error:" | grep -v "macro"
-  ```
-  Empty output = syntactically clean. (Macro-not-found errors are expected without Xcode; filter them.)
-- **Adding/removing files OR editing `project.yml`** → run `xcodegen generate`, then **reopen the project in Xcode** (it won't pick up a regenerated project file that's already open).
-- Editing existing source files → Xcode picks up automatically; just ⌘R.
-- ⚠️ `xcodegen generate` can **wipe the Signing Team** (`DEVELOPMENT_TEAM` is blank in `project.yml`) — re-set it in Signing & Capabilities if signing errors appear.
-- **$0 dev:** build/run with a **free Apple ID** (Personal Team). The $99/yr program is only for notarized distribution.
+The SwiftUI source (`Fellow2/`), `project.yml` and `Package.swift` were
+**deleted on 2026-09-23**. The app had been a web app for weeks and the Swift
+tree was dead weight. It is in git history if a behavioural detail is ever
+needed: `git log --all -- Fellow2/`.
 
-## Architecture & conventions
-- **SwiftUI + SwiftData**, target **macOS 14+** (dev machine is on macOS 26 "Tahoe"). Pattern: plain SwiftUI + `@Observable`/`@Bindable`, no heavy MVVM.
-- **Models** ([Fellow2/Models.swift](Fellow2/Models.swift)): `Person`, `MeetingStream`, `Meeting`, `TalkingPoint`, `ActionItem`. Every entity has UUID + (for sync-readiness) keep `updatedAt`-style fields when extending. `ActionItem.meeting` is the back-link powering the unified list; `ekEventIdentifier` is reused as the external calendar event id (dedupe key).
-- **Design tokens** ([Fellow2/DesignSystem.swift](Fellow2/DesignSystem.swift)): adaptive **light/dark** via `Color(light:dark:)`. Use `Theme.*` tokens — **Fellow palette** (primary blue `#2563EB`/dark `#60A5FA`, due `#F59E0B`, now-line `#22C55E`, etc.). Shared components: `AvatarView`, `DueDatePill`, `ActionCheckbox`, `RowMenu`.
-- **The meeting note is a FIXED 3-block template** (do not restructure): **Talking Points (○) → Action Items (☐) → Notepad (•)** — [MeetingNoteView.swift](Fellow2/Views/MeetingNoteView.swift).
-- **Shell**: top bar + ultra-thin icon rail (Calendar/Actions/People/Meetings, ⌘1–4) + content — [RootView.swift](Fellow2/Views/RootView.swift). Calendar has a Today/Week toggle; re-tapping Calendar collapses the agenda panel.
-- **Calendar**: `CalendarService` (EventKit, read import) + `GoogleCalendarService` (direct Google API, behind `#if canImport` so the app still builds without the packages). Sample data seeds on first launch ([SampleData.swift](Fellow2/SampleData.swift)).
+## Build / run
 
-## Fidelity rules (match Fellow — the user is detail-oriented)
-- Action-item row: **non-hover** = checkbox + text + pill + avatar only; **on hover** = grey rounded bg (fades in, ~0.18s), source/"No series" line, add-assignee icon, `⋮` menu.
-- **Checkbox** fills with colour **only when the cursor is on the box itself** (own hover target), no checkmark glyph on hover; bigger rounded square.
-- Agenda uses **custom card selection** (light-blue, blue title) — never the default solid-blue `List` selection.
-- Always verify visual changes against the screenshots the user shares and `Fellow2 - Design/`.
+**Node 24.** Pinned in `.nvmrc`, `package.json` engines and the Dockerfile, and
+they must move together. The image was on Node 20 until 2026-09-23, five months
+after it went end-of-life, so production ran unpatched. With `fnm` installed,
+`fnm use` in `web/` picks the right version from `.nvmrc`.
+
+```bash
+brew services start mysql   # once per boot
+cd web
+fnm use                     # Node 24, per .nvmrc
+npm install
+npm run db:setup            # creates fellow_dev, its user, and the schema
+npm run dev                 # port 3000, auto signed-in
+npm run test:e2e            # full suite
+npm run screens:connect     # screenshots of the connect prompts
+```
+
+**MySQL is required** for both dev and tests. There is no SQLite fallback any
+more (see Gotchas). Local credentials default to database `fellow_dev`, user
+`app_fellow_dev`, password `fellowdev`, all localhost-only.
+
+## Architecture and conventions
+- **Next.js App Router** + React Server Components, **MySQL** via `mysql2`.
+- **Auth**: Cloudflare Access JWT, verified against JWKS. Fails closed.
+  `requireIdentity()` is the only way to learn who is asking.
+- **Database seam**: every query goes through `getDb()` in
+  [web/src/lib/db.ts](web/src/lib/db.ts). Schema DDL is never run from app
+  code; [web/sql/schema.mysql.sql](web/sql/schema.mysql.sql) mirrors production
+  and is applied out of band via the Protoship `execute_sql` MCP tool.
+- **Secrets** come from Vault at boot via `instrumentation.ts`, NOT from
+  container env vars.
+- **The meeting note is a FIXED 3-block template** (do not restructure):
+  Talking Points (○) → Action Items (☐) → Notepad (•).
+- **Shell**: top bar + ultra-thin icon rail (Calendar/Actions/People/Meetings)
+  + content. Calendar has a Today/Week toggle.
+
+## Fidelity rules (match Fellow - the user is detail-oriented)
+- Action-item row: **non-hover** = checkbox + text + pill + avatar only;
+  **on hover** = grey rounded bg (~0.18s), source line, add-assignee icon, `⋮`.
+- **Checkbox** fills with colour only when the cursor is on the box itself.
+- Agenda uses **custom card selection** (light-blue, blue title), never the
+  default solid-blue list selection.
+- **Show every calendar event.** Fellow displays declined meetings struck
+  through, all-day events, and solo blocks like "gym". Filtering them out made
+  the app look wrong next to Google.
+- Always verify visual changes against screenshots the user shares and
+  `Fellow2 - Design/`.
 
 ## Key decisions (don't re-litigate without asking)
-- **Local-only v1.** Real-time multi-user collaboration is a later phase — **Firebase** is the agreed direction (Firestore + Google auth; private notes stay private). See [docs/07](docs/07-integrations-and-sync.md).
-- **Google Calendar = direct API** via an **Internal OAuth app** in the DH Google Cloud org (no public sharing, no verification; needs DH admin sign-off). EventKit stays as a working fallback. Setup checklist in [docs/07](docs/07-integrations-and-sync.md); paste `GIDClientID` + reversed-client-id URL scheme into `Fellow2/Info.plist`.
-- **No AI/transcription in MVP** (explicitly cut). "Ask Fellow" button was removed.
+- **Google Calendar = direct API** via an Internal OAuth app in the DH Google
+  Cloud org. Credentials are in Vault.
+- **No AI/transcription in MVP** (explicitly cut).
+- **Two features are blocked on the same unrequested OAuth scope. Ask for
+  them together, once.** The current client only has `calendar.events`.
+  Anything about *people* rather than *events* needs a People API / directory
+  scope, which means a new consent screen and another DH admin approval
+  (Anubha Gupta created the current client, project `quick-commerce-data`).
+  Both of these are deliberately unbuilt, not forgotten:
+  1. **Directory attendee search.** Fellow's event-creation picker searches the
+     whole Workspace directory and finds people you have never met. We search
+     only the `person` table, i.e. anyone from a synced calendar event.
+     Decided 2026-09-23.
+  2. **Real profile photos.** Avatars are generated initials on a hashed
+     colour. Google's actual photos come from the People API
+     (`people.get` with `personFields=photos`), same scope family.
+
+  **Do not raise these as two separate asks.** One request covering directory
+  search plus profile photos, or neither. Until then, both fall back
+  gracefully and nothing is broken - the narrow search works and initials
+  render fine, so there is no urgency to chase the approval.
+- **"Registered user" is inferred, not stored.** There is no user table. A
+  person counts as registered when their email matches an owner with a
+  `google_connection` row, i.e. they have connected a calendar to this app.
+  Used to sort the `@` picker. `FILTER_TO_REGISTERED` in `MeetingNote.tsx`
+  switches it from sorting to hard filtering; leave it off until more than one
+  person uses the app, or the picker shows a single name.
+- **Calendar write-back is now IN scope** (reversing [docs/01](docs/01-product-brief.md) §5,
+  decided 2026-09-23). The existing `calendar.events` scope already allows
+  writes, so no new consent is needed.
+- **There is NO scheduler on this platform.** No cron, no background worker,
+  no queue: the pod only answers HTTP requests. Anything that must happen at
+  a particular moment without a user present is impossible here as deployed.
+  This already shapes two features:
+  - **Meeting reminders** are real OS notifications fired from an open tab
+    (`MeetingReminders.tsx`), NOT Web Push. Real push needs a service worker,
+    VAPID keys, stored subscriptions **and** a server-side timer to send
+    them; the first three without the fourth would never fire. The limitation
+    is stated in the Settings panel itself, deliberately.
+  - Calendar sync is polled for the same reason (below).
+
+  If a scheduler ever appears - a Protoship cron, an external trigger hitting
+  an endpoint, a small worker - both become straightforward. Worth raising
+  with Narbeh as a platform question rather than engineering around.
+- **Sync is polled, not pushed.** Google's `events.watch` needs a public
+  endpoint it can POST to, and every `*.dhapps.ai` URL answers 302 to Okta, so
+  push is impossible until an Access-exempt path is agreed. The ladder in place
+  is sync-on-connect, throttled sync-on-load, and a 5-minute interval.
 
 ## Gotchas
-- The Google code path (`GoogleCalendarService` real branch) **can't be compiled-verified without Xcode + the SDKs**; expect possible minor GoogleSignIn/GTLR API tweaks on first real build. Map GTLR objects to a **Sendable** struct inside callbacks (Swift 6 strict concurrency — already done as `GEvent`).
-- `WebSearch` is blocked for this model in some environments; use `WebFetch`.
+- **Protoship deploys from `~/.protoship/apps/fellow2/`, NOT the git repo.**
+  Always rsync `web/src/` across first, then confirm the commit really carries
+  the change.
+- **`deployed: true` proves nothing.** The pod lags minutes behind, `curl`
+  returns 302 to Okta for every URL, and `check_deploy_status` reports
+  `waiting_for_dns` for healthy apps. Verify via the `Update <app_id> image
+  tag` commit on `deliveryhero/dh-ets-ei-protoship` main, then the browser.
+- **`CMD` must be an ABSOLUTE path** in the Dockerfile.
+- **No native modules.** `better-sqlite3` was the only one and cost two
+  outages: with `--ignore-scripts` it has no compiled binary and killed the pod
+  at boot, and excluding it from tracing left a dangling symlink that broke the
+  Docker build. If you ever add one, prune it before tracing.
+- **Dev and production must run the same SQL dialect.** `meeting_id IS ?` is
+  valid SQLite and a syntax error in MySQL; it shipped broken while 128 tests
+  stayed green. That is why SQLite is gone, and why
+  [web/test/e2e/dialect.spec.ts](web/test/e2e/dialect.spec.ts) statically scans
+  for dialect traps.
+- **New pure-logic specs must be added to `UNIT_SPECS`** in
+  `playwright.config.ts`, or they silently run as slow browser tests.
+- The dev proxy's HMR WebSocket is broken (`WS_ERR_EXPECTED_MASK`), which can
+  make click handlers look dead under `npm run dev`. Not an app bug; the
+  production build is fine.
 
 ## Honesty / communication
-The user (Danya) wants **facts vs assumptions clearly separated**, and unverified code flagged as such (especially anything not compile-checked here).
+Danya wants **facts and assumptions clearly separated**, and unverified code
+flagged as such. **Never use an em-dash or en-dash** in any output, chat or
+file. No individual names in PR descriptions.
