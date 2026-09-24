@@ -14,4 +14,11 @@ export async function register() {
 
   const { loadSecrets } = await import('./lib/secrets')
   await loadSecrets()
+
+  // The app's own scheduler. There is no platform cron, but app.yaml pins
+  // this service to a single always-on replica (min: 1, max: 1), so a timer
+  // started here IS a reliable scheduler. Must come after loadSecrets: the
+  // VAPID keys arrive from Vault.
+  const { startReminderScheduler } = await import('./lib/push')
+  startReminderScheduler()
 }

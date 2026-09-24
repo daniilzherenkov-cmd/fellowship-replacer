@@ -24,7 +24,7 @@ export default function Home() {
   }, [router])
 
   return (
-    <div style={{ padding: 32, fontSize: 14 }}>
+    <div style={{ padding: 32, fontSize: 'var(--text-md)' }}>
       <p>
         Opening your calendar… <Link href="/calendar">Continue</Link>
       </p>

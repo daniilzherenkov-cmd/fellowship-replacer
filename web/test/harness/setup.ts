@@ -14,14 +14,13 @@
  */
 
 import { createServer, type Server } from 'node:http'
-import { existsSync, mkdirSync, rmSync } from 'node:fs'
+import { existsSync, mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { jwks } from './jwt'
 
 const here = dirname(fileURLToPath(import.meta.url))
 export const TMP_DIR = join(here, '../.tmp')
-export const SQLITE_PATH = join(TMP_DIR, 'e2e.sqlite')
 
 export const JWKS_PORT = 3199
 export const TEST_ISSUER_URL = `http://127.0.0.1:${JWKS_PORT}`
@@ -52,21 +51,45 @@ export function stopJwksServer(): Promise<void> {
   })
 }
 
-export function resetDatabaseFile(): void {
-  if (!existsSync(TMP_DIR)) mkdirSync(TMP_DIR, { recursive: true })
-  for (const suffix of ['', '-wal', '-shm']) {
-    const path = `${SQLITE_PATH}${suffix}`
-    if (existsSync(path)) rmSync(path)
-  }
+const MYSQL_CONN = {
+  host: process.env.DB_HOST ?? '127.0.0.1',
+  port: Number(process.env.DB_PORT ?? 3306),
+  database: process.env.APP_ID ?? 'fellow_dev',
+  user: `app_${process.env.APP_ID ?? 'fellow_dev'}`,
+  password: process.env.DB_PASSWORD ?? 'fellowdev',
+  multipleStatements: true,
 }
 
-/** Apply schema.sql to the test database. */
+export function resetDatabaseFile(): void {
+  if (!existsSync(TMP_DIR)) mkdirSync(TMP_DIR, { recursive: true })
+}
+
+/**
+ * Give the suite an empty database.
+ *
+ * MySQL is a long-lived service rather than a throwaway file, so it has to be
+ * TRUNCATED between runs. Without this the same rows pile up and tests that
+ * assert `toHaveCount(1)` start seeing 2, 3, 4 copies, which looks exactly
+ * like a product bug and is not one.
+ */
 export async function applySchema(): Promise<void> {
-  const { default: Database } = await import('better-sqlite3')
   const { readFileSync } = await import('node:fs')
-  const schema = readFileSync(join(here, '../../sql/schema.sql'), 'utf8')
-  const db = new Database(SQLITE_PATH)
-  db.pragma('journal_mode = WAL')
-  db.exec(schema)
-  db.close()
+  const mysql = await import('mysql2/promise')
+  const conn = await mysql.createConnection(MYSQL_CONN)
+  try {
+    await conn.query(readFileSync(join(here, '../../sql/schema.mysql.sql'), 'utf8'))
+
+    const [rows] = await conn.query(
+      'SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = ?',
+      [MYSQL_CONN.database],
+    )
+    const names = (rows as { TABLE_NAME: string }[]).map((r) => r.TABLE_NAME)
+    if (names.length) {
+      await conn.query('SET FOREIGN_KEY_CHECKS = 0')
+      for (const name of names) await conn.query(`TRUNCATE TABLE \`${name}\``)
+      await conn.query('SET FOREIGN_KEY_CHECKS = 1')
+    }
+  } finally {
+    await conn.end()
+  }
 }

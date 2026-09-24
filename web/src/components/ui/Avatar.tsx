@@ -78,7 +78,7 @@ export function AvatarStack({
       ))}
       {overflow > 0 && (
         <span
-          className="ml-1 text-[11px]"
+          className="ml-1 text-[length:var(--text-xs)]"
           style={{ color: 'var(--color-text-tertiary)' }}
         >
           +{overflow}

@@ -110,17 +110,32 @@ async function upsertMeeting(
     created = false
     // Calendar facts only. notepad is untouched - it is the user's writing.
     await db.exec(
-      `UPDATE meeting SET title = ?, start_at = ?, end_at = ?, kind = ?, updated_at = ?
+      `UPDATE meeting SET title = ?, start_at = ?, end_at = ?, kind = ?,
+                          response_status = ?, is_all_day = ?,
+                          conference_url = ?, location = ?, updated_at = ?
         WHERE id = ?`,
-      [meeting.title, meeting.startAt, meeting.endAt, meeting.kind, ts, meetingId],
+      [
+        meeting.title,
+        meeting.startAt,
+        meeting.endAt,
+        meeting.kind,
+        meeting.selfResponse,
+        meeting.isAllDay ? 1 : 0,
+        meeting.conferenceUrl,
+        meeting.location,
+        ts,
+        meetingId,
+      ],
     )
   } else {
     meetingId = randomUUID()
     created = true
     await db.exec(
       `INSERT INTO meeting (id, owner_email, title, start_at, end_at, kind,
-                            external_id, notepad, created_at, updated_at, deleted_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, '', ?, ?, NULL)`,
+                            external_id, notepad, response_status, is_all_day,
+                            conference_url, location,
+                            created_at, updated_at, deleted_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, '', ?, ?, ?, ?, ?, ?, NULL)`,
       [
         meetingId,
         ownerEmail,
@@ -129,6 +144,10 @@ async function upsertMeeting(
         meeting.endAt,
         meeting.kind,
         meeting.externalId,
+        meeting.selfResponse,
+        meeting.isAllDay ? 1 : 0,
+        meeting.conferenceUrl,
+        meeting.location,
         ts,
         ts,
       ],

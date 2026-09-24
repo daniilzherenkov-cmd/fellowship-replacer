@@ -9,7 +9,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 
 const SECTIONS = [
   { href: '/calendar', label: 'Calendar', key: '1', icon: CalendarIcon },
@@ -21,6 +21,15 @@ const SECTIONS = [
 export function IconRail() {
   const pathname = usePathname()
   const router = useRouter()
+  // Which section was just clicked, so the rail responds on the press rather
+  // than when the new page arrives. usePathname only updates AFTER the
+  // navigation resolves, which on a ~600ms page meant the click looked
+  // ignored for over half a second.
+  const [pendingHref, setPendingHref] = useState<string | null>(null)
+  const [, startNav] = useTransition()
+
+  // Clear the pending mark once the URL has actually changed.
+  useEffect(() => setPendingHref(null), [pathname])
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -28,7 +37,8 @@ export function IconRail() {
       const section = SECTIONS.find((s) => s.key === e.key)
       if (!section) return
       e.preventDefault()
-      router.push(section.href)
+      setPendingHref(section.href)
+      startNav(() => router.push(section.href))
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -52,23 +62,29 @@ export function IconRail() {
           ? section.href === '/calendar'
           : pathname === section.href || pathname.startsWith(`${section.href}/`)
         const Icon = section.icon
+        const pending = pendingHref === section.href && !active
+        // Show the destination as selected the instant it is clicked.
+        const lit = active || pending
         return (
           <Link
             key={section.href}
             href={section.href}
+            onClick={() => setPendingHref(section.href)}
             aria-current={active ? 'page' : undefined}
+            aria-busy={pending || undefined}
             title={`${section.label} (⌘${section.key})`}
-            className="flex flex-col items-center justify-center gap-[3px] no-underline"
+            className="flex flex-col items-center justify-center gap-[3px] no-underline transition-colors duration-100"
             style={{
               width: 56,
               height: 50,
               borderRadius: 10,
-              background: active ? 'var(--color-accent-subtle)' : 'transparent',
-              color: active ? 'var(--color-accent)' : 'var(--color-text-secondary)',
+              background: lit ? 'var(--color-accent-subtle)' : 'transparent',
+              color: lit ? 'var(--color-accent)' : 'var(--color-text-secondary)',
+              opacity: pending ? 0.75 : 1,
             }}
           >
             <Icon />
-            <span className="text-[10px] leading-none">{section.label}</span>
+            <span className="text-[length:var(--text-2xs)] leading-none">{section.label}</span>
           </Link>
         )
       })}

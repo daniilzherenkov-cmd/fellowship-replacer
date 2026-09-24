@@ -1,7 +1,7 @@
 import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { requireIdentity } from '@/lib/auth'
-import { getMeeting, listPeople } from '@/lib/queries'
+import { carriedForwardFor, getMeeting, listPeople } from '@/lib/queries'
 import { MeetingNote } from '@/components/note/MeetingNote'
 
 export const dynamic = 'force-dynamic'
@@ -18,5 +18,14 @@ export default async function MeetingPage({ params }: { params: Promise<{ id: st
   ])
   if (!meeting) notFound()
 
-  return <MeetingNote meeting={meeting} people={people} />
+  // Fails soft: the carry-forward block is a helper, never a reason to 500
+  // the note it sits above.
+  let carried = null
+  try {
+    carried = await carriedForwardFor(identity.email, id)
+  } catch {
+    carried = null
+  }
+
+  return <MeetingNote meeting={meeting} people={people} carried={carried} />
 }

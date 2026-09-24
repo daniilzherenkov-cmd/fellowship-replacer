@@ -43,6 +43,16 @@ const REVOKE_ENDPOINT = 'https://oauth2.googleapis.com/revoke'
  * edit events on all your calendars" rather than view-only. That is the honest
  * description of what we are asking for.
  */
+/**
+ * Every call to Google gets a deadline.
+ *
+ * WHY: none of them had one. A hung request left the server action awaiting
+ * forever, and the create-event dialog sat on "Saving…" with no error and no
+ * way out - the exact failure Danya hit. fetch has no default timeout, so an
+ * unresponsive upstream becomes an unresponsive app.
+ */
+const GOOGLE_TIMEOUT_MS = 15_000
+
 export const CALENDAR_SCOPE = 'https://www.googleapis.com/auth/calendar.events'
 
 export interface OAuthConfig {
@@ -63,6 +73,31 @@ export function oauthConfig(): OAuthConfig | null {
 /** Whether Google Calendar can be connected at all in this deployment. */
 export function googleConfigured(): boolean {
   return oauthConfig() !== null
+}
+
+/**
+ * The origin to send the browser back to after the handshake.
+ *
+ * WHY NOT `new URL(request.url).origin`: inside the pod that resolves to the
+ * internal Kubernetes service address, e.g.
+ * `http://dh-ets-ei-protoship-backend-...-dhfff:8080`. Redirecting there hands
+ * the browser a hostname that does not resolve, so a SUCCESSFUL connect ended
+ * on DNS_PROBE_FINISHED_NXDOMAIN with `?google=connected` in the bar.
+ *
+ * `GOOGLE_REDIRECT_URI` is public by definition, since Google just redirected
+ * the browser to it, and it is already required for the handshake. Falls back
+ * to the request origin so local dev and tests keep working.
+ */
+export function publicOrigin(requestUrl: string): string {
+  const configured = process.env.GOOGLE_REDIRECT_URI
+  if (configured) {
+    try {
+      return new URL(configured).origin
+    } catch {
+      // Malformed config should not break the redirect entirely.
+    }
+  }
+  return new URL(requestUrl).origin
 }
 
 export interface PkcePair {
@@ -146,6 +181,7 @@ export async function exchangeCode(params: {
 }): Promise<TokenResponse> {
   const { config, code, verifier } = params
   const res = await fetch(TOKEN_ENDPOINT, {
+    signal: AbortSignal.timeout(GOOGLE_TIMEOUT_MS),
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
@@ -173,6 +209,7 @@ export async function refreshAccessToken(params: {
 }): Promise<TokenResponse> {
   const { config, refreshToken } = params
   const res = await fetch(TOKEN_ENDPOINT, {
+    signal: AbortSignal.timeout(GOOGLE_TIMEOUT_MS),
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
@@ -194,6 +231,7 @@ export function isPermanentAuthFailure(err: unknown): boolean {
 /** Revoke a token, so "Disconnect" actually severs access at Google. */
 export async function revokeToken(token: string): Promise<boolean> {
   const res = await fetch(REVOKE_ENDPOINT, {
+    signal: AbortSignal.timeout(GOOGLE_TIMEOUT_MS),
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({ token }),

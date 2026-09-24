@@ -10,6 +10,7 @@
  */
 
 import { useEffect, useState } from 'react'
+import { GlobalSearch } from './GlobalSearch'
 
 type Theme = 'light' | 'dark' | 'system'
 
@@ -55,17 +56,18 @@ export function TopBar({ userEmail }: { userEmail: string | null }) {
     >
       <div className="flex items-center gap-2">
         <span
-          className="inline-flex items-center justify-center text-[11px] font-bold text-white"
+          className="inline-flex items-center justify-center text-[length:var(--text-xs)] font-bold text-white"
           style={{ width: 24, height: 24, borderRadius: 6, background: 'var(--color-accent)' }}
         >
           DH
         </span>
-        <span className="text-[13px] font-medium">Fellow Hero</span>
+        <span className="text-[length:var(--text-base)] font-medium">Fellow Hero</span>
       </div>
 
       <div className="ml-auto flex items-center gap-3">
+        <GlobalSearch />
         {userEmail && (
-          <span className="text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <span className="text-[length:var(--text-sm)]" style={{ color: 'var(--color-text-secondary)' }}>
             {userEmail}
           </span>
         )}
@@ -74,7 +76,7 @@ export function TopBar({ userEmail }: { userEmail: string | null }) {
           onClick={cycleTheme}
           title={`Theme: ${theme} (click to change)`}
           aria-label={`Theme: ${theme}`}
-          className="cursor-pointer border-0 bg-transparent p-1 text-[13px]"
+          className="cursor-pointer border-0 bg-transparent p-1 text-[length:var(--text-base)]"
           style={{ color: 'var(--color-text-secondary)' }}
         >
           {theme === 'dark' ? '🌙' : theme === 'light' ? '☀️' : '🌗'}

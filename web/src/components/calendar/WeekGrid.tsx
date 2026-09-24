@@ -60,7 +60,16 @@ function offsetMinutes(date: Date): number {
 }
 
 /** An all-day event, or one spanning the whole visible range. */
+/**
+ * Belongs in the all-day band above the grid rather than at a clock position.
+ *
+ * Prefers the real `isAllDay` flag, which the sync now stores from the
+ * calendar event itself. The duration heuristic stays as a fallback for rows
+ * written before that column existed and for manually created meetings,
+ * which have no flag.
+ */
 function isAllDayish(meeting: Meeting): boolean {
+  if (meeting.isAllDay) return true
   const start = new Date(meeting.startAt)
   const end = new Date(meeting.endAt)
   return end.getTime() - start.getTime() >= 20 * 60 * 60 * 1000
@@ -171,10 +180,16 @@ export function WeekGrid({
   meetings,
   anchorDate,
   onSelect,
+  onCreateAt,
 }: {
   meetings: Meeting[]
   anchorDate: Date
   onSelect: (id: string) => void
+  /**
+   * Clicking empty space starts a new event at that slot, as in Fellow and
+   * Google Calendar. Optional so the grid still renders without it.
+   */
+  onCreateAt?: (start: Date) => void
 }) {
   const days = weekDaysFor(anchorDate)
   const today = new Date()
@@ -210,7 +225,7 @@ export function WeekGrid({
 
   return (
     <div className="flex h-full min-w-0 flex-col">
-      <h2 className="m-0 px-5 pb-2 pt-4 text-[16px] font-semibold">{weekTitle(days)}</h2>
+      <h2 className="m-0 px-5 pb-2 pt-4 text-[length:var(--text-xl)] font-semibold">{weekTitle(days)}</h2>
 
       <div className="min-w-0 flex-1 overflow-auto px-5 pb-5" ref={scrollRef}>
         <div style={{ minWidth: 640 }}>
@@ -232,7 +247,7 @@ export function WeekGrid({
                   style={{ borderBottom: '1px solid var(--color-hairline)' }}
                 >
                   <div
-                    className="text-[11px] font-medium"
+                    className="text-[length:var(--text-xs)] font-medium"
                     style={{
                       color: isToday ? 'var(--color-accent)' : 'var(--color-text-secondary)',
                     }}
@@ -240,7 +255,7 @@ export function WeekGrid({
                     {WEEKDAYS[i]}
                   </div>
                   <div
-                    className="text-[15px] font-semibold"
+                    className="text-[length:var(--text-lg)] font-semibold"
                     style={{ color: isToday ? 'var(--color-accent)' : undefined }}
                   >
                     {day.getDate()}
@@ -260,7 +275,7 @@ export function WeekGrid({
               }}
             >
               <div
-                className="pr-2 pt-1 text-right text-[10px]"
+                className="pr-2 pt-1 text-right text-[length:var(--text-2xs)]"
                 style={{ color: 'var(--color-text-tertiary)' }}
               >
                 all-day
@@ -273,7 +288,7 @@ export function WeekGrid({
                       type="button"
                       onClick={() => onSelect(m.id)}
                       title={m.title}
-                      className="cursor-pointer truncate border-0 px-[6px] py-[2px] text-left text-[10px]"
+                      className="cursor-pointer truncate border-0 px-[6px] py-[2px] text-left text-[length:var(--text-2xs)]"
                       style={{
                         borderRadius: 4,
                         background: 'var(--color-hover)',
@@ -297,7 +312,7 @@ export function WeekGrid({
               {hours.map((hour) => (
                 <div
                   key={hour}
-                  className="absolute right-2 text-[10px]"
+                  className="absolute right-2 text-[length:var(--text-2xs)]"
                   style={{
                     top: (hour - DAY_START_HOUR) * HOUR_HEIGHT - 6,
                     color: 'var(--color-text-tertiary)',
@@ -317,9 +332,26 @@ export function WeekGrid({
                 <div
                   key={day.toISOString()}
                   className="relative"
+                  // Clicking blank space creates an event there. The handler
+                  // sits on the column and checks the target, so a click that
+                  // landed on an event chip does not also start a new one.
+                  onClick={(e) => {
+                    if (!onCreateAt) return
+                    if (e.target !== e.currentTarget) return
+                    const rect = e.currentTarget.getBoundingClientRect()
+                    const y = e.clientY - rect.top
+                    const minutes = (y / HOUR_HEIGHT) * 60
+                    // Snap to the nearest 15, the granularity Google uses.
+                    const snapped = Math.max(0, Math.round(minutes / 15) * 15)
+                    const at = new Date(day)
+                    at.setHours(DAY_START_HOUR, 0, 0, 0)
+                    at.setMinutes(at.getMinutes() + snapped)
+                    onCreateAt(at)
+                  }}
                   style={{
                     height: hours.length * HOUR_HEIGHT,
                     borderLeft: '1px solid var(--color-hairline)',
+                    cursor: onCreateAt ? 'copy' : undefined,
                     background: isToday
                       ? 'color-mix(in srgb, var(--color-accent) 4%, transparent)'
                       : 'transparent',
@@ -356,7 +388,7 @@ export function WeekGrid({
             {/* Time label for the now-line, in the gutter. */}
             {showsToday && nowTop >= 0 && nowTop <= hours.length * HOUR_HEIGHT && (
               <div
-                className="pointer-events-none absolute z-[6] px-1 text-[10px] font-semibold"
+                className="pointer-events-none absolute z-[6] px-1 text-[length:var(--text-2xs)] font-semibold"
                 style={{
                   top: nowTop - 7,
                   left: 4,
@@ -423,14 +455,14 @@ function EventBlock({
       }}
     >
       <span
-        className="block truncate text-[10px] font-medium leading-tight"
+        className="block truncate text-[length:var(--text-2xs)] font-medium leading-tight"
         style={{ color: 'var(--color-text-primary)' }}
       >
         {meeting.title}
       </span>
       {!compact && (
         <span
-          className="block truncate text-[9px] leading-tight"
+          className="block truncate text-[length:var(--text-3xs)] leading-tight"
           style={{ color: 'var(--color-text-secondary)' }}
         >
           {start.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}

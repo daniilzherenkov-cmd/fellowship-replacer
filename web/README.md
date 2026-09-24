@@ -48,14 +48,48 @@ signed-out page.
 | `npm run dev:raw` | Plain `next dev`, no auth - signed-out page only |
 | `npm run build` | Production build (`output: 'standalone'`) |
 | `npm start` | Run the production bundle locally |
-| `npm run test:e2e` | Full test suite (114 tests) |
+| `npm run test:e2e` | Full test suite (140 tests) |
 | `npm run test:e2e:ui` | Playwright UI mode |
+| `npm run db:setup` | Create the local MySQL database, user and schema |
+| `npm run screens:connect` | Screenshot the connect prompts |
 
 Sign in as someone else: `FELLOW_DEV_USER=other@deliveryhero.com npm run dev`.
 Useful for checking per-user isolation by hand.
 
-Local data lives in `.dev/dev.sqlite` (gitignored). Delete the file for a clean
-slate; the schema is applied automatically on first use.
+### Node version
+
+**Node 24**, pinned in `.nvmrc`, `package.json` engines and the Dockerfile.
+Keep all three in step: local and production drifting apart is how this ended
+up serving production from **Node 20 for five months after its 2026-04-30
+end-of-life**, with no security patches.
+
+```bash
+fnm use    # or nvm use - reads .nvmrc
+```
+
+Node 24 is supported until 2028-04-30. When that approaches, bump the
+Dockerfile and the two pins together.
+
+### The local database
+
+Dev and tests run **MySQL**, the same engine as production, because the
+dialects disagree in ways that pass every test and then fail in the pod:
+`meeting_id IS ?` is valid SQLite and a syntax error in MySQL, and it shipped
+broken while 128 tests stayed green. SQLite and `better-sqlite3` were removed
+on 2026-09-23.
+
+```bash
+brew services start mysql
+npm run db:setup      # idempotent; re-run after editing sql/schema.mysql.sql
+```
+
+Defaults are database `fellow_dev`, user `app_fellow_dev`, password
+`fellowdev`, localhost only. The app derives the schema name and user from
+`APP_ID` exactly as Protoship does, so local dev exercises the production code
+path unchanged.
+
+For a clean slate, re-run `npm run db:setup`; the test harness truncates every
+table before each run.
 
 ---
 
@@ -144,7 +178,7 @@ another user's meeting. Keep them passing.
 | `CF_ACCESS_AUD` | prod | Binds tokens to **this** app - see below |
 | `CF_ACCESS_ISSUER` | — | Access team domain; defaults to the shared one |
 | `APP_ID`, `DB_HOST`, `DB_PORT`, `DB_PASSWORD` | prod | MySQL, injected by the platform |
-| `FELLOW_DB_DRIVER=sqlite` | dev/test | **Explicit** opt-in to SQLite |
+| `FELLOW_DB_DRIVER=mysql` | dev/test | Set automatically by the dev script and the test harness |
 | `GOOGLE_CLIENT_ID` / `_SECRET` / `_REDIRECT_URI` | optional | Google Calendar OAuth |
 
 > ⚠️ **`CF_ACCESS_AUD` is currently unset in production.** Without it the
@@ -207,12 +241,14 @@ Four traps, all hit for real:
 2. **The readiness probe targets `/` and accepts only 2xx** - it does not follow
    redirects. A server-side redirect from `/` leaves the pod permanently unready
    while CI stays green and nothing explains why.
-3. **Native modules must not reach the production bundle.** `better-sqlite3` is
-   test-only; it is installed with `--ignore-scripts` so it has no compiled
-   binary, and importing it kills the server at boot. Its specifier is resolved
-   at runtime so the build tracer cannot follow it. Excluding it via
-   `outputFileTracingExcludes` does **not** work - that leaves a dangling symlink
-   which Docker's `COPY` follows and fails on.
+3. **Native modules must not reach the production bundle.** There are none in
+   the graph today: `better-sqlite3` was the only one and was removed with the
+   SQLite driver on 2026-09-23. It is worth knowing why, because the next
+   native module will repeat it. Installed with `--ignore-scripts` it has no
+   compiled binary, so importing it killed the server at boot and the edge
+   served "no healthy upstream". Excluding it via `outputFileTracingExcludes`
+   does **not** help: that leaves a dangling symlink which Docker's `COPY`
+   follows and fails on. Prune dev dependencies before tracing instead.
 4. **`public/` must exist**, or the Dockerfile's `COPY` fails outright.
 
 ### Verifying a deploy

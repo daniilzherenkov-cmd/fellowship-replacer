@@ -3,21 +3,28 @@
 # Next.js is off-template on this platform, but the contract is only "listen on
 # 8080 and return 2xx on the probe path" - CI builds whatever this file says.
 #
-# Four things this must get right; all four have bitten:
+# Node 24 (Active LTS, EOL 2028-04-30). This image was on node:20-alpine until
+# 2026-09-23, five months AFTER Node 20 went end-of-life on 2026-04-30, so it
+# was running production on a runtime receiving no security patches. Keep this
+# on a supported LTS and keep .nvmrc in step with it, or local and production
+# drift apart again.
+#
+# Three things this must get right; all three have bitten:
 #  1. `output: 'standalone'` traces a minimal node_modules, keeping the
 #     container inside the 200MB default (measured ~98MB RSS).
 #  2. Next does NOT copy .next/static or public/ into the standalone output.
 #     Without them no client JS loads and every onClick is silently dead.
-#  3. better-sqlite3 is a test-only NATIVE module. Installed with
-#     --ignore-scripts it has no compiled binary, and importing it kills the
-#     server at boot - the pod never passes readiness and the edge reports
-#     "no healthy upstream". Dev dependencies are pruned before tracing so it
-#     is never part of the production graph at all.
-#  4. Excluding a package via outputFileTracingExcludes alone leaves a DANGLING
-#     SYMLINK in .next/standalone, and `COPY` follows it and fails the build.
-#     Pruning (3) removes the package before tracing, so no link is created.
+#  3. CMD must be an ABSOLUTE path: GDP does not preserve WORKDIR, so
+#     `node server.js` dies with "Cannot find module '/server.js'".
+#
+# There are NO native modules in the graph any more. better-sqlite3 was the
+# only one and was removed on 2026-09-23 along with the SQLite driver; it had
+# caused two outages (no compiled binary under --ignore-scripts killed the pod
+# at boot, and excluding it from tracing left a dangling symlink that COPY
+# followed and failed on). The dev-dependency prune below is kept anyway: it
+# keeps the image small and stops the next native module repeating the story.
 
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 
 # Full install (including dev deps) - the build needs typescript/tailwind.
@@ -27,11 +34,11 @@ RUN npm ci --ignore-scripts
 COPY . .
 RUN npm run build
 
-# Drop dev dependencies BEFORE the runner stage copies anything, so no
-# test-only native module can reach the image.
+# Drop dev dependencies BEFORE the runner stage copies anything: smaller image,
+# and no test-only package can reach production even if one is added later.
 RUN npm prune --omit=dev --ignore-scripts
 
-FROM node:20-alpine AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production

@@ -20,7 +20,9 @@ import { join } from 'node:path'
 // is treated as a UI spec and will be run against a real browser, so a new
 // pure-logic spec omitted from this list silently becomes a slow browser test
 // (or fails for want of a page). Add new unit specs here.
-const UNIT_SPECS = /(auth|import|calendar|oauth|ics|weekgrid|syncbutton)\.spec\.ts/
+const SCREEN_SPECS = /\.screens\.spec\.ts/
+
+const UNIT_SPECS = /(auth|import|calendar|oauth|ics|weekgrid|syncbutton|dialect|mention|actions-filter|timeleft|reorder|notepad|reminders|push-client)\.spec\.ts/
 
 export default defineConfig({
   testDir: './test/e2e',
@@ -42,12 +44,26 @@ export default defineConfig({
   },
 
   projects: [
-    { name: 'unit', testMatch: UNIT_SPECS },
+    { name: 'unit', testMatch: UNIT_SPECS, testIgnore: SCREEN_SPECS },
     {
       name: 'ui',
-      testIgnore: UNIT_SPECS,
+      testIgnore: [UNIT_SPECS, SCREEN_SPECS],
       use: { ...devices['Desktop Chrome'] },
     },
+    // Screenshot-only, and present ONLY when explicitly asked for. It needs a
+    // server configured for Google while the user is NOT connected, which is
+    // not how the rest of the suite runs, so including it by default just
+    // produces three failures.
+    //   npm run screens:connect
+    ...(process.env.FELLOW_SCREENS
+      ? [
+          {
+            name: 'screens',
+            testMatch: SCREEN_SPECS,
+            use: { ...devices['Desktop Chrome'] },
+          },
+        ]
+      : []),
   ],
 
   webServer: process.env.SKIP_WEBSERVER
@@ -61,14 +77,27 @@ export default defineConfig({
         stderr: 'pipe',
         env: {
           PORT: '3100',
-          FELLOW_DB_DRIVER: 'sqlite',
-          // Absolute: the standalone server runs from .next/standalone, so a
-          // relative path would resolve against the wrong directory.
-          FELLOW_SQLITE_PATH: join(process.cwd(), 'test/.tmp/e2e.sqlite'),
+          // MySQL everywhere, same engine as production. Needs a local
+          // server: `brew services start mysql` plus `npm run db:setup`.
+          FELLOW_DB_DRIVER: 'mysql',
+          APP_ID: process.env.APP_ID ?? 'fellow_dev',
+          DB_HOST: process.env.DB_HOST ?? '127.0.0.1',
+          DB_PORT: process.env.DB_PORT ?? '3306',
+          DB_PASSWORD: process.env.DB_PASSWORD ?? 'fellowdev',
           // Points the app's JWKS fetch at the local test server.
           CF_ACCESS_ISSUER: 'http://127.0.0.1:3199',
           CF_ACCESS_AUD: 'fellow2-test-aud',
           FELLOW_ENCRYPTION_KEY: 'test-encryption-key-long-enough-for-tests',
+          // Screenshot runs need googleConfigured() true so the connect
+          // prompts render. There is still no google_connection row, so the
+          // app is in the configured-but-not-connected state they exist for.
+          ...(process.env.FELLOW_SCREENS
+            ? {
+                GOOGLE_CLIENT_ID: 'screens.apps.googleusercontent.com',
+                GOOGLE_CLIENT_SECRET: 'screens-secret',
+                GOOGLE_REDIRECT_URI: 'http://127.0.0.1:3100/api/auth/google/callback',
+              }
+            : {}),
         },
       },
 })

@@ -13,7 +13,7 @@
  * not-yet-configured deployment shows no dead control.
  */
 
-import { useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { syncCalendarAction } from '@/actions'
 import { summarise, describeError } from './sync-messages'
@@ -48,6 +48,16 @@ export function SyncButton({ connected }: { connected: boolean }) {
       setSyncing(false)
     }
   }
+
+  // The original comment claimed the toast auto-dismissed on success. It did
+  // not: there was no timer, so a success readout sat there until clicked and
+  // an error looked identical to a stale success. Successes now clear
+  // themselves; errors still stay until dismissed.
+  useEffect(() => {
+    if (outcome?.kind !== 'ok') return
+    const t = setTimeout(() => setOutcome(null), 4000)
+    return () => clearTimeout(t)
+  }, [outcome])
 
   const busy = syncing || pending
 
@@ -89,13 +99,13 @@ function SyncToast({ outcome, onDismiss }: { outcome: Outcome; onDismiss: () => 
       role="status"
       aria-live="polite"
       onClick={onDismiss}
-      className="absolute right-0 top-[26px] z-10 cursor-pointer whitespace-nowrap px-2 py-1 text-[11px]"
+      className="absolute right-0 top-[26px] z-20 cursor-pointer whitespace-nowrap px-[10px] py-[5px] text-[length:var(--text-sm)] font-medium"
       style={{
         borderRadius: 'var(--radius-row)',
-        border: '1px solid var(--color-hairline)',
-        background: 'var(--color-canvas)',
-        color: isError ? 'var(--color-due)' : 'var(--color-text-secondary)',
-        boxShadow: '0 2px 8px rgb(0 0 0 / 0.08)',
+        border: `1px solid ${isError ? 'var(--color-due)' : 'var(--color-accent)'}`,
+        background: isError ? 'var(--color-canvas)' : 'var(--color-accent)',
+        color: isError ? 'var(--color-due)' : '#fff',
+        boxShadow: '0 4px 14px rgb(0 0 0 / 0.16)',
       }}
     >
       {isError ? outcome.text : summarise(outcome.created, outcome.updated)}

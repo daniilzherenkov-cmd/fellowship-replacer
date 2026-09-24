@@ -14,11 +14,10 @@ const nextConfig: NextConfig = {
   // live at the repo root.
   agentRules: false,
 
-  // NOTE: better-sqlite3 (test-only, native) is kept out of the production image
-  // by `npm prune --omit=dev` in the Dockerfile, NOT by outputFileTracingExcludes.
-  // Excluding it from the trace leaves a DANGLING SYMLINK in .next/standalone
-  // that Docker's COPY follows and fails on. Pruning removes the package before
-  // tracing runs, so no broken link is ever created.
+  // There are no native modules in the dependency graph any more (better-sqlite3
+  // was the only one and is gone). If you ever add one, note that excluding it
+  // via outputFileTracingExcludes leaves a DANGLING SYMLINK in .next/standalone
+  // that Docker's COPY follows and fails on - prune it before tracing instead.
 }
 
 export default nextConfig
