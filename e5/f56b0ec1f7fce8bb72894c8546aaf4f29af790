@@ -1,0 +1,118 @@
+web/src/app/(app)/layout.tsx
+  s_9b11f8d124a4ca::t_bf2a919e62c926 7,58
+  s_9b11f8d124a4ca::t_862c87a290c390 9,33-35
+  s_9b11f8d124a4ca::t_1ff354cb04f95d 36
+web/src/components/note/MeetingNote.tsx
+  s_9b11f8d124a4ca::t_8a3d4c4ce97675 24,48-49,54-56,410-426
+web/src/app/(app)/calendar/page.tsx
+  s_9b11f8d124a4ca::t_552cc87d33690f 3-10,33,36,70-112,115
+docs/17-pre-launch-audit.md
+  s_9b11f8d124a4ca::t_42b9d1a32eacc6 1-11,13,17,22,39-40,45,49,51,57-146
+  s_9b11f8d124a4ca::t_21bfd07d27d083 23-38,41-44,46-48,50,52-56
+  s_9b11f8d124a4ca::t_8ec53c0498eccc 12,14-16,18-21
+web/src/lib/last-route.ts
+  s_9b11f8d124a4ca::t_342b8c599f78e7 30-46
+  s_9b11f8d124a4ca::t_d570cb59d98994 1-29
+web/src/app/api/notes/[externalId]/stream/route.ts
+  s_9b11f8d124a4ca::t_59b629a53cd345 74-81
+  s_9b11f8d124a4ca::t_b166b30bc21317 1-15,17-70,73,82-107
+  s_9b11f8d124a4ca::t_08c28cb10be38c 16,71-72
+web/src/lib/sync.ts
+  s_9b11f8d124a4ca::t_7edf37c867a933 19,169-185
+  s_9b11f8d124a4ca::t_0a464c69f81918 186-187
+web/test/e2e/shared-notes.spec.ts
+  s_9b11f8d124a4ca::t_009c8aa165882f 1-14,25-30,32-48,50-52,54-79,81-85
+  s_9b11f8d124a4ca::t_05ee2d0dfc5f6d 15-24,31,49,53,80
+  s_9b11f8d124a4ca::t_6e397b39d3fa94 177-179,184,195,197,199,201,203,205,207,213-216,219-220
+  s_9b11f8d124a4ca::t_17fa018d889ff3 86-118,156-157,166-176
+  s_9b11f8d124a4ca::t_f867fe98becb84 119-155,158-165
+  s_9b11f8d124a4ca::t_537ae9136751de 180-183,185-194,196,198,200,202,204,206,208-212,217-218
+web/src/actions/index.ts
+  s_9b11f8d124a4ca::t_08c28cb10be38c 16,218,498
+  s_9b11f8d124a4ca::t_4f22f240b9034e 59-65,95,128,272-276
+  s_9b11f8d124a4ca::t_b166b30bc21317 467-476,478-480,496-497,499-508
+  s_9b11f8d124a4ca::t_73e643691b6dc8 17-27,477,481-495
+  s_9b11f8d124a4ca::t_4443bc6678ab1d 277
+web/src/lib/limits.ts
+  s_9b11f8d124a4ca::t_8902a8a41d63a8 1-114
+web/src/components/note/SharedNotepad.tsx
+  s_9b11f8d124a4ca::t_8a3d4c4ce97675 1-76
+web/src/app/api/metrics/route.ts
+  s_9b11f8d124a4ca::t_862c87a290c390 1-32
+web/Dockerfile
+  s_9b11f8d124a4ca::t_b726e9f6fcd27a 48-61
+web/test/e2e/loading-states.spec.ts
+  s_9b11f8d124a4ca::t_260f406e34cb14 10,111-151
+  s_9b11f8d124a4ca::t_7a28a785125c97 152
+web/test/e2e/last-route.spec.ts
+  s_9b11f8d124a4ca::t_13fd78642f25a5 1-48
+web/src/lib/logger.ts
+  s_9b11f8d124a4ca::t_fe96cdc1b258d0 1-26
+web/test/e2e/limits.spec.ts
+  s_9b11f8d124a4ca::t_56a28022c6fb46 1-86
+web/sql/schema.mysql.sql
+  s_9b11f8d124a4ca::t_590e5d8b5289e9 146-164
+web/src/lib/queries.ts
+  s_9b11f8d124a4ca::t_8ae37da9326791 1272-1406
+  s_9b11f8d124a4ca::t_9aca39d8681ef0 1407-1425
+docs/18-slack-announcement.md
+  s_9b11f8d124a4ca::t_8c0fb1f0e511c9 1-22,25-28,30-41,44,56-60
+  s_9b11f8d124a4ca::t_e2d4b47d55fd52 23-24,29,42-43,45-55
+web/src/components/note/useSharedNote.ts
+  s_9b11f8d124a4ca::t_4c8e21ac3431f9 1-106
+web/src/app/page.tsx
+  s_9b11f8d124a4ca::t_d570cb59d98994 7-9,11-14,20,26-35,41
+web/src/components/shell/RememberRoute.tsx
+  s_9b11f8d124a4ca::t_bf2a919e62c926 1-11,13-19,21-24
+  s_9b11f8d124a4ca::t_be8abd24579ebb 12,20
+web/src/components/calendar/CalendarView.tsx
+  s_9b11f8d124a4ca::t_7fb67f829902db 124-126
+  s_9b11f8d124a4ca::t_cf44f7cc49f2c0 129-139
+  s_9b11f8d124a4ca::t_f0753f108ca91c 17,79,95-100,103,225-237,241-242,391,409,413
+  s_9b11f8d124a4ca::t_285a25420007aa 26,37-69,112-123,127-128,140-141,164-169,172-180,238-240,243-257,336,377-381,392-408,462-472,494-498,519-523
+  s_9b11f8d124a4ca::t_d86d2c8efa59d7 181
+web/src/lib/push.ts
+  s_9b11f8d124a4ca::t_862c87a290c390 16-17,107,110,144,148,154,156
+  s_9b11f8d124a4ca::t_9aca39d8681ef0 21,93-95,106,115,120-128
+  s_9b11f8d124a4ca::t_b19842a03b2afe 129
+web/playwright.config.ts
+  s_9b11f8d124a4ca::t_13fd78642f25a5 25
+web/test/e2e/reminder-claim.spec.ts
+  s_9b11f8d124a4ca::t_450f61c6aaaed0 1-88
+web/sql/006-shared-notes.sql
+  s_9b11f8d124a4ca::t_590e5d8b5289e9 1-32
+web/src/app/(app)/meetings/[id]/page.tsx
+  s_9b11f8d124a4ca::t_f5205ba6a61604 4-9,35-58
+web/src/lib/note-hub.ts
+  s_9b11f8d124a4ca::t_e376ac464fb651 1-22,28-43,65,74-76,78,83-152
+  s_9b11f8d124a4ca::t_97a3a787a774c0 23-27,56-64,66-73,77,79-82
+  s_9b11f8d124a4ca::t_4c7ede11d929e8 44-55
+web/src/components/shell/TopBar.tsx
+  s_9b11f8d124a4ca::t_d570cb59d98994 91-94,96,98,100,102
+web/src/lib/metrics.ts
+  s_9b11f8d124a4ca::t_4c7ede11d929e8 29-55,58-59
+  s_9b11f8d124a4ca::t_fe96cdc1b258d0 1-28,56-57,60-169
+web/test/e2e/app.spec.ts
+  s_9b11f8d124a4ca::t_ddebe6768f3e37 235-237,239,246-252,386-423
+  s_9b11f8d124a4ca::t_30cdc5c39d510c 253-300
+  s_9b11f8d124a4ca::t_a0a3935dfe8185 424
+web/src/instrumentation.ts
+  s_9b11f8d124a4ca::t_862c87a290c390 31-35
+  s_9b11f8d124a4ca::t_3a8189bf9ce957 24-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "e5f56b0ec1f7fce8bb72894c8546aaf4f29af790",
+  "prompts": {},
+  "sessions": {
+    "s_9b11f8d124a4ca": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "78272c85-3b86-4f98-be61-00bf083ac019",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
