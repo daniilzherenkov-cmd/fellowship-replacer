@@ -14,6 +14,7 @@ import {
   CALENDAR_SCOPE,
   isPermanentAuthFailure,
   oauthConfig,
+  publicOrigin,
 } from '../../src/lib/google-oauth'
 import { createHash } from 'node:crypto'
 
@@ -191,5 +192,39 @@ test.describe('randomToken', () => {
     const t = randomToken()
     expect(t).toMatch(/^[A-Za-z0-9_-]+$/)
     expect(randomToken()).not.toBe(t)
+  })
+})
+
+test.describe('post-callback redirect origin', () => {
+  // The pod hostname Kubernetes gives this app. It does not resolve from a
+  // browser, which is exactly the bug this guards: the handshake succeeded and
+  // then dumped the user on DNS_PROBE_FINISHED_NXDOMAIN.
+  const podUrl =
+    'http://dh-ets-ei-protoship-backend-9zs9-fellow76bf-9b8cdd9cb-dhfff:8080' +
+    '/api/auth/google/callback?code=x&state=y'
+
+  const saved = process.env.GOOGLE_REDIRECT_URI
+  test.afterAll(() => {
+    if (saved === undefined) delete process.env.GOOGLE_REDIRECT_URI
+    else process.env.GOOGLE_REDIRECT_URI = saved
+  })
+
+  test('prefers the configured public origin over the request host', () => {
+    process.env.GOOGLE_REDIRECT_URI = 'https://fellow2.dhapps.ai/api/auth/google/callback'
+    expect(publicOrigin(podUrl)).toBe('https://fellow2.dhapps.ai')
+  })
+
+  test('falls back to the request origin when unset', () => {
+    delete process.env.GOOGLE_REDIRECT_URI
+    expect(publicOrigin('http://localhost:3000/api/auth/google/callback')).toBe(
+      'http://localhost:3000',
+    )
+  })
+
+  test('falls back rather than throwing on a malformed redirect uri', () => {
+    process.env.GOOGLE_REDIRECT_URI = 'not-a-url'
+    expect(publicOrigin('http://localhost:3000/api/auth/google/callback')).toBe(
+      'http://localhost:3000',
+    )
   })
 })

@@ -39,6 +39,16 @@ export interface ListEventsResult {
   syncTokenExpired: boolean
 }
 
+/**
+ * Every call to Google gets a deadline.
+ *
+ * WHY: none of them had one. A hung request left the server action awaiting
+ * forever, and the create-event dialog sat on "Saving…" with no error and no
+ * way out - the exact failure Danya hit. fetch has no default timeout, so an
+ * unresponsive upstream becomes an unresponsive app.
+ */
+const GOOGLE_TIMEOUT_MS = 15_000
+
 export class GoogleApiError extends Error {
   constructor(
     message: string,
@@ -46,6 +56,30 @@ export class GoogleApiError extends Error {
   ) {
     super(message)
     this.name = 'GoogleApiError'
+  }
+}
+
+/**
+ * What Google actually returns, as opposed to our normalised shape.
+ *
+ * These differ in a way that bit us: Google sends `hangoutLink` and
+ * `conferenceData`, never a field called `conferenceUrl`. The response used
+ * to be cast straight to GCalEvent[], which satisfied TypeScript while
+ * `conferenceUrl` stayed undefined on every synced event forever. That is why
+ * no meeting ever showed a Google Meet badge. A cast is not a parse.
+ */
+interface RawEvent extends Omit<GCalEvent, 'conferenceUrl'> {
+  hangoutLink?: string
+  conferenceData?: {
+    entryPoints?: { uri?: string; entryPointType?: string }[]
+  }
+}
+
+function toGCalEvent(raw: RawEvent): GCalEvent {
+  const video = raw.conferenceData?.entryPoints?.find((e) => e.entryPointType === 'video')
+  return {
+    ...raw,
+    conferenceUrl: raw.hangoutLink ?? video?.uri ?? undefined,
   }
 }
 
@@ -82,6 +116,7 @@ export async function listEvents(params: ListEventsParams): Promise<ListEventsRe
   if (pageToken) url.searchParams.set('pageToken', pageToken)
 
   const res = await fetch(url, {
+    signal: AbortSignal.timeout(GOOGLE_TIMEOUT_MS),
     headers: { authorization: `Bearer ${accessToken}` },
   })
 
@@ -98,13 +133,13 @@ export async function listEvents(params: ListEventsParams): Promise<ListEventsRe
   }
 
   const data = (await res.json()) as {
-    items?: GCalEvent[]
+    items?: RawEvent[]
     nextPageToken?: string
     nextSyncToken?: string
   }
 
   return {
-    events: data.items ?? [],
+    events: (data.items ?? []).map(toGCalEvent),
     nextPageToken: data.nextPageToken ?? null,
     nextSyncToken: data.nextSyncToken ?? null,
     syncTokenExpired: false,
@@ -178,4 +213,127 @@ export function defaultWindow(now = new Date()): { timeMin: string; timeMax: str
   const max = new Date(now)
   max.setMonth(max.getMonth() + 3)
   return { timeMin: min.toISOString(), timeMax: max.toISOString() }
+}
+
+export interface CreateEventParams {
+  accessToken: string
+  calendarId?: string
+  summary: string
+  /** RFC3339 with offset, or a YYYY-MM-DD date when allDay. */
+  start: string
+  end: string
+  allDay?: boolean
+  location?: string | null
+  description?: string | null
+  attendeeEmails?: string[]
+  timeZone?: string
+}
+
+export interface CreatedEvent {
+  id: string
+  htmlLink: string | null
+  conferenceUrl: string | null
+}
+
+/**
+ * Create an event on the user's calendar.
+ *
+ * The first thing in this app that WRITES to Google. docs/01 §5 cut calendar
+ * write-back from v1; that was reversed on 2026-09-23. No new consent was
+ * needed: the existing `calendar.events` scope already covers writes.
+ *
+ * `sendUpdates=all` so invitees are actually notified. Creating an event that
+ * silently never reaches the other attendees would be worse than not offering
+ * the feature.
+ */
+export async function createEvent(params: CreateEventParams): Promise<CreatedEvent> {
+  const {
+    accessToken,
+    calendarId = 'primary',
+    summary,
+    start,
+    end,
+    allDay = false,
+    location,
+    description,
+    attendeeEmails = [],
+    timeZone,
+  } = params
+
+  const url = new URL(`${BASE}/calendars/${encodeURIComponent(calendarId)}/events`)
+  // Notify invitees, matching what the Google UI does by default.
+  url.searchParams.set('sendUpdates', 'all')
+
+  const body: Record<string, unknown> = {
+    summary,
+    // All-day events use `date`; timed ones use `dateTime` plus a zone.
+    start: allDay ? { date: start } : { dateTime: start, ...(timeZone ? { timeZone } : {}) },
+    end: allDay ? { date: end } : { dateTime: end, ...(timeZone ? { timeZone } : {}) },
+  }
+  if (location) body.location = location
+  if (description) body.description = description
+  if (attendeeEmails.length) {
+    body.attendees = attendeeEmails.map((email) => ({ email }))
+  }
+
+  const res = await fetch(url.toString(), {
+    signal: AbortSignal.timeout(GOOGLE_TIMEOUT_MS),
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${accessToken}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '')
+    throw new GoogleApiError(
+      `Calendar create failed (${res.status}): ${text.slice(0, 300)}`,
+      res.status,
+    )
+  }
+
+  const json = (await res.json()) as {
+    id?: string
+    htmlLink?: string
+    hangoutLink?: string
+    conferenceData?: { entryPoints?: { uri?: string; entryPointType?: string }[] }
+  }
+
+  const entry = json.conferenceData?.entryPoints?.find((e) => e.entryPointType === 'video')
+
+  return {
+    id: json.id ?? '',
+    htmlLink: json.htmlLink ?? null,
+    conferenceUrl: json.hangoutLink ?? entry?.uri ?? null,
+  }
+}
+
+/**
+ * Remove an event from the user's calendar.
+ *
+ * A 404 or 410 is treated as success: the event is already gone, which is the
+ * state the caller wanted. Anything else is a real failure worth surfacing.
+ */
+export async function deleteEvent(params: {
+  accessToken: string
+  calendarId?: string
+  eventId: string
+}): Promise<void> {
+  const { accessToken, calendarId = 'primary', eventId } = params
+  const url = new URL(
+    `${BASE}/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(eventId)}`,
+  )
+  url.searchParams.set('sendUpdates', 'all')
+
+  const res = await fetch(url.toString(), {
+    signal: AbortSignal.timeout(GOOGLE_TIMEOUT_MS),
+    method: 'DELETE',
+    headers: { authorization: `Bearer ${accessToken}` },
+  })
+
+  if (res.ok || res.status === 404 || res.status === 410) return
+  const text = await res.text().catch(() => '')
+  throw new GoogleApiError(`Calendar delete failed (${res.status}): ${text.slice(0, 200)}`, res.status)
 }

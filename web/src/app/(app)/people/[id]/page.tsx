@@ -26,14 +26,14 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
       <div className="mb-6 flex items-center gap-4">
         <Avatar name={person.name} colorHex={person.colorHex} size={56} />
         <div>
-          <h1 className="m-0 text-[22px] font-semibold">{person.name}</h1>
+          <h1 className="m-0 text-[length:var(--text-3xl)] font-semibold">{person.name}</h1>
           {person.email && (
-            <p className="m-0 text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+            <p className="m-0 text-[length:var(--text-base)]" style={{ color: 'var(--color-text-secondary)' }}>
               {person.email}
             </p>
           )}
           {openItems.length > 0 && (
-            <p className="m-0 mt-1 text-[13px] font-medium" style={{ color: 'var(--color-accent)' }}>
+            <p className="m-0 mt-1 text-[length:var(--text-base)] font-medium" style={{ color: 'var(--color-accent)' }}>
               {openItems.length} open to-do{openItems.length === 1 ? '' : 's'}
             </p>
           )}
@@ -48,10 +48,10 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
             background: 'var(--color-accent-subtle)',
           }}
         >
-          <h2 className="m-0 mb-2 text-[13px] font-semibold">Carried forward</h2>
+          <h2 className="m-0 mb-2 text-[length:var(--text-base)] font-semibold">Carried forward</h2>
           <ul className="m-0 list-none p-0">
             {openItems.map((item) => (
-              <li key={item.id} className="flex items-center gap-2 py-[3px] text-[13px]">
+              <li key={item.id} className="flex items-center gap-2 py-[3px] text-[length:var(--text-base)]">
                 <span aria-hidden="true" style={{ color: 'var(--color-text-tertiary)' }}>
                   ☐
                 </span>
@@ -63,9 +63,9 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
         </section>
       )}
 
-      <h2 className="mb-2 text-[16px] font-semibold">History</h2>
+      <h2 className="mb-2 text-[length:var(--text-xl)] font-semibold">History</h2>
       {meetings.length === 0 ? (
-        <p className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+        <p className="text-[length:var(--text-base)]" style={{ color: 'var(--color-text-secondary)' }}>
           No meetings with {person.name} yet.
         </p>
       ) : (
@@ -77,8 +77,8 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
                 className="flex items-baseline gap-3 px-2 py-2 no-underline"
                 style={{ borderRadius: 'var(--radius-row)', color: 'inherit' }}
               >
-                <span className="min-w-0 flex-1 truncate text-[14px]">{meeting.title}</span>
-                <span className="shrink-0 text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+                <span className="min-w-0 flex-1 truncate text-[length:var(--text-md)]">{meeting.title}</span>
+                <span className="shrink-0 text-[length:var(--text-sm)]" style={{ color: 'var(--color-text-secondary)' }}>
                   {new Date(meeting.startAt).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',

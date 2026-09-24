@@ -19,20 +19,33 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { RowMenu } from '../ui/RowMenu'
-import type { TalkingPoint } from '@/lib/queries'
+import type { Person, TalkingPoint } from '@/lib/queries'
+import { Avatar } from '../ui/Avatar'
+import { detectMention } from './ActionItemRow'
 
 export function TalkingPointRow({
   point,
+  people = [],
   onChange,
   onDelete,
 }: {
   point: TalkingPoint
+  /**
+   * Meeting attendees, for the @mention picker. Defaults to empty so a row
+   * rendered without them simply has no picker rather than crashing.
+   */
+  people?: Person[]
   onChange: (fields: { text?: string; isCovered?: boolean }) => void
   onDelete: () => void
 }) {
   const [hover, setHover] = useState(false)
   const [bulletHover, setBulletHover] = useState(false)
   const [text, setText] = useState(point.text)
+  // Active @query, or null when not mentioning. A talking point has no
+  // assignee column, so unlike an action item the pick inserts the name as
+  // text rather than assigning anyone.
+  const [mention, setMention] = useState<string | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pendingRef = useRef<string | null>(null)
 
@@ -66,6 +79,30 @@ export function TalkingPointRow({
     if (value !== null && value !== point.text) onChange({ text: value })
   }
 
+  /**
+   * Replace the @token being typed with the person's name.
+   *
+   * Plain text on purpose: talking_point stores only text, so a marker syntax
+   * or a join table would be a schema change for a cosmetic link. The name
+   * reads correctly in the note and in any export.
+   */
+  function insertMention(person: Person) {
+    const caret = inputRef.current?.selectionStart ?? text.length
+    const upto = text.slice(0, caret)
+    const at = upto.lastIndexOf('@')
+    const next =
+      at === -1 ? text : `${upto.slice(0, at)}@${person.name} ${text.slice(caret)}`.trimEnd() + ' '
+    setText(next)
+    setMention(null)
+    save(next)
+    inputRef.current?.focus()
+  }
+
+  const candidates = people
+    .filter((p) => !mention || p.name.toLowerCase().includes(mention.toLowerCase()))
+    .sort((a, b) => Number(b.isMe) - Number(a.isMe))
+    .slice(0, 6)
+
   return (
     <div
       data-testid="talking-point-row"
@@ -92,21 +129,70 @@ export function TalkingPointRow({
         <Bullet covered={point.isCovered} hover={bulletHover} />
       </button>
 
-      <input
-        value={text}
-        onChange={(e) => {
-          setText(e.target.value)
-          save(e.target.value)
-        }}
-        onBlur={flush}
-        placeholder="New talking point"
-        aria-label="Talking point"
-        className="min-w-0 flex-1 border-0 bg-transparent p-0 outline-none"
-        style={{
-          color: point.isCovered ? 'var(--color-text-tertiary)' : 'var(--color-text-primary)',
-          textDecoration: point.isCovered ? 'line-through' : 'none',
-        }}
-      />
+      <span className="relative min-w-0 flex-1">
+        <input
+          ref={inputRef}
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value)
+            setMention(detectMention(e.target.value, e.target.selectionStart ?? e.target.value.length))
+            save(e.target.value)
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape' && mention !== null) {
+              e.preventDefault()
+              setMention(null)
+            }
+          }}
+          // Blur closes the picker, but only after a click on it has landed.
+          onBlur={() => {
+            flush()
+            setTimeout(() => setMention(null), 120)
+          }}
+          placeholder="New talking point"
+          aria-label="Talking point"
+          className="w-full border-0 bg-transparent p-0 outline-none"
+          style={{
+            color: point.isCovered ? 'var(--color-text-tertiary)' : 'var(--color-text-primary)',
+            textDecoration: point.isCovered ? 'line-through' : 'none',
+          }}
+        />
+
+        {mention !== null && candidates.length > 0 && (
+          <ul
+            role="listbox"
+            aria-label="Mention a person"
+            className="absolute left-0 top-[22px] z-30 m-0 min-w-[190px] list-none p-1"
+            style={{
+              borderRadius: 'var(--radius-card)',
+              border: '1px solid var(--color-hairline)',
+              background: 'var(--color-canvas)',
+              boxShadow: '0 8px 24px rgb(0 0 0 / 0.14)',
+            }}
+          >
+            {candidates.map((person) => (
+              <li key={person.id}>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={false}
+                  // onMouseDown, not onClick: the input's blur would otherwise
+                  // close the list before a click could register.
+                  onMouseDown={(e) => {
+                    e.preventDefault()
+                    insertMention(person)
+                  }}
+                  className="flex w-full cursor-pointer items-center gap-2 border-0 bg-transparent px-2 py-[5px] text-left text-[length:var(--text-base)]"
+                  style={{ borderRadius: 'var(--radius-row)' }}
+                >
+                  <Avatar name={person.name} colorHex={person.colorHex} size={18} />
+                  <span className="truncate">{person.name}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </span>
 
       {hover ? (
         <RowMenu

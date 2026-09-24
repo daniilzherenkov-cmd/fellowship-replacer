@@ -74,7 +74,7 @@ export function RowMenu({ items }: { items: RowMenuItem[] }) {
                 setOpen(false)
                 item.onSelect()
               }}
-              className="block w-full cursor-pointer border-0 bg-transparent px-3 py-[6px] text-left text-[13px] hover:bg-[var(--color-hover)]"
+              className="block w-full cursor-pointer border-0 bg-transparent px-3 py-[6px] text-left text-[length:var(--text-base)] hover:bg-[var(--color-hover)]"
               style={{
                 color: item.destructive
                   ? 'var(--color-overdue)'

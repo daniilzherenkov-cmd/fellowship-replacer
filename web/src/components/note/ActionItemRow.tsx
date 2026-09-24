@@ -26,7 +26,10 @@ import type { ActionItem, Person } from '@/lib/queries'
 
 export interface ActionItemRowProps {
   item: ActionItem
+  /** Everyone, for the assignee picker: Fellow lets you assign to someone who was not in the room. */
   people: Person[]
+  /** Just this meeting's attendees, for the `@` picker. Falls back to `people`. */
+  mentionable?: Person[]
   onChange: (fields: {
     text?: string
     isDone?: boolean
@@ -53,6 +56,7 @@ export function detectMention(text: string, caret: number): string | null {
 export function ActionItemRow({
   item,
   people,
+  mentionable,
   onChange,
   onDelete,
   showSource = false,
@@ -106,18 +110,31 @@ export function ActionItemRow({
     commit(next)
   }
 
+  /**
+   * Assign from the @ picker, and leave the name in the text.
+   *
+   * Fellow writes "@Daniel Zherenkov to prepare chat" and assigns at the same
+   * time; the name stays visible in the row. This used to strip the @token,
+   * so the only evidence of an assignment was a small avatar at the far right.
+   */
   function assign(person: Person) {
-    // Strip the @token the user was typing.
     const caret = inputRef.current?.selectionStart ?? text.length
     const upto = text.slice(0, caret)
     const at = upto.lastIndexOf('@')
-    const cleaned = at === -1 ? text : (upto.slice(0, at) + text.slice(caret)).trimEnd()
-    setText(cleaned)
+    const next =
+      at === -1
+        ? text
+        : `${upto.slice(0, at)}@${person.name} ${text.slice(caret)}`.replace(/\s+$/, ' ')
+    setText(next)
     setMention(null)
-    onChange({ text: cleaned, assigneeId: person.id })
+    pendingRef.current = null
+    onChange({ text: next, assigneeId: person.id })
   }
 
-  const candidates = people
+  // `@` offers the meeting's attendees; the avatar button still opens the
+  // full directory, because assigning to someone absent is legitimate.
+  const pool = mention !== null ? (mentionable ?? people) : people
+  const candidates = pool
     .filter((p) => !mention || p.name.toLowerCase().includes(mention.toLowerCase()))
     // "Me" first, exactly as the Swift assignee popover ordered it.
     .sort((a, b) => Number(b.isMe) - Number(a.isMe))
@@ -165,7 +182,7 @@ export function ActionItemRow({
         />
 
         {showSource && hover && (
-          <div className="mt-[2px] text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <div className="mt-[2px] text-[length:var(--text-xs)]" style={{ color: 'var(--color-text-secondary)' }}>
             {item.meetingId ? (
               <button
                 type="button"
@@ -203,7 +220,7 @@ export function ActionItemRow({
                   e.preventDefault()
                   assign(p)
                 }}
-                className="flex w-full cursor-pointer items-center gap-2 border-0 bg-transparent px-3 py-[6px] text-left text-[13px] hover:bg-[var(--color-hover)]"
+                className="flex w-full cursor-pointer items-center gap-2 border-0 bg-transparent px-3 py-[6px] text-left text-[length:var(--text-base)] hover:bg-[var(--color-hover)]"
               >
                 <Avatar name={p.name} colorHex={p.colorHex} size={20} />
                 <span>

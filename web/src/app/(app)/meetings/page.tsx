@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import { headers } from 'next/headers'
 import { requireIdentity } from '@/lib/auth'
-import { listMeetings } from '@/lib/queries'
+import { listMeetings, meetingDateBounds } from '@/lib/queries'
+import { Suspense } from 'react'
+import { ScrollToToday } from '@/components/meetings/ScrollToToday'
+import { SkeletonLine, SkeletonRow } from '@/components/ui/Skeleton'
+import { AutoLoadMore } from '@/components/meetings/AutoLoadMore'
 import { AvatarStack } from '@/components/ui/Avatar'
 
 export const dynamic = 'force-dynamic'
@@ -24,9 +28,91 @@ function dayLabel(date: Date, now = new Date()): { text: string; isToday: boolea
   }
 }
 
-export default async function MeetingsArchivePage() {
+/**
+ * Weeks either side of today loaded per step.
+ *
+ * Three months was 1055 meetings, a 448KB response and nearly two seconds
+ * before the page appeared. The archive is a scrolling list: almost nobody
+ * reads all of it, so load a month and let the reader ask for more.
+ */
+const STEP_WEEKS = 2
+
+/**
+ * Shell first, list streamed.
+ *
+ * NOT a route-level `loading.tsx`: that boundary would cover /meetings/[id]
+ * too, and streaming commits HTTP 200 before the child can call notFound(),
+ * which turned another user's meeting from a 404 into a 200. Caught by the
+ * per-user isolation test, which is exactly what it is there for.
+ */
+export default async function MeetingsArchivePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ back?: string; fwd?: string }>
+}) {
+  return (
+    <div className="mx-auto w-full" style={{ maxWidth: 'var(--note-max-width)', padding: 32 }}>
+      <h1 className="mb-1 text-[length:var(--text-3xl)] font-semibold">Meetings</h1>
+      <Suspense fallback={<ArchiveSkeleton />}>
+        <Archive searchParams={searchParams} />
+      </Suspense>
+    </div>
+  )
+}
+
+function ArchiveSkeleton() {
+  return (
+    <div>
+      <span role="status" aria-live="polite" className="sr-only">
+        Loading meetings
+      </span>
+      <SkeletonLine width={240} height={13} className="mt-3" />
+      {Array.from({ length: 3 }, (_, group) => (
+        <div key={group} className="mt-7">
+          <SkeletonLine width={120} height={14} className="mb-2" />
+          {Array.from({ length: 3 }, (_, i) => (
+            <SkeletonRow key={i} avatar={false} />
+          ))}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+async function Archive({
+  searchParams,
+}: {
+  searchParams: Promise<{ back?: string; fwd?: string }>
+}) {
   const identity = await requireIdentity(await headers())
-  const meetings = await listMeetings(identity.email, { limit: 500 })
+  const sp = await searchParams
+
+  // How many steps have been expanded in each direction. Clamped: these are
+  // URL parameters, so a hand-edited ?back=9999 must not ask for everything.
+  const clampSteps = (raw: string | undefined) => {
+    const n = Number.parseInt(raw ?? '1', 10)
+    return Number.isFinite(n) ? Math.min(Math.max(n, 1), 26) : 1
+  }
+  const backSteps = clampSteps(sp.back)
+  const fwdSteps = clampSteps(sp.fwd)
+
+  const from = new Date()
+  from.setDate(from.getDate() - backSteps * STEP_WEEKS * 7)
+  from.setHours(0, 0, 0, 0)
+  const to = new Date()
+  to.setDate(to.getDate() + fwdSteps * STEP_WEEKS * 7)
+  to.setHours(23, 59, 59, 999)
+
+  const meetings = await listMeetings(identity.email, {
+    from: from.toISOString(),
+    to: to.toISOString(),
+  })
+
+  // Where the data actually ends. Without this the sentinels would keep
+  // firing forever against empty months, re-fetching nothing.
+  const bounds = await meetingDateBounds(identity.email)
+  const atHistoryLimit = !bounds.earliest || new Date(bounds.earliest) >= from
+  const atFutureLimit = !bounds.latest || new Date(bounds.latest) <= to
 
   // Grouped by calendar day, ascending - the Swift archive did the same, then
   // auto-scrolled to today on appear.
@@ -37,13 +123,48 @@ export default async function MeetingsArchivePage() {
   }
 
   return (
-    <div className="mx-auto w-full" style={{ maxWidth: 'var(--note-max-width)', padding: 32 }}>
-      <h1 className="mb-6 text-[22px] font-semibold">Meetings</h1>
+    <>
+      <p
+        className="mb-6 text-[length:var(--text-base)]"
+        style={{ color: 'var(--color-text-secondary)' }}
+      >
+        {from.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} to{' '}
+        {to.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}. Load more at
+        either end.
+      </p>
+      <ScrollToToday />
+
+      {/* Scrolling to the top loads older meetings; the link is the keyboard
+          and no-JS path to the same thing. */}
+      <AutoLoadMore
+        href={`/meetings?back=${backSteps + 1}&fwd=${fwdSteps}`}
+        direction="up"
+        disabled={atHistoryLimit}
+      />
+      <div className="mb-4">
+        {atHistoryLimit ? (
+          <span
+            className="text-[length:var(--text-sm)]"
+            style={{ color: 'var(--color-text-tertiary)' }}
+          >
+            Start of the imported history.
+          </span>
+        ) : (
+          <Link
+            href={`/meetings?back=${backSteps + 1}&fwd=${fwdSteps}`}
+            className="text-[length:var(--text-sm)] no-underline"
+            style={{ color: 'var(--color-accent)' }}
+            scroll={false}
+          >
+            ↑ Load {STEP_WEEKS} more weeks of history
+          </Link>
+        )}
+      </div>
 
       {groups.size === 0 ? (
         <div className="py-16 text-center">
-          <p className="text-[15px] font-medium">No meetings yet</p>
-          <p className="mt-1 text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="text-[length:var(--text-lg)] font-medium">No meetings yet</p>
+          <p className="mt-1 text-[length:var(--text-base)]" style={{ color: 'var(--color-text-secondary)' }}>
             Connect your calendar in Settings, or create one from the Calendar tab.
           </p>
         </div>
@@ -53,7 +174,7 @@ export default async function MeetingsArchivePage() {
           return (
             <section key={key} id={label.isToday ? 'today' : undefined} className="mb-6">
               <h2
-                className="mb-1 px-2 text-[13px] font-semibold"
+                className="mb-1 px-2 text-[length:var(--text-base)] font-semibold"
                 style={{ color: label.isToday ? 'var(--color-accent)' : undefined }}
               >
                 {label.text}
@@ -80,8 +201,8 @@ export default async function MeetingsArchivePage() {
                         }}
                       />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[14px]">{meeting.title}</span>
-                        <span className="text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+                        <span className="block truncate text-[length:var(--text-md)]">{meeting.title}</span>
+                        <span className="text-[length:var(--text-sm)]" style={{ color: 'var(--color-text-secondary)' }}>
                           {new Date(meeting.startAt).toLocaleTimeString('en-US', {
                             hour: 'numeric',
                             minute: '2-digit',
@@ -99,6 +220,33 @@ export default async function MeetingsArchivePage() {
           )
         })
       )}
-    </div>
+
+      {groups.size > 0 && (
+        <div className="mt-2 pb-8">
+          {atFutureLimit ? (
+            <span
+              className="text-[length:var(--text-sm)]"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              End of the imported range.
+            </span>
+          ) : (
+            <Link
+              href={`/meetings?back=${backSteps}&fwd=${fwdSteps + 1}`}
+              className="text-[length:var(--text-sm)] no-underline"
+              style={{ color: 'var(--color-accent)' }}
+              scroll={false}
+            >
+              ↓ Load {STEP_WEEKS} more weeks ahead
+            </Link>
+          )}
+          <AutoLoadMore
+            href={`/meetings?back=${backSteps}&fwd=${fwdSteps + 1}`}
+            direction="down"
+            disabled={atFutureLimit}
+          />
+        </div>
+      )}
+    </>
   )
 }

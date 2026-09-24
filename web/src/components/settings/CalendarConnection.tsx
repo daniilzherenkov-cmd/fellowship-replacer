@@ -51,8 +51,8 @@ export function CalendarConnection({
         borderRadius: 'var(--radius-card)',
       }}
     >
-      <h2 className="m-0 text-[16px] font-semibold">Google Calendar</h2>
-      <p className="mb-3 mt-[2px] text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+      <h2 className="m-0 text-[length:var(--text-xl)] font-semibold">Google Calendar</h2>
+      <p className="mb-3 mt-[2px] text-[length:var(--text-base)]" style={{ color: 'var(--color-text-secondary)' }}>
         Fellow Hero reads your calendar so your meetings and the people in them appear
         automatically. It asks for permission to edit events too, so it can create
         meetings later, but nothing in the app writes to your calendar today.
@@ -73,7 +73,7 @@ export function CalendarConnection({
         </Banner>
       ) : connected ? (
         <div>
-          <dl className="m-0 mb-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[13px]">
+          <dl className="m-0 mb-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[length:var(--text-base)]">
             <dt style={{ color: 'var(--color-text-secondary)' }}>Account</dt>
             <dd className="m-0">{googleEmail ?? 'Connected'}</dd>
             <dt style={{ color: 'var(--color-text-secondary)' }}>Last sync</dt>
@@ -89,7 +89,7 @@ export function CalendarConnection({
               type="button"
               onClick={sync}
               disabled={syncing}
-              className="cursor-pointer px-3 py-[6px] text-[13px] font-medium text-white"
+              className="cursor-pointer px-3 py-[6px] text-[length:var(--text-base)] font-medium text-white"
               style={{
                 borderRadius: 'var(--radius-row)',
                 border: 0,
@@ -101,22 +101,24 @@ export function CalendarConnection({
             </button>
             <a
               href="/api/auth/google/start"
-              className="px-3 py-[6px] text-[13px] no-underline"
+              className="px-3 py-[6px] text-[length:var(--text-base)] no-underline"
               style={{ color: 'var(--color-text-secondary)' }}
             >
               Reconnect
             </a>
           </div>
           {message && (
-            <p className="mt-2 text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
-              {message}
-            </p>
+            <div className="mt-3">
+              <Banner tone={message.startsWith('Calendar synced') ? 'ok' : 'warn'}>
+                {message}
+              </Banner>
+            </div>
           )}
         </div>
       ) : (
         <a
           href="/api/auth/google/start"
-          className="inline-block px-3 py-[6px] text-[13px] font-medium text-white no-underline"
+          className="inline-block px-3 py-[6px] text-[length:var(--text-base)] font-medium text-white no-underline"
           style={{ borderRadius: 'var(--radius-row)', background: 'var(--color-accent)' }}
         >
           Connect Google Calendar
@@ -141,7 +143,7 @@ function Banner({
         : 'var(--color-accent)'
   return (
     <p
-      className="mb-3 px-3 py-2 text-[13px]"
+      className="mb-3 px-3 py-2 text-[length:var(--text-base)]"
       style={{
         borderRadius: 'var(--radius-row)',
         background: `color-mix(in srgb, ${color} 10%, transparent)`,

@@ -130,7 +130,7 @@ test.describe('filtering rules', () => {
     expect(normaliseEvent({ id: 'x', status: 'cancelled', start: { dateTime: '2026-09-01T09:00:00Z' }, end: { dateTime: '2026-09-01T10:00:00Z' } })).toBeNull()
   })
 
-  test('drops declined meetings by default and keeps them on request', () => {
+  test('KEEPS declined meetings, and records the RSVP so they can be struck through', () => {
     const ev: GCalEvent = {
       id: 'x',
       summary: 'Something I declined',
@@ -141,11 +141,17 @@ test.describe('filtering rules', () => {
         { email: 'other@x.com' },
       ],
     }
-    expect(normaliseEvent(ev)).toBeNull()
-    expect(normaliseEvent(ev, { skipDeclined: false })).not.toBeNull()
+    // Fellow keeps declined meetings on the calendar and strikes them through.
+    // Hiding them made Fellow Hero look wrong next to the same week in Google.
+    const kept = normaliseEvent(ev)
+    expect(kept).not.toBeNull()
+    expect(kept?.selfResponse).toBe('declined')
+
+    // The rule still exists for a future Settings toggle.
+    expect(normaliseEvent(ev, { skipDeclined: true })).toBeNull()
   })
 
-  test('drops all-day events by default', () => {
+  test('KEEPS all-day events, flagged so the UI can label them', () => {
     const holiday: GCalEvent = {
       id: 'x',
       summary: 'All DH Offices Closed',
@@ -153,18 +159,22 @@ test.describe('filtering rules', () => {
       end: { date: '2026-12-26' },
     }
     expect(isAllDay(holiday)).toBe(true)
-    expect(normaliseEvent(holiday)).toBeNull()
+    const kept = normaliseEvent(holiday)
+    expect(kept).not.toBeNull()
+    expect(kept?.isAllDay).toBe(true)
+
+    expect(normaliseEvent(holiday, { skipAllDay: true })).toBeNull()
   })
 
-  test('drops solo blocks by default', () => {
+  test('KEEPS solo blocks such as gym or Lunch', () => {
     const focus: GCalEvent = {
       id: 'x',
       summary: 'Deep Work Block',
       start: { dateTime: '2026-09-01T09:00:00Z' },
       end: { dateTime: '2026-09-01T11:00:00Z' },
     }
-    expect(normaliseEvent(focus)).toBeNull()
-    expect(normaliseEvent(focus, { skipSolo: false })).not.toBeNull()
+    expect(normaliseEvent(focus)).not.toBeNull()
+    expect(normaliseEvent(focus, { skipSolo: true })).toBeNull()
   })
 })
 
@@ -201,5 +211,32 @@ test.describe('real captured window', () => {
     const withMeet = out.filter((m) => m.conferenceUrl)
     expect(withMeet.length).toBeGreaterThan(0)
     expect(withMeet[0].conferenceUrl).toContain('meet.google.com')
+  })
+})
+
+test.describe('conference links from the Google response', () => {
+  // Regression: listEvents cast Google's JSON straight to GCalEvent[], so
+  // `conferenceUrl` was undefined on every synced event and no meeting ever
+  // showed a Meet badge. Google sends hangoutLink / conferenceData instead.
+  test('normalises an event carrying hangoutLink', () => {
+    const ev = {
+      id: 'x',
+      summary: 'Standup',
+      start: { dateTime: '2026-09-01T09:00:00Z' },
+      end: { dateTime: '2026-09-01T09:15:00Z' },
+      conferenceUrl: 'https://meet.google.com/abc-defg-hij',
+      attendees: [{ email: 'me@x.com', self: true }, { email: 'other@x.com' }],
+    } as GCalEvent
+    expect(normaliseEvent(ev)?.conferenceUrl).toBe('https://meet.google.com/abc-defg-hij')
+  })
+
+  test('a meeting with no conference link has none', () => {
+    const ev = {
+      id: 'y',
+      summary: 'Desk work',
+      start: { dateTime: '2026-09-01T09:00:00Z' },
+      end: { dateTime: '2026-09-01T10:00:00Z' },
+    } as GCalEvent
+    expect(normaliseEvent(ev)?.conferenceUrl).toBeNull()
   })
 })

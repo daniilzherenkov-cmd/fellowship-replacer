@@ -95,8 +95,13 @@ const next = spawn('npx', ['next', 'dev', '-p', String(NEXT_PORT)], {
     ...process.env,
     CF_ACCESS_ISSUER: ISSUER,
     CF_ACCESS_AUD: AUD,
-    FELLOW_DB_DRIVER: 'sqlite',
-    FELLOW_SQLITE_PATH: join(TMP, 'dev.sqlite'),
+    // Same engine as production. Run `npm run db:setup` once, and keep
+    // `brew services start mysql` running.
+    FELLOW_DB_DRIVER: 'mysql',
+    APP_ID: process.env.APP_ID ?? 'fellow_dev',
+    DB_HOST: process.env.DB_HOST ?? '127.0.0.1',
+    DB_PORT: process.env.DB_PORT ?? '3306',
+    DB_PASSWORD: process.env.DB_PASSWORD ?? 'fellowdev',
     FELLOW_ENCRYPTION_KEY:
       process.env.FELLOW_ENCRYPTION_KEY || 'local-dev-encryption-key-not-for-production',
   },

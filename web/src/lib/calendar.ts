@@ -144,12 +144,21 @@ function toIso(slot: GCalEvent['start'], endOfDay = false): string | null {
   return null
 }
 
+/**
+ * All three default to FALSE because Fellow shows everything: declined
+ * meetings struck through, all-day banners in their own band, and solo blocks
+ * like "gym" or "Lunch" alongside real meetings. Hiding them made Fellow Hero
+ * look broken next to the same week in Google.
+ *
+ * They remain options rather than being deleted so Settings can offer them
+ * later, and so tests can assert each rule in isolation.
+ */
 export interface NormaliseOptions {
-  /** Drop meetings the user declined. Default true - they are noise. */
+  /** Drop meetings the user declined. */
   skipDeclined?: boolean
-  /** Drop all-day events (holidays, OOO banners). Default true. */
+  /** Drop all-day events (holidays, OOO banners). */
   skipAllDay?: boolean
-  /** Drop solo blocks with no other attendees. Default true. */
+  /** Drop solo blocks with no other attendees. */
   skipSolo?: boolean
 }
 
@@ -161,7 +170,7 @@ export function normaliseEvent(
   event: GCalEvent,
   options: NormaliseOptions = {},
 ): NormalisedMeeting | null {
-  const { skipDeclined = true, skipAllDay = true, skipSolo = true } = options
+  const { skipDeclined = false, skipAllDay = false, skipSolo = false } = options
 
   if (event.status === 'cancelled') return null
 

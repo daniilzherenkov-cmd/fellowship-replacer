@@ -30,6 +30,11 @@ function meeting(
     kind: 'team',
     notepad: '',
     externalId: null,
+    responseStatus: null,
+    isAllDay: false,
+    conferenceUrl: null,
+    location: null,
+    privateNotes: '',
     attendees: [],
   }
 }

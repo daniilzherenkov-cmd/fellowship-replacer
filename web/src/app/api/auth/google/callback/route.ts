@@ -12,14 +12,15 @@
  */
 
 import { requireIdentity } from '@/lib/auth'
-import { oauthConfig, exchangeCode } from '@/lib/google-oauth'
+import { oauthConfig, exchangeCode, publicOrigin } from '@/lib/google-oauth'
 import { consumeOAuthState, saveConnection } from '@/lib/google-store'
+import { syncCalendar } from '@/lib/sync'
 import { safeEqual } from '@/lib/crypto'
 
 export const dynamic = 'force-dynamic'
 
 function redirectToSettings(request: Request, params: Record<string, string>) {
-  const url = new URL('/settings', new URL(request.url).origin)
+  const url = new URL('/settings', publicOrigin(request.url))
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v)
   return Response.redirect(url.toString(), 302)
 }
@@ -77,6 +78,19 @@ export async function GET(request: Request) {
       googleEmail: identity.email,
       scope: tokens.scope,
     })
+
+    // Sync immediately rather than waiting for a button press. Connecting and
+    // then finding an empty calendar reads as a broken connection, which is
+    // exactly what happened on the first real run.
+    //
+    // Best-effort: the connection IS saved at this point, so a sync failure
+    // must not turn a successful authorisation into an error. The calendar
+    // page retries on load anyway.
+    try {
+      await syncCalendar(identity.email)
+    } catch {
+      // Swallowed on purpose. last_sync_error carries the detail.
+    }
 
     return redirectToSettings(request, { google: 'connected' })
   } catch {

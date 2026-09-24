@@ -1,21 +1,25 @@
 /**
  * Database seam.
  *
- * Production: the Protoship per-app MySQL (mysql2 pool, credentials derived
- * from APP_ID + DB_PASSWORD injected from Vault at runtime).
- * Local/tests: SQLite, because this machine has neither Docker nor a local
- * MySQL and the platform provides no local emulation.
+ * MySQL everywhere: the Protoship per-app database in production, a local
+ * MySQL in dev and tests. Credentials are derived from APP_ID, with
+ * DB_PASSWORD injected from Vault at runtime in production.
  *
- * Every query in the app goes through `query()` / `exec()` so the two backends
- * stay swappable. Keep SQL to the common subset of MySQL 8 and SQLite:
- *   - `?` placeholders (both support them)
- *   - no MySQL-only functions (no JSON_TABLE, no ON DUPLICATE KEY UPDATE)
- *   - ISO-8601 TEXT for datetimes, so ordering is lexicographic in both
+ * WHY THERE IS NO SQLITE ANY MORE: dev used to run better-sqlite3. The two
+ * dialects disagree in ways that pass every test and then fail in the pod -
+ * `meeting_id IS ?` is valid SQLite and a syntax error in MySQL, and it
+ * shipped broken while 128 tests stayed green. better-sqlite3 is also a
+ * NATIVE module, and keeping it out of the production image took two
+ * outages and three separate workarounds to get right. Running the same
+ * engine in both places removes the whole category.
+ *
+ * Local setup:
+ *   brew services start mysql
+ *   npm run db:setup      (creates the database, user and schema)
  *
  * Schema DDL is NOT run from here. Protoship applies it out-of-band via the
  * execute_sql MCP tool; app code must never CREATE TABLE against production.
- * `sql/schema.sql` is the source of truth, and the test harness applies it to
- * its throwaway SQLite file.
+ * `sql/schema.mysql.sql` is the source of truth and mirrors production.
  */
 
 export type Row = Record<string, unknown>
@@ -28,89 +32,6 @@ export interface Db {
 }
 
 let instance: Db | null = null
-
-/**
- * True when running against SQLite (tests, local dev without MySQL).
- *
- * Requires an EXPLICIT opt-in via FELLOW_DB_DRIVER. It used to fall back to
- * SQLite whenever DB_HOST was unset, which is dangerous in a container: a
- * missing DB_HOST would silently start an in-memory database that looks healthy
- * and quietly loses every write, instead of failing loudly. better-sqlite3 is
- * also excluded from the production bundle (see next.config.ts), so attempting
- * it there would throw at import anyway.
- */
-function useSqlite(): boolean {
-  return process.env.FELLOW_DB_DRIVER === 'sqlite'
-}
-
-async function makeSqlite(): Promise<Db> {
-  // Resolved at runtime so Next's static tracer cannot follow it. A literal
-  // `import('better-sqlite3')` gets traced into .next/standalone WITHOUT its
-  // compiled .node binary (the Dockerfile installs with --ignore-scripts), and
-  // the import then throws at boot on Alpine - the pod never becomes ready and
-  // the edge serves "no healthy upstream". This module is test-only; production
-  // uses MySQL and must never load it.
-  const sqliteModule = 'better-sqlite3'
-  const { default: Database } = (await import(/* webpackIgnore: true */ sqliteModule)) as {
-    default: new (path: string) => {
-      pragma(s: string): void
-      prepare(s: string): { all(...a: unknown[]): unknown; run(...a: unknown[]): unknown; get(...a: unknown[]): unknown }
-      exec(s: string): void
-      close(): void
-    }
-  }
-  const { mkdirSync } = await import('node:fs')
-  const { dirname, isAbsolute, resolve } = await import('node:path')
-
-  const configured = process.env.FELLOW_SQLITE_PATH || ':memory:'
-  // A relative path is resolved against process.cwd(), which for a Next
-  // standalone build is .next/standalone - not the project root. Resolve it
-  // explicitly and create the directory, otherwise the first query fails with
-  // an opaque "directory does not exist".
-  const file =
-    configured === ':memory:' || isAbsolute(configured)
-      ? configured
-      : resolve(process.cwd(), configured)
-  if (file !== ':memory:') mkdirSync(dirname(file), { recursive: true })
-
-  const db = new Database(file)
-  db.pragma('journal_mode = WAL')
-  db.pragma('foreign_keys = ON')
-
-  // SQLite is the local/test backend only, and there is no migration runner on
-  // this path, so apply the schema if the file is empty. Production MySQL DDL
-  // is applied out-of-band via the execute_sql MCP tool and never from here.
-  const hasTables = db
-    .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='meeting'")
-    .get()
-  if (!hasTables && process.env.FELLOW_SQLITE_AUTO_SCHEMA !== '0') {
-    const { readFileSync, existsSync } = await import('node:fs')
-    const { join } = await import('node:path')
-    // Try both layouts: repo root in dev, and the traced copy in standalone.
-    for (const candidate of [
-      join(process.cwd(), 'sql/schema.sql'),
-      join(process.cwd(), '../../sql/schema.sql'),
-    ]) {
-      if (existsSync(candidate)) {
-        db.exec(readFileSync(candidate, 'utf8'))
-        break
-      }
-    }
-  }
-
-  return {
-    async query<T = Row>(sql: string, params: Param[] = []): Promise<T[]> {
-      return db.prepare(sql).all(...params) as T[]
-    },
-    async exec(sql: string, params: Param[] = []): Promise<void> {
-      if (params.length) db.prepare(sql).run(...params)
-      else db.exec(sql)
-    },
-    async close(): Promise<void> {
-      db.close()
-    },
-  }
-}
 
 /**
  * Fail with a diagnosis rather than a symptom.
@@ -132,8 +53,8 @@ function assertDbConfigured(appId: string | undefined): asserts appId is string 
     `Database is not configured - missing ${missing.join(', ')}. ` +
       'On Protoship, DB_PASSWORD is loaded from Vault at startup by ' +
       'instrumentation.ts; if it is absent, check the Vault lines in the pod ' +
-      'log. DB_HOST and APP_ID are injected by the platform. For local dev ' +
-      'set FELLOW_DB_DRIVER=sqlite instead.',
+      'log. DB_HOST and APP_ID are injected by the platform. For local dev, ' +
+      'start MySQL (brew services start mysql) and run npm run db:setup.',
   )
 }
 
@@ -177,7 +98,7 @@ async function makeMysql(): Promise<Db> {
 export async function getDb(): Promise<Db> {
   if (instance) return instance
   try {
-    instance = useSqlite() ? await makeSqlite() : await makeMysql()
+    instance = await makeMysql()
     return instance
   } catch (cause) {
     throw Object.assign(new Error('Database not available'), { status: 503, cause })

@@ -13,12 +13,14 @@ import { test, expect, signInAs, PRIMARY_USER, OTHER_USER, mintUiToken } from '.
 
 async function createMeeting(page: import('@playwright/test').Page, title: string) {
   await page.goto('/calendar')
+  // "+ New meeting" opens the create dialog rather than inserting a stub:
+  // the old behaviour dropped an unnamed 09:00 meeting you could only rename
+  // or delete. Going through the dialog means these tests exercise the real
+  // creation path, title and all.
   await page.getByRole('button', { name: '+ New meeting' }).click()
+  await page.getByLabel('Event title').fill(title)
+  await page.getByRole('button', { name: 'Save' }).click()
   await page.waitForURL(/\/meetings\/[a-f0-9-]+$/)
-  const titleInput = page.getByLabel('Meeting title')
-  await titleInput.fill(title)
-  // Title autosaves on a 500ms debounce.
-  await page.waitForTimeout(900)
   return page.url()
 }
 
@@ -72,7 +74,9 @@ test.describe('meeting note', () => {
     await expect(signedIn.getByLabel('Meeting title')).toHaveValue('Weekly 1:1')
     await expect(signedIn.getByLabel('Talking point').first()).toHaveValue('Discuss roadmap')
     await expect(signedIn.getByLabel('Action item text').first()).toHaveValue('Send the summary')
-    await expect(signedIn.getByLabel('Notepad')).toHaveValue('Some free-form notes.')
+    // The notepad is a bullet list now, so the first line gains a bullet as
+    // soon as you type - the behaviour Fellow has.
+    await expect(signedIn.getByLabel('Notepad')).toHaveValue('• Some free-form notes.')
   })
 
   test('adding a second row does not discard the first row\'s text', async ({ signedIn }) => {

@@ -80,24 +80,24 @@ export function IcsConnection({
       className="mt-4 p-4"
       style={{ border: '1px solid var(--color-hairline)', borderRadius: 'var(--radius-card)' }}
     >
-      <h2 className="m-0 text-[16px] font-semibold">Calendar address (no sign-in needed)</h2>
-      <p className="mb-3 mt-[2px] text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+      <h2 className="m-0 text-[length:var(--text-xl)] font-semibold">Calendar address (no sign-in needed)</h2>
+      <p className="mb-3 mt-[2px] text-[length:var(--text-base)]" style={{ color: 'var(--color-text-secondary)' }}>
         Works today, without waiting for Google sign-in to be approved. Paste the private
         address of your calendar and Fellow Hero will keep your meetings up to date.
       </p>
 
       {connected ? (
         <div>
-          <dl className="m-0 mb-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[13px]">
+          <dl className="m-0 mb-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[length:var(--text-base)]">
             <dt style={{ color: 'var(--color-text-secondary)' }}>Address</dt>
-            <dd className="m-0 break-all font-mono text-[12px]">{maskedUrl}</dd>
+            <dd className="m-0 break-all font-mono text-[length:var(--text-sm)]">{maskedUrl}</dd>
             <dt style={{ color: 'var(--color-text-secondary)' }}>Last refreshed</dt>
             <dd className="m-0">
               {lastSyncAt ? new Date(lastSyncAt).toLocaleString() : 'Never'}
             </dd>
           </dl>
 
-          <p className="mb-3 text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="mb-3 text-[length:var(--text-sm)]" style={{ color: 'var(--color-text-secondary)' }}>
             Google updates this feed on its own schedule, often only every few hours, so very
             recent changes can take a while to appear.
           </p>
@@ -107,7 +107,7 @@ export function IcsConnection({
               type="button"
               onClick={sync}
               disabled={busy}
-              className="cursor-pointer px-3 py-[6px] text-[13px] font-medium text-white"
+              className="cursor-pointer px-3 py-[6px] text-[length:var(--text-base)] font-medium text-white"
               style={{
                 borderRadius: 'var(--radius-row)',
                 border: 0,
@@ -121,7 +121,7 @@ export function IcsConnection({
               type="button"
               onClick={disconnect}
               disabled={busy}
-              className="cursor-pointer border-0 bg-transparent px-3 py-[6px] text-[13px]"
+              className="cursor-pointer border-0 bg-transparent px-3 py-[6px] text-[length:var(--text-base)]"
               style={{ color: 'var(--color-text-secondary)' }}
             >
               Remove address
@@ -131,7 +131,7 @@ export function IcsConnection({
       ) : (
         <div>
           <ol
-            className="mb-3 ml-4 mt-0 text-[13px]"
+            className="mb-3 ml-4 mt-0 text-[length:var(--text-base)]"
             // Tailwind's preflight strips list-style, so restore it explicitly.
             style={{ color: 'var(--color-text-secondary)', listStyle: 'decimal' }}
           >
@@ -154,7 +154,7 @@ export function IcsConnection({
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://calendar.google.com/calendar/ical/…/private-…/basic.ics"
             aria-label="Secret calendar address"
-            className="mb-2 w-full px-3 py-[6px] text-[13px] outline-none"
+            className="mb-2 w-full px-3 py-[6px] text-[length:var(--text-base)] outline-none"
             style={{
               borderRadius: 'var(--radius-row)',
               border: '1px solid var(--color-hairline)',
@@ -166,7 +166,7 @@ export function IcsConnection({
             type="button"
             onClick={connect}
             disabled={busy || url.trim().length === 0}
-            className="cursor-pointer px-3 py-[6px] text-[13px] font-medium text-white"
+            className="cursor-pointer px-3 py-[6px] text-[length:var(--text-base)] font-medium text-white"
             style={{
               borderRadius: 'var(--radius-row)',
               border: 0,
@@ -180,17 +180,17 @@ export function IcsConnection({
       )}
 
       {message && (
-        <p className="mt-3 text-[13px]" style={{ color: 'var(--color-now)' }}>
+        <p className="mt-3 text-[length:var(--text-base)]" style={{ color: 'var(--color-now)' }}>
           {message}
         </p>
       )}
       {error && (
-        <p className="mt-3 text-[13px]" style={{ color: 'var(--color-overdue)' }}>
+        <p className="mt-3 text-[length:var(--text-base)]" style={{ color: 'var(--color-overdue)' }}>
           {error}
         </p>
       )}
 
-      <p className="mt-3 text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+      <p className="mt-3 text-[length:var(--text-sm)]" style={{ color: 'var(--color-text-secondary)' }}>
         Events you marked <strong>private</strong> in Google arrive as
         &ldquo;Busy&rdquo; with no title and no attendees - Google removes that detail
         before sending the feed, so it cannot be recovered here. Those are skipped
@@ -201,7 +201,7 @@ export function IcsConnection({
       {/* Stated plainly rather than buried: this address is as sensitive as a
           password, and the user needs to know it is revocable. */}
       <p
-        className="mt-3 px-3 py-2 text-[12px]"
+        className="mt-3 px-3 py-2 text-[length:var(--text-sm)]"
         style={{
           borderRadius: 'var(--radius-row)',
           background: 'color-mix(in srgb, var(--color-due) 10%, transparent)',

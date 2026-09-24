@@ -26,7 +26,7 @@ export function DueDatePill({ date }: { date: Date }) {
   const color = overdue ? 'var(--color-overdue)' : 'var(--color-due)'
   return (
     <span
-      className="inline-flex shrink-0 items-center text-[11px] font-medium"
+      className="inline-flex shrink-0 items-center text-[length:var(--text-xs)] font-medium"
       style={{
         color,
         borderRadius: 'var(--radius-pill)',
