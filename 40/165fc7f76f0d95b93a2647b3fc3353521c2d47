@@ -1,0 +1,76 @@
+web/src/components/note/MeetingNote.tsx
+  s_c50d584fc50e84::t_329a0803a62c92 638
+  s_c50d584fc50e84::t_53f051595b2ac2 18,363-365
+  s_c50d584fc50e84::t_7cd8e749e31c5f 25,188-272,415-419,421-423,435,437,440-442,445-448,563-565
+web/test/e2e/weekgrid.spec.ts
+  s_c50d584fc50e84::t_2fac3bf0ac5ccb 39
+web/src/components/note/ActionItemRow.tsx
+  s_c50d584fc50e84::t_5db23f3ccfaf96 43-44,66,172
+web/src/components/settings/CalendarConnection.tsx
+  s_c50d584fc50e84::t_329a0803a62c92 131,157
+  s_c50d584fc50e84::t_e44f3b57027189 10-13,16,28,37-38,42,48-57,59,64-73,84,87-96,166-192,194
+  s_c50d584fc50e84::t_9fd6dbd0990e3c 193,195
+web/src/components/shell/GlobalSearch.tsx
+  s_c50d584fc50e84::t_1f5f57c5b0ff4d 158
+  s_c50d584fc50e84::t_92ca5da7730f4d 11-15,125,157
+web/src/components/settings/ReminderSettings.tsx
+  s_c50d584fc50e84::t_329a0803a62c92 86
+web/src/app/(app)/meetings/page.tsx
+  s_c50d584fc50e84::t_53f051595b2ac2 9,236
+  s_c50d584fc50e84::t_2c71bbf6c051e9 124-134,187,189-193,197-204
+web/src/components/shell/UpcomingBanner.tsx
+  s_c50d584fc50e84::t_d4328ebb8870ff 65
+web/src/components/calendar/NewMeetingDialog.tsx
+  s_c50d584fc50e84::t_329a0803a62c92 352
+web/src/components/shell/TopBar.tsx
+  s_c50d584fc50e84::t_329a0803a62c92 60
+web/src/styles/globals.css
+  s_c50d584fc50e84::t_329a0803a62c92 19-23
+web/src/app/api/auth/google/callback/route.ts
+  s_c50d584fc50e84::t_e6fb3128b2a202 81-87
+web/src/components/calendar/ConnectPrompt.tsx
+  s_c50d584fc50e84::t_cd08bde029abed 134
+  s_c50d584fc50e84::t_329a0803a62c92 89,149
+web/test/e2e/ux-review.spec.ts
+  s_c50d584fc50e84::t_97d5367c05d18c 92
+  s_c50d584fc50e84::t_ee909ee108207f 65
+  s_c50d584fc50e84::t_0bb1355c8c4536 1-64,66-91,93-112
+web/src/components/ui/AvatarStack.tsx
+  s_c50d584fc50e84::t_53f051595b2ac2 1-154
+web/src/components/calendar/CalendarView.tsx
+  s_c50d584fc50e84::t_53f051595b2ac2 19,552
+web/src/components/note/TalkingPointRow.tsx
+  s_c50d584fc50e84::t_1df006da07817b 8-16,37-39,49-54,135,157,162-177,232,242,246-247,261-271
+web/src/components/meetings/ScrollToToday.tsx
+  s_c50d584fc50e84::t_e2730b624a56c5 4,6-8,10-17,20,23-25,30-36,39-50,52-57
+  s_c50d584fc50e84::t_329a0803a62c92 51
+web/src/components/settings/IcsConnection.tsx
+  s_c50d584fc50e84::t_329a0803a62c92 114,173
+web/src/app/(app)/settings/page.tsx
+  s_c50d584fc50e84::t_e44f3b57027189 15,38
+web/src/components/actions/ActionsList.tsx
+  s_c50d584fc50e84::t_5db23f3ccfaf96 12-16,52-56,68,72-76,93-95,245-271,274-276
+  s_c50d584fc50e84::t_329a0803a62c92 122
+  s_c50d584fc50e84::t_98aaffaabc9eea 272-273
+web/src/components/shell/FirstRunPush.tsx
+  s_c50d584fc50e84::t_cd08bde029abed 88
+  s_c50d584fc50e84::t_329a0803a62c92 107
+web/src/lib/queries.ts
+  s_c50d584fc50e84::t_53fb186e05663b 69-73,75,137-145,149-151,160-164,168-169,174,179-181,201-203,217-218,270,287-288,744
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "40165fc7f76f0d95b93a2647b3fc3353521c2d47",
+  "prompts": {},
+  "sessions": {
+    "s_c50d584fc50e84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cb79e7b3-f32f-465e-a31d-7811f4713399",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
