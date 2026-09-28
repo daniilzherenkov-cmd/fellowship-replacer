@@ -123,29 +123,34 @@ more (see Gotchas). Local credentials default to database `fellow_dev`, user
 - **Calendar write-back is now IN scope** (reversing [docs/01](docs/01-product-brief.md) §5,
   decided 2026-09-23). The existing `calendar.events` scope already allows
   writes, so no new consent is needed.
-- **There is NO scheduler on this platform.** No cron, no background worker,
-  no queue: the pod only answers HTTP requests. Anything that must happen at
-  a particular moment without a user present is impossible here as deployed.
-  This already shapes two features:
-  - **Meeting reminders** are real OS notifications fired from an open tab
-    (`MeetingReminders.tsx`), NOT Web Push. Real push needs a service worker,
-    VAPID keys, stored subscriptions **and** a server-side timer to send
-    them; the first three without the fourth would never fire. The limitation
-    is stated in the Settings panel itself, deliberately.
-  - Calendar sync is polled for the same reason (below).
-
-  If a scheduler ever appears - a Protoship cron, an external trigger hitting
-  an endpoint, a small worker - both become straightforward. Worth raising
-  with Narbeh as a platform question rather than engineering around.
+- **There is no PLATFORM scheduler, so the app hosts its own.** No Protoship
+  cron, worker or queue. Instead `startReminderScheduler()` in
+  [web/src/lib/push.ts](web/src/lib/push.ts) runs a 60s in-process timer,
+  started from `instrumentation.ts` (logs `push_scheduler_started`, or
+  `push_scheduler_skipped` when VAPID keys are missing, as in tests).
+  - **Meeting reminders are real Web Push**, delivered with the app closed:
+    service worker, VAPID keys from Vault, `push_subscription` rows, and the
+    timer above. `FirstRunPush.tsx` does the soft ask; Settings has the panel.
+  - This is safe only because `app.yaml` pins the app to `min: 1, max: 1`.
+    Duplicate sends are still prevented if that changes (`reminder_sent`
+    primary key claims each reminder), but the shared-note hub is in-memory
+    and genuinely needs a single replica (docs/16, docs/17).
+  - Anything else time-based can use the same pattern. Calendar sync is still
+    polled for a different reason (below).
 - **Sync is polled, not pushed.** Google's `events.watch` needs a public
   endpoint it can POST to, and every `*.dhapps.ai` URL answers 302 to Okta, so
   push is impossible until an Access-exempt path is agreed. The ladder in place
   is sync-on-connect, throttled sync-on-load, and a 5-minute interval.
+  Sync-on-connect runs from the Settings page (`?google=connected&syncing=1`),
+  **not** inside the OAuth callback: awaiting the first import there held the
+  redirect until a gateway timeout.
 
 ## Gotchas
 - **Protoship deploys from `~/.protoship/apps/fellow2/`, NOT the git repo.**
-  Always rsync `web/src/` across first, then confirm the commit really carries
-  the change.
+  Always rsync `web/src/` (and `web/test/`) across first, then confirm the
+  commit really carries the change. If `deploy_app` says "Not authenticated",
+  call `authenticate`; its first attempt can fail with HTTP 400 on the code
+  exchange and succeed on a retry.
 - **`deployed: true` proves nothing.** The pod lags minutes behind, `curl`
   returns 302 to Okta for every URL, and `check_deploy_status` reports
   `waiting_for_dns` for healthy apps. Verify via the `Update <app_id> image
@@ -162,6 +167,19 @@ more (see Gotchas). Local credentials default to database `fellow_dev`, user
   for dialect traps.
 - **New pure-logic specs must be added to `UNIT_SPECS`** in
   `playwright.config.ts`, or they silently run as slow browser tests.
+- **List views get a capped attendee preview.** `attendeesFor()` loads at
+  most `ATTENDEE_PREVIEW_CAP` people per meeting for agenda, week grid and
+  archive. Use `meeting.attendeeCount` for "how many", never
+  `attendees.length`: counting the preview showed "+1" on ten-person
+  meetings. `getMeeting` loads everyone (cap `null`), because the note header
+  and the `@` picker need the full list.
+- **Filled buttons use `--color-accent-solid`, not `--color-accent`.** Dark
+  mode lightens the accent for text on dark, and white text on that is about
+  2.5:1. Anything with white text on blue takes the solid token.
+- **Known bug:** an unlayered `input, textarea, button { font: inherit }` in
+  `globals.css` beats Tailwind's layered size utilities, so e.g. the meeting
+  title renders at 15px instead of `--text-3xl`. Fix is `@layer base`, but
+  check visuals after, since some inputs may have been tuned to the wrong size.
 - The dev proxy's HMR WebSocket is broken (`WS_ERR_EXPECTED_MASK`), which can
   make click handlers look dead under `npm run dev`. Not an app bug; the
   production build is fine.
