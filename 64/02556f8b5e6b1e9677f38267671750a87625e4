@@ -1,0 +1,19 @@
+CLAUDE.md
+  s_c50d584fc50e84::t_7f887c54335f69 126-139,144-146,150-153,170-182
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "6402556f8b5e6b1e9677f38267671750a87625e4",
+  "prompts": {},
+  "sessions": {
+    "s_c50d584fc50e84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cb79e7b3-f32f-465e-a31d-7811f4713399",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Daniil Zherenkov <daniil.zherenkov@deliveryhero.com>"
+    }
+  }
+}
