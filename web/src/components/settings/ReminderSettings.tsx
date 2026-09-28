@@ -83,7 +83,7 @@ export function ReminderSettings({ vapidPublicKey }: { vapidPublicKey: string })
           style={{
             borderRadius: 'var(--radius-row)',
             border: 0,
-            background: 'var(--color-accent)',
+            background: 'var(--color-accent-solid)',
             opacity: busy ? 0.6 : 1,
           }}
         >

@@ -85,8 +85,7 @@ export function FirstRunPush({ vapidPublicKey }: { vapidPublicKey: string }) {
         className="mb-3 mt-1 text-[length:var(--text-sm)] leading-[1.45]"
         style={{ color: 'var(--color-text-secondary)' }}
       >
-        A notification five minutes before each meeting, even when Fellow Hero is closed.
-        You can change this any time in Settings.
+        A notification five minutes before each meeting.
       </p>
       <div className="flex items-center justify-end gap-2">
         <button
@@ -105,7 +104,7 @@ export function FirstRunPush({ vapidPublicKey }: { vapidPublicKey: string }) {
           style={{
             borderRadius: 'var(--radius-row)',
             border: 0,
-            background: 'var(--color-accent)',
+            background: 'var(--color-accent-solid)',
             opacity: busy ? 0.6 : 1,
           }}
         >

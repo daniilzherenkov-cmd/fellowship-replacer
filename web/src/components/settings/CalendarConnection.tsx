@@ -7,9 +7,13 @@
  *   not configured -> the deployment has no OAuth credentials yet (docs/12)
  *   not connected  -> credentials exist, this user has not authorised
  *   connected      -> show the account, last sync, and a Sync button
+ *
+ * Arriving from the OAuth callback with `syncing=1` starts the first import
+ * here, with a progress state, instead of the callback doing it while the
+ * browser waits on a redirect (that ended in a gateway timeout).
  */
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { syncCalendarAction } from '@/actions'
 
@@ -21,6 +25,7 @@ export function CalendarConnection({
   lastSyncError,
   status,
   reason,
+  autoSync = false,
 }: {
   configured: boolean
   connected: boolean
@@ -29,19 +34,42 @@ export function CalendarConnection({
   lastSyncError: string | null
   status: string | null
   reason: string | null
+  /** Run the first import on mount. Set by the OAuth callback redirect. */
+  autoSync?: boolean
 }) {
   const router = useRouter()
   const [syncing, setSyncing] = useState(false)
+  const [firstImport, setFirstImport] = useState(autoSync && connected)
   const [message, setMessage] = useState<string | null>(null)
 
   async function sync() {
     setSyncing(true)
     setMessage(null)
-    const result = await syncCalendarAction()
+    let result: Awaited<ReturnType<typeof syncCalendarAction>>
+    try {
+      result = await syncCalendarAction()
+    } catch {
+      // The request itself failed, usually a gateway timeout on a long first
+      // import. The server keeps going regardless, so wait for it to land
+      // rather than report a failure that may not be one.
+      const landed = await waitForSync(lastSyncAt)
+      result = landed ? { ok: true } : { ok: false }
+    }
     setSyncing(false)
+    setFirstImport(false)
     setMessage(result.ok ? 'Calendar synced.' : describeError(result.error))
     if (result.ok) router.refresh()
   }
+
+  const started = useRef(false)
+  useEffect(() => {
+    if (!firstImport || started.current) return
+    started.current = true
+    // Drop the query flag first, so a reload does not start a second import.
+    router.replace('/settings?google=connected')
+    void sync()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <section
@@ -53,12 +81,19 @@ export function CalendarConnection({
     >
       <h2 className="m-0 text-[length:var(--text-xl)] font-semibold">Google Calendar</h2>
       <p className="mb-3 mt-[2px] text-[length:var(--text-base)]" style={{ color: 'var(--color-text-secondary)' }}>
-        Fellow Hero reads your calendar so your meetings and the people in them appear
-        automatically. It asks for permission to edit events too, so it can create
-        meetings later, but nothing in the app writes to your calendar today.
+        Your meetings and the people in them appear automatically.
       </p>
 
-      {status === 'connected' && <Banner tone="ok">Google Calendar connected.</Banner>}
+      {firstImport ? (
+        <Banner tone="info">
+          <span role="status" className="inline-flex items-center gap-2">
+            <Spinner />
+            Connected. Importing your meetings, this can take up to a minute…
+          </span>
+        </Banner>
+      ) : (
+        status === 'connected' && <Banner tone="ok">Google Calendar connected.</Banner>
+      )}
       {status === 'denied' && (
         <Banner tone="warn">Connection cancelled. Nothing was changed.</Banner>
       )}
@@ -93,7 +128,7 @@ export function CalendarConnection({
               style={{
                 borderRadius: 'var(--radius-row)',
                 border: 0,
-                background: 'var(--color-accent)',
+                background: 'var(--color-accent-solid)',
                 opacity: syncing ? 0.6 : 1,
               }}
             >
@@ -119,12 +154,42 @@ export function CalendarConnection({
         <a
           href="/api/auth/google/start"
           className="inline-block px-3 py-[6px] text-[length:var(--text-base)] font-medium text-white no-underline"
-          style={{ borderRadius: 'var(--radius-row)', background: 'var(--color-accent)' }}
+          style={{ borderRadius: 'var(--radius-row)', background: 'var(--color-accent-solid)' }}
         >
           Connect Google Calendar
         </a>
       )}
     </section>
+  )
+}
+
+/**
+ * Poll the status endpoint until last sync moves past `before`.
+ * Two minutes is well past the longest first import seen so far (assumed,
+ * not measured on the largest calendars).
+ */
+async function waitForSync(before: string | null): Promise<boolean> {
+  const deadline = Date.now() + 120_000
+  while (Date.now() < deadline) {
+    await new Promise((r) => setTimeout(r, 4000))
+    try {
+      const res = await fetch('/api/calendar/sync', { cache: 'no-store' })
+      if (!res.ok) continue
+      const body = (await res.json()) as { lastSyncAt: string | null; lastSyncError: string | null }
+      if (body.lastSyncAt && body.lastSyncAt !== before) return !body.lastSyncError
+    } catch {
+      // Keep waiting; one failed poll says nothing.
+    }
+  }
+  return false
+}
+
+function Spinner() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" className="animate-spin">
+      <circle cx="7" cy="7" r="5.5" fill="none" stroke="currentColor" strokeOpacity="0.25" strokeWidth="1.6" />
+      <path d="M7 1.5a5.5 5.5 0 0 1 5.5 5.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
   )
 }
 

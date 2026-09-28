@@ -16,6 +16,11 @@
 :root {
   /* Colour - light half of each Swift pair */
   --color-accent: #2563eb;
+  /* Fill for buttons with white text. Separate from --color-accent because
+     dark mode lightens the accent for text on dark, and white on that light
+     blue is about 2.5:1. #2563eb keeps white text above WCAG AA (5.2:1) in
+     both themes. */
+  --color-accent-solid: #2563eb;
   --color-accent-subtle: #eff6ff;
   --color-ai: #9333ea;          /* reserved; "Ask Fellow" is cut from MVP */
   --color-due: #f59e0b;

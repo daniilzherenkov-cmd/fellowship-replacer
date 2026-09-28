@@ -9,6 +9,11 @@
  *
  * Checking an item here checks it in its source note too - they are two views
  * of one row, which is the point of must-have #3.
+ *
+ * Items created or changed during this visit stay on screen even when they
+ * no longer match the filters, with a note saying so. Otherwise creating an
+ * item, or assigning one to yourself while filtered to someone else, made it
+ * vanish on the spot and read as a failed save (UX review, 2026-09).
  */
 
 import { useMemo, useState } from 'react'
@@ -44,6 +49,11 @@ export function ActionsList({ items, people }: { items: ActionItem[]; people: Pe
   const [meetingId, setMeetingId] = useState('')
   const [showDone, setShowDone] = useState(false)
   const [adding, setAdding] = useState(false)
+  // Touched this visit: shown regardless of filters until the page is left.
+  const [pinned, setPinned] = useState<ReadonlySet<string>>(() => new Set())
+  const [focusId, setFocusId] = useState<string | null>(null)
+  const pin = (id: string) =>
+    setPinned((prev) => (prev.has(id) ? prev : new Set(prev).add(id)))
 
   // Source meetings, derived from the items themselves so the dropdown only
   // ever offers meetings that actually have items.
@@ -55,9 +65,14 @@ export function ActionsList({ items, people }: { items: ActionItem[]; people: Pe
     return [...seen.entries()].sort((a, b) => a[1].localeCompare(b[1]))
   }, [items])
 
-  const filtered = useMemo(
+  const matching = useMemo(
     () => applyFilters(items, { tab, text, personId, meetingId, showDone }),
     [items, tab, text, personId, meetingId, showDone],
+  )
+  const matchingIds = useMemo(() => new Set(matching.map((i) => i.id)), [matching])
+  const filtered = useMemo(
+    () => items.filter((i) => matchingIds.has(i.id) || pinned.has(i.id)),
+    [items, matchingIds, pinned],
   )
 
   const filtering = isFiltering({ tab, text, personId, meetingId, showDone })
@@ -75,7 +90,9 @@ export function ActionsList({ items, people }: { items: ActionItem[]; people: Pe
     setAdding(true)
     try {
       // Standalone: no meeting. Lands in Inbox until given a due date.
-      await createActionItemAction('')
+      const { id } = await createActionItemAction('')
+      pin(id)
+      setFocusId(id)
       router.refresh()
     } finally {
       setAdding(false)
@@ -102,7 +119,7 @@ export function ActionsList({ items, people }: { items: ActionItem[]; people: Pe
           style={{
             borderRadius: 'var(--radius-row)',
             border: 0,
-            background: 'var(--color-accent)',
+            background: 'var(--color-accent-solid)',
             opacity: adding ? 0.6 : 1,
           }}
         >
@@ -225,23 +242,38 @@ export function ActionsList({ items, people }: { items: ActionItem[]; people: Pe
               </span>
             </div>
             {list.map((item) => (
-              <ActionItemRow
-                key={item.id}
-                item={item}
-                people={people}
-                showSource
-                onOpenSource={() =>
-                  item.meetingId && router.push(`/meetings/${item.meetingId}`)
-                }
-                onChange={async (fields) => {
-                  await updateActionItemAction(item.id, fields)
-                  if (fields.text === undefined) router.refresh()
-                }}
-                onDelete={async () => {
-                  await deleteActionItemAction(item.id, item.meetingId)
-                  router.refresh()
-                }}
-              />
+              <div key={item.id}>
+                <ActionItemRow
+                  item={item}
+                  people={people}
+                  showSource
+                  autoFocus={item.id === focusId}
+                  onOpenSource={() =>
+                    item.meetingId && router.push(`/meetings/${item.meetingId}`)
+                  }
+                  onChange={async (fields) => {
+                    // Pin before the refresh, so an edit that takes the item
+                    // out of the filter does not make it disappear under the
+                    // cursor.
+                    if (fields.text === undefined) pin(item.id)
+                    await updateActionItemAction(item.id, fields)
+                    if (fields.text === undefined) router.refresh()
+                  }}
+                  onDelete={async () => {
+                    await deleteActionItemAction(item.id, item.meetingId)
+                    router.refresh()
+                  }}
+                />
+                {!matchingIds.has(item.id) && (
+                  <p
+                    className="m-0 pb-1 pl-9 text-[length:var(--text-xs)]"
+                    style={{ color: 'var(--color-text-secondary)' }}
+                  >
+                    Saved. It does not match the current filters, so it will not
+                    show here next time.
+                  </p>
+                )}
+              </div>
             ))}
           </section>
         )

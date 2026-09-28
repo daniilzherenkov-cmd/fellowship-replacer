@@ -57,7 +57,7 @@ export function TopBar({ userEmail }: { userEmail: string | null }) {
       <div className="flex items-center gap-2">
         <span
           className="inline-flex items-center justify-center text-[length:var(--text-xs)] font-bold text-white"
-          style={{ width: 24, height: 24, borderRadius: 6, background: 'var(--color-accent)' }}
+          style={{ width: 24, height: 24, borderRadius: 6, background: 'var(--color-accent-solid)' }}
         >
           DH
         </span>

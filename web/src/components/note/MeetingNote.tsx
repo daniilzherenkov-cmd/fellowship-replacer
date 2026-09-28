@@ -15,14 +15,14 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { TalkingPointRow } from './TalkingPointRow'
 import { ActionItemRow } from './ActionItemRow'
-import { AvatarStack } from '../ui/Avatar'
+import { AvatarStack } from '../ui/AvatarStack'
 import { RowMenu } from '../ui/RowMenu'
 import { timeLeftLabel } from './time-left'
 import { CarriedForward } from './CarriedForward'
 import { useRowDrag, moveItem } from './useRowDrag'
 import { BulletTextarea } from './BulletTextarea'
 import { SharedNotepad } from './SharedNotepad'
-import type { ActionItem, MeetingDetail, Person } from '@/lib/queries'
+import type { ActionItem, MeetingDetail, Person, TalkingPoint } from '@/lib/queries'
 import {
   addActionItemAction,
   addTalkingPointAction,
@@ -185,6 +185,91 @@ export function MeetingNote({
     void reorderActionItemsAction(meeting.id, ids).then(() => router.refresh())
   })
 
+  /*
+   * Optimistic talking points. Waiting for the insert AND a router.refresh()
+   * before the row appeared read as "did my click register?" (UX review,
+   * 2026-09). A new row now renders at once under a temporary id and takes
+   * focus; the server id arrives in the background.
+   *
+   * Two maps keep that seamless:
+   *   pendingIds   temp id -> promise of the server id, so an edit, toggle or
+   *                delete made before the insert lands waits for it rather
+   *                than hitting a row that does not exist yet.
+   *   rowKeys      server id -> temp id, so when the refreshed list brings the
+   *                real row, React keeps the SAME instance (and the text the
+   *                user is typing, and focus) instead of remounting it.
+   */
+  const [pendingPoints, setPendingPoints] = useState<TalkingPoint[]>([])
+  const pendingIds = useRef(new Map<string, Promise<string>>())
+  const resolvedIds = useRef(new Map<string, string>())
+  const rowKeys = useRef(new Map<string, string>())
+  const [focusKey, setFocusKey] = useState<string | null>(null)
+  const pointsRef = useRef<HTMLDivElement>(null)
+
+  const serverPointIds = useMemo(
+    () => new Set(meeting.talkingPoints.map((p) => p.id)),
+    [meeting.talkingPoints],
+  )
+  // A pending row retires once the server list carries its real id.
+  const visiblePending = pendingPoints.filter((p) => {
+    const real = resolvedIds.current.get(p.id)
+    return !real || !serverPointIds.has(real)
+  })
+  useEffect(() => {
+    setPendingPoints((prev) => {
+      const next = prev.filter((p) => {
+        const real = resolvedIds.current.get(p.id)
+        return !real || !serverPointIds.has(real)
+      })
+      return next.length === prev.length ? prev : next
+    })
+  }, [serverPointIds])
+
+  function realId(id: string): Promise<string> {
+    return pendingIds.current.get(id) ?? Promise.resolve(id)
+  }
+
+  function addPoint() {
+    const tempId = `pending-${crypto.randomUUID()}`
+    const promise = addTalkingPointAction(meeting.id).then(({ id }) => {
+      resolvedIds.current.set(tempId, id)
+      rowKeys.current.set(id, tempId)
+      return id
+    })
+    pendingIds.current.set(tempId, promise)
+    setPendingPoints((prev) => [
+      ...prev,
+      { id: tempId, text: '', isCovered: false, sortOrder: Number.MAX_SAFE_INTEGER },
+    ])
+    setFocusKey(tempId)
+    promise.then(
+      () => router.refresh(),
+      () => {
+        // The insert failed: take the phantom row away and say so.
+        setPendingPoints((prev) => prev.filter((p) => p.id !== tempId))
+        setNotice('Could not add that talking point. Try again.')
+      },
+    )
+  }
+
+  async function removePoint(point: TalkingPoint, focusPrevious: boolean) {
+    const rows = pointsRef.current?.querySelectorAll<HTMLInputElement>(
+      '[data-testid="talking-point-row"] input[aria-label="Talking point"]',
+    )
+    if (focusPrevious && rows) {
+      const list = Array.from(rows)
+      const index = list.findIndex((el) => el === document.activeElement)
+      const prev = index > 0 ? list[index - 1] : null
+      if (prev) {
+        prev.focus()
+        prev.setSelectionRange(prev.value.length, prev.value.length)
+      }
+    }
+    setPendingPoints((prev) => prev.filter((p) => p.id !== point.id))
+    await deleteTalkingPointAction(await realId(point.id), meeting.id)
+    router.refresh()
+  }
+
   const mentionable = useMemo(() => {
     const attendees = meeting.attendees
     const list = FILTER_TO_REGISTERED ? attendees.filter((p) => p.isRegistered) : attendees
@@ -275,7 +360,9 @@ export function MeetingNote({
           </span>
         )}
 
-        {meeting.attendees.length > 0 && <AvatarStack people={meeting.attendees} />}
+        {meeting.attendees.length > 0 && (
+          <AvatarStack people={meeting.attendees} total={meeting.attendeeCount} interactive />
+        )}
 
         <span className="ml-1">
           <RowMenu
@@ -325,10 +412,15 @@ export function MeetingNote({
       )}
 
       <Section title="Talking Points" subtitle="The things to talk about">
-        {orderedPoints.map((point, index) => (
+        <div ref={pointsRef}>
+        {[...orderedPoints, ...visiblePending].map((point, index) => {
+          const rowKey = rowKeys.current.get(point.id) ?? point.id
+          const pending = index >= orderedPoints.length
+          return (
           <div
-            key={point.id}
-            {...pointDrag.handlers(index)}
+            key={rowKey}
+            // Pending rows are not draggable: reorder needs server ids.
+            {...(pending ? {} : pointDrag.handlers(index))}
             style={{
               opacity: pointDrag.draggingIndex === index ? 0.4 : 1,
               borderTop:
@@ -340,24 +432,20 @@ export function MeetingNote({
           <TalkingPointRow
             people={mentionable}
             point={point}
+            autoFocus={rowKey === focusKey}
             onChange={async (fields) => {
-              await updateTalkingPointAction(point.id, fields)
+              await updateTalkingPointAction(await realId(point.id), fields)
               if (fields.isCovered !== undefined) router.refresh()
             }}
-            onDelete={async () => {
-              await deleteTalkingPointAction(point.id, meeting.id)
-              router.refresh()
-            }}
+            onDelete={() => void removePoint(point, false)}
+            onEnter={addPoint}
+            onBackspaceEmpty={() => void removePoint(point, true)}
           />
           </div>
-        ))}
-        <AddRow
-          label="New talking point"
-          onAdd={async () => {
-            await addTalkingPointAction(meeting.id)
-            router.refresh()
-          }}
-        />
+          )
+        })}
+        </div>
+        <AddRow label="New talking point" onAdd={addPoint} />
       </Section>
 
       <Section
@@ -472,7 +560,9 @@ function AddRow({ label, onAdd }: { label: string; onAdd: () => void }) {
       type="button"
       onClick={onAdd}
       className="flex w-full cursor-pointer items-center gap-2 border-0 bg-transparent px-2 py-[6px] text-left text-[length:var(--text-md)]"
-      style={{ color: 'var(--color-text-tertiary)' }}
+      // Secondary, not tertiary: tertiary grey on white is about 2.5:1, below
+      // the WCAG AA 4.5:1 for text, and this is a control people must find.
+      style={{ color: 'var(--color-text-secondary)' }}
     >
       <span style={{ width: 14, textAlign: 'center' }}>+</span>
       {label}
@@ -545,7 +635,7 @@ function TimeEditor({
         style={{
           borderRadius: 'var(--radius-row)',
           border: 0,
-          background: 'var(--color-accent)',
+          background: 'var(--color-accent-solid)',
           opacity: invalid ? 0.5 : 1,
         }}
       >

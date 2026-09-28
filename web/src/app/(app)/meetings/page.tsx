@@ -6,7 +6,7 @@ import { Suspense } from 'react'
 import { ScrollToToday } from '@/components/meetings/ScrollToToday'
 import { SkeletonLine, SkeletonRow } from '@/components/ui/Skeleton'
 import { AutoLoadMore } from '@/components/meetings/AutoLoadMore'
-import { AvatarStack } from '@/components/ui/Avatar'
+import { AvatarStack } from '@/components/ui/AvatarStack'
 
 export const dynamic = 'force-dynamic'
 
@@ -121,6 +121,17 @@ async function Archive({
     const key = new Date(meeting.startAt).toDateString()
     groups.set(key, [...(groups.get(key) ?? []), meeting])
   }
+  // Always give today a section, so the landing scroll and the "Today" pill
+  // have somewhere to go on a day with no meetings.
+  const todayKey = new Date().toDateString()
+  if (meetings.length > 0 && !groups.has(todayKey)) {
+    groups.set(todayKey, [])
+    const sorted = [...groups.entries()].sort(
+      ([a], [b]) => new Date(a).getTime() - new Date(b).getTime(),
+    )
+    groups.clear()
+    for (const [k, v] of sorted) groups.set(k, v)
+  }
 
   return (
     <>
@@ -173,12 +184,24 @@ async function Archive({
           const label = dayLabel(new Date(key))
           return (
             <section key={key} id={label.isToday ? 'today' : undefined} className="mb-6">
+              {/* Sticky, so the day stays readable after landing mid-list. */}
               <h2
-                className="mb-1 px-2 text-[length:var(--text-base)] font-semibold"
-                style={{ color: label.isToday ? 'var(--color-accent)' : undefined }}
+                className="sticky top-0 z-10 mb-1 px-2 py-1 text-[length:var(--text-base)] font-semibold"
+                style={{
+                  color: label.isToday ? 'var(--color-accent)' : undefined,
+                  background: 'var(--color-canvas)',
+                }}
               >
                 {label.text}
               </h2>
+              {dayMeetings.length === 0 && (
+                <p
+                  className="m-0 px-2 py-2 text-[length:var(--text-sm)]"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                >
+                  No meetings today.
+                </p>
+              )}
               <ul className="m-0 list-none p-0">
                 {dayMeetings.map((meeting) => (
                   <li key={meeting.id}>
@@ -210,7 +233,7 @@ async function Archive({
                         </span>
                       </span>
                       {meeting.attendees.length > 0 && (
-                        <AvatarStack people={meeting.attendees} size={20} max={3} />
+                        <AvatarStack people={meeting.attendees} total={meeting.attendeeCount} size={20} max={3} />
                       )}
                     </Link>
                   </li>

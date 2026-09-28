@@ -66,7 +66,13 @@ export interface Meeting {
   /** Google Meet or similar, for the header badge. */
   conferenceUrl: string | null
   location: string | null
+  /**
+   * In LIST views this is a preview, capped at ATTENDEE_PREVIEW_CAP. Use
+   * attendeeCount for "how many", never attendees.length: the stack once
+   * showed "+1" for a ten-person meeting because it counted the preview.
+   */
   attendees: Person[]
+  attendeeCount: number
 }
 
 export interface MeetingDetail extends Meeting {
@@ -128,11 +134,21 @@ export async function listPeople(ownerEmail: string): Promise<Person[]> {
 /** Attendees returned per meeting in LIST views. The stack shows 3 plus a count. */
 const ATTENDEE_PREVIEW_CAP = 4
 
+interface Attendees {
+  people: Person[]
+  total: number
+}
+
+/**
+ * Attendees per meeting. `cap` null loads everyone, which the meeting note
+ * needs: its header and its @ picker both used to get the 4-person preview.
+ */
 async function attendeesFor(
   ownerEmail: string,
   meetingIds: string[],
-): Promise<Map<string, Person[]>> {
-  const out = new Map<string, Person[]>()
+  cap: number | null = ATTENDEE_PREVIEW_CAP,
+): Promise<Map<string, Attendees>> {
+  const out = new Map<string, Attendees>()
   if (!meetingIds.length) return out
 
   const db = await getDb()
@@ -141,24 +157,28 @@ async function attendeesFor(
   // most 3 plus a count, but this used to return EVERY attendee of every
   // meeting: 7.4k person objects and 928KB of JSON for a screen showing one
   // week. The cap is 4 so the stack still has its overflow item.
-  const rows = await db.query<PersonRow & { meeting_id: string }>(
-    `SELECT meeting_id, id, name, email, role, color_hex, is_me, is_registered
+  // The cap is a number we own, never user input, so inlining it is safe;
+  // a bound LIMIT-style parameter inside a window filter is not portable.
+  const capClause = cap === null ? '' : `WHERE rn <= ${Math.floor(cap)}`
+  const rows = await db.query<PersonRow & { meeting_id: string; total: number }>(
+    `SELECT meeting_id, id, name, email, role, color_hex, is_me, is_registered, total
        FROM (
          SELECT ma.meeting_id, p.id, p.name, p.email, p.role, p.color_hex, p.is_me,
                 ${REGISTERED_SELECT},
-                ROW_NUMBER() OVER (PARTITION BY ma.meeting_id ORDER BY p.is_me DESC, p.name) AS rn
+                ROW_NUMBER() OVER (PARTITION BY ma.meeting_id ORDER BY p.is_me DESC, p.name) AS rn,
+                COUNT(*) OVER (PARTITION BY ma.meeting_id) AS total
            FROM meeting_attendee ma
            JOIN person p ON p.id = ma.person_id
           WHERE ma.meeting_id IN (${placeholders}) AND p.owner_email = ?
        ) ranked
-      WHERE rn <= ${ATTENDEE_PREVIEW_CAP}
+      ${capClause}
       ORDER BY name`,
     [...meetingIds, ownerEmail],
   )
   for (const row of rows) {
-    const list = out.get(row.meeting_id) ?? []
-    list.push(toPerson(row))
-    out.set(row.meeting_id, list)
+    const entry = out.get(row.meeting_id) ?? { people: [], total: Number(row.total) }
+    entry.people.push(toPerson(row))
+    out.set(row.meeting_id, entry)
   }
   return out
 }
@@ -178,7 +198,9 @@ interface MeetingRow {
   private_notes?: string | null
 }
 
-function toMeeting(row: MeetingRow, attendees: Person[]): Meeting {
+const NO_ATTENDEES: Attendees = { people: [], total: 0 }
+
+function toMeeting(row: MeetingRow, attendees: Attendees = NO_ATTENDEES): Meeting {
   return {
     id: row.id,
     title: row.title,
@@ -192,7 +214,8 @@ function toMeeting(row: MeetingRow, attendees: Person[]): Meeting {
     privateNotes: row.private_notes ?? '',
     conferenceUrl: row.conference_url ?? null,
     location: row.location ?? null,
-    attendees,
+    attendees: attendees.people,
+    attendeeCount: attendees.total,
   }
 }
 
@@ -244,7 +267,7 @@ export async function listMeetings(
     ownerEmail,
     rows.map((r) => r.id),
   )
-  return rows.map((r) => toMeeting(r, attendees.get(r.id) ?? []))
+  return rows.map((r) => toMeeting(r, attendees.get(r.id)))
 }
 
 /** One meeting with its full note. Returns null if it is not the caller's. */
@@ -261,8 +284,8 @@ export async function getMeeting(
   )
   if (!rows.length) return null
 
-  const attendees = await attendeesFor(ownerEmail, [meetingId])
-  const meeting = toMeeting(rows[0], attendees.get(meetingId) ?? [])
+  const attendees = await attendeesFor(ownerEmail, [meetingId], null)
+  const meeting = toMeeting(rows[0], attendees.get(meetingId))
 
   const tpRows = await db.query<{
     id: string
@@ -718,7 +741,7 @@ export async function getPersonStream(
   const all = await listAllActionItems(ownerEmail)
   return {
     person: toPerson(personRows[0]),
-    meetings: meetingRows.map((r) => toMeeting(r, attendees.get(r.id) ?? [])),
+    meetings: meetingRows.map((r) => toMeeting(r, attendees.get(r.id))),
     openItems: all.filter((i) => i.assignee?.id === personId),
   }
 }

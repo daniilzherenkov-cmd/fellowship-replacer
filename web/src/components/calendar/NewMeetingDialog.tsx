@@ -349,7 +349,7 @@ export function NewMeetingDialog({
             style={{
               borderRadius: 'var(--radius-row)',
               border: 0,
-              background: 'var(--color-accent)',
+              background: 'var(--color-accent-solid)',
               opacity: saving ? 0.6 : 1,
             }}
           >
