@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic'
 export default async function SettingsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ google?: string; reason?: string }>
+  searchParams: Promise<{ google?: string; reason?: string; syncing?: string }>
 }) {
   const identity = await requireIdentity(await headers())
   const params = await searchParams
@@ -35,6 +35,7 @@ export default async function SettingsPage({
         lastSyncError={connection?.lastSyncError ?? null}
         status={params.google ?? null}
         reason={params.reason ?? null}
+        autoSync={params.google === 'connected' && params.syncing === '1'}
       />
 
       <IcsConnection

@@ -40,6 +40,8 @@ export interface ActionItemRowProps {
   /** Rendered under the text when hovered, in the unified list. */
   showSource?: boolean
   onOpenSource?: () => void
+  /** Focus the text on mount, for a row the user has just created. */
+  autoFocus?: boolean
 }
 
 /** Scan back from the caret for an active @mention. */
@@ -61,6 +63,7 @@ export function ActionItemRow({
   onDelete,
   showSource = false,
   onOpenSource,
+  autoFocus = false,
 }: ActionItemRowProps) {
   const [hover, setHover] = useState(false)
   const [text, setText] = useState(item.text)
@@ -166,6 +169,7 @@ export function ActionItemRow({
         <input
           ref={inputRef}
           value={text}
+          autoFocus={autoFocus}
           onChange={handleInput}
           onBlur={() => {
             flush()

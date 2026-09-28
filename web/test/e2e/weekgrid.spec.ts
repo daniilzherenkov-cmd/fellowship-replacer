@@ -36,6 +36,7 @@ function meeting(
     location: null,
     privateNotes: '',
     attendees: [],
+    attendeeCount: 0,
   }
 }
 

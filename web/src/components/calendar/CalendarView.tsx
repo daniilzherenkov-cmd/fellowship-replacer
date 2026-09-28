@@ -16,7 +16,7 @@
 import { useEffect, useMemo, useState, useTransition } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
-import { AvatarStack } from '../ui/Avatar'
+import { AvatarStack } from '../ui/AvatarStack'
 import { createMeetingAction } from '@/actions'
 import { WeekGrid, weekDaysFor } from './WeekGrid'
 import { SyncButton } from './SyncButton'
@@ -549,7 +549,7 @@ function AgendaCard({
             {meeting.isAllDay ? 'All day' : `${fmt(start)} – ${fmt(end)}`}
           </span>
           {meeting.attendees.length > 0 && (
-            <AvatarStack people={meeting.attendees} size={18} max={3} />
+            <AvatarStack people={meeting.attendees} total={meeting.attendeeCount} size={18} max={3} />
           )}
         </span>
       </span>

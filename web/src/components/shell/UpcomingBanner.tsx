@@ -62,7 +62,7 @@ export function UpcomingBanner({ meetings }: { meetings: UpcomingMeeting[] }) {
       aria-live="polite"
       className="flex items-center gap-3 px-4 py-[7px] text-[length:var(--text-base)]"
       style={{
-        background: 'var(--color-accent)',
+        background: 'var(--color-accent-solid)',
         color: '#fff',
       }}
     >

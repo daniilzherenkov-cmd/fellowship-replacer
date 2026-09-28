@@ -56,34 +56,3 @@ export function Avatar({
     </span>
   )
 }
-
-/** Overlapping avatar row. Swift used HStack(spacing: -6) with a canvas ring. */
-export function AvatarStack({
-  people,
-  size = 22,
-  max = 3,
-}: {
-  people: { name: string; colorHex?: string }[]
-  size?: number
-  max?: number
-}) {
-  const shown = people.slice(0, max)
-  const overflow = people.length - shown.length
-  return (
-    <span className="inline-flex items-center" style={{ gap: -6 }}>
-      {shown.map((p, i) => (
-        <span key={`${p.name}-${i}`} style={{ marginLeft: i === 0 ? 0 : -6 }}>
-          <Avatar name={p.name} colorHex={p.colorHex} size={size} ring />
-        </span>
-      ))}
-      {overflow > 0 && (
-        <span
-          className="ml-1 text-[length:var(--text-xs)]"
-          style={{ color: 'var(--color-text-tertiary)' }}
-        >
-          +{overflow}
-        </span>
-      )}
-    </span>
-  )
-}

@@ -8,6 +8,11 @@
  * because "where did we discuss X" is answered by whichever of those mentions
  * X, not by a type the user has to pick first.
  *
+ * The placeholder names that scope. A bare "Search…" read as a company-wide
+ * search, so an unknown colleague's name returning nothing looked like a
+ * broken feature (UX review, 2026-09). People are only those from your own
+ * meetings: the directory needs the People API scope (see CLAUDE.md).
+ *
  * ⌘K or ⌘F focuses it, matching both Fellow and the ⌘F in docs/04.
  */
 
@@ -117,7 +122,7 @@ export function GlobalSearch() {
         }}
         onFocus={() => setOpen(true)}
         onKeyDown={onKeyDown}
-        placeholder="Search…"
+        placeholder="Search meetings, notes, people"
         aria-label="Search"
         role="combobox"
         aria-expanded={open && ordered.length > 0}
@@ -149,6 +154,8 @@ export function GlobalSearch() {
               style={{ color: 'var(--color-text-secondary)' }}
             >
               Nothing matches “{term}”.
+              <br />
+              People show up once you have a meeting with them.
             </p>
           ) : (
             KIND_ORDER.map((kind) => {

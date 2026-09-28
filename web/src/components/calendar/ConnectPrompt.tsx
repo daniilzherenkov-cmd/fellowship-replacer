@@ -86,7 +86,7 @@ function ConnectCard() {
       <a
         href={CONNECT_HREF}
         className="inline-block px-3 py-[6px] text-[length:var(--text-sm)] font-medium text-white no-underline"
-        style={{ borderRadius: 'var(--radius-row)', background: 'var(--color-accent)' }}
+        style={{ borderRadius: 'var(--radius-row)', background: 'var(--color-accent-solid)' }}
       >
         Connect
       </a>
@@ -131,9 +131,7 @@ function ConnectModal({ onDismiss }: { onDismiss: () => void }) {
           className="mb-4 mt-2 text-[length:var(--text-base)] leading-[1.5]"
           style={{ color: 'var(--color-text-secondary)' }}
         >
-          Fellow Hero reads your Google Calendar so your meetings, and the people in
-          them, show up here without any typing. You can also skip this and create
-          meetings by hand.
+          Your meetings and attendees appear here automatically.
         </p>
 
         <div className="flex items-center justify-end gap-2">
@@ -148,7 +146,7 @@ function ConnectModal({ onDismiss }: { onDismiss: () => void }) {
           <a
             href={CONNECT_HREF}
             className="px-3 py-[7px] text-[length:var(--text-base)] font-medium text-white no-underline"
-            style={{ borderRadius: 'var(--radius-row)', background: 'var(--color-accent)' }}
+            style={{ borderRadius: 'var(--radius-row)', background: 'var(--color-accent-solid)' }}
           >
             Connect Google Calendar
           </a>

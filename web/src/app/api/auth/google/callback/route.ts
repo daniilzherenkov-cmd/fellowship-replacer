@@ -14,7 +14,6 @@
 import { requireIdentity } from '@/lib/auth'
 import { oauthConfig, exchangeCode, publicOrigin } from '@/lib/google-oauth'
 import { consumeOAuthState, saveConnection } from '@/lib/google-store'
-import { syncCalendar } from '@/lib/sync'
 import { safeEqual } from '@/lib/crypto'
 
 export const dynamic = 'force-dynamic'
@@ -79,20 +78,13 @@ export async function GET(request: Request) {
       scope: tokens.scope,
     })
 
-    // Sync immediately rather than waiting for a button press. Connecting and
-    // then finding an empty calendar reads as a broken connection, which is
-    // exactly what happened on the first real run.
-    //
-    // Best-effort: the connection IS saved at this point, so a sync failure
-    // must not turn a successful authorisation into an error. The calendar
-    // page retries on load anyway.
-    try {
-      await syncCalendar(identity.email)
-    } catch {
-      // Swallowed on purpose. last_sync_error carries the detail.
-    }
-
-    return redirectToSettings(request, { google: 'connected' })
+    // Redirect NOW and let the settings page run the first sync with a visible
+    // progress state. Awaiting the sync here held the browser on a blank
+    // redirect for as long as the first full import took, which ended in a
+    // gateway timeout even though the connection had been saved (UX review,
+    // 2026-09). An empty calendar after connecting still must not happen, so
+    // `syncing=1` tells CalendarConnection to start the import on arrival.
+    return redirectToSettings(request, { google: 'connected', syncing: '1' })
   } catch {
     // Never surface the raw error: it can contain the client secret or code.
     return redirectToSettings(request, { google: 'error', reason: 'exchange_failed' })

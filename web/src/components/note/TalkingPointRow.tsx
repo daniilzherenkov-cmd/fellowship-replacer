@@ -5,9 +5,15 @@
  *
  * The bullet is TRI-STATE, which is easy to miss:
  *   idle    -> empty circle
- *   hover   -> small filled circle, accent at 50%
- *   covered -> large filled circle, accent
- * with strikethrough text once covered.
+ *   hover   -> faint checkmark inside the circle
+ *   covered -> filled accent circle with a white checkmark
+ * with strikethrough text once covered. The checkmark matters: a ring with a
+ * filled dot reads as a radio button, which implies "pick one of these"
+ * (UX review, 2026-09).
+ *
+ * The bullet is the ONLY way to mark a point covered. The row menu used to
+ * repeat it, and two controls with the same outcome made people look for a
+ * difference that did not exist.
  *
  * State handling note: the row is keyed by id in the parent, and `key` includes
  * the id, so React gives each row its own instance. Local text is seeded once
@@ -28,6 +34,9 @@ export function TalkingPointRow({
   people = [],
   onChange,
   onDelete,
+  autoFocus = false,
+  onEnter,
+  onBackspaceEmpty,
 }: {
   point: TalkingPoint
   /**
@@ -37,6 +46,12 @@ export function TalkingPointRow({
   people?: Person[]
   onChange: (fields: { text?: string; isCovered?: boolean }) => void
   onDelete: () => void
+  /** Focus the input on mount. Set for a row the user has just added. */
+  autoFocus?: boolean
+  /** Enter pressed outside the @ picker: the parent adds the next point. */
+  onEnter?: () => void
+  /** Backspace in an already-empty row: the parent deletes it and moves focus. */
+  onBackspaceEmpty?: () => void
 }) {
   const [hover, setHover] = useState(false)
   const [bulletHover, setBulletHover] = useState(false)
@@ -117,6 +132,7 @@ export function TalkingPointRow({
       <button
         type="button"
         aria-label={point.isCovered ? 'Mark not covered' : 'Mark covered'}
+        title={point.isCovered ? 'Mark not covered' : 'Mark covered'}
         aria-pressed={point.isCovered}
         onClick={() => {
           flush()
@@ -138,10 +154,27 @@ export function TalkingPointRow({
             setMention(detectMention(e.target.value, e.target.selectionStart ?? e.target.value.length))
             save(e.target.value)
           }}
+          autoFocus={autoFocus}
           onKeyDown={(e) => {
             if (e.key === 'Escape' && mention !== null) {
               e.preventDefault()
               setMention(null)
+              return
+            }
+            // IME composition uses Enter to commit a character, not the row.
+            if (e.nativeEvent.isComposing) return
+            if (e.key === 'Enter' && mention === null && onEnter) {
+              e.preventDefault()
+              flush()
+              onEnter()
+              return
+            }
+            if (e.key === 'Backspace' && text === '' && onBackspaceEmpty) {
+              e.preventDefault()
+              // Nothing to save: an empty row is about to go.
+              if (saveTimer.current) clearTimeout(saveTimer.current)
+              pendingRef.current = null
+              onBackspaceEmpty()
             }
           }}
           // Blur closes the picker, but only after a click on it has landed.
@@ -196,16 +229,7 @@ export function TalkingPointRow({
 
       {hover ? (
         <RowMenu
-          items={[
-            {
-              label: point.isCovered ? 'Mark not covered' : 'Mark covered',
-              onSelect: () => {
-                flush()
-                onChange({ isCovered: !point.isCovered })
-              },
-            },
-            { label: 'Delete', onSelect: onDelete, destructive: true },
-          ]}
+          items={[{ label: 'Delete', onSelect: onDelete, destructive: true }]}
         />
       ) : (
         <span style={{ width: 16, display: 'inline-block' }} aria-hidden="true" />
@@ -215,11 +239,12 @@ export function TalkingPointRow({
 }
 
 function Bullet({ covered, hover }: { covered: boolean; hover: boolean }) {
+  const check = 'M4.2 7.2 6.1 9 9.8 5.2'
   if (covered) {
     return (
       <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-        <circle cx="7" cy="7" r="6" fill="none" stroke="var(--color-accent)" strokeWidth="1.4" />
-        <circle cx="7" cy="7" r="3.6" fill="var(--color-accent)" />
+        <circle cx="7" cy="7" r="6.6" fill="var(--color-accent)" />
+        <path d={check} fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     )
   }
@@ -233,7 +258,17 @@ function Bullet({ covered, hover }: { covered: boolean; hover: boolean }) {
         stroke={hover ? 'var(--color-accent)' : 'var(--color-text-tertiary)'}
         strokeWidth="1.4"
       />
-      {hover && <circle cx="7" cy="7" r="2.2" fill="var(--color-accent)" opacity="0.5" />}
+      {hover && (
+        <path
+          d={check}
+          fill="none"
+          stroke="var(--color-accent)"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity="0.5"
+        />
+      )}
     </svg>
   )
 }
